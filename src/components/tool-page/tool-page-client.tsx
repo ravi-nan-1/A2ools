@@ -8,7 +8,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 
 interface ToolPageClientProps {
