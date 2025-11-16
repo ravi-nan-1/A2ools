@@ -27,12 +27,12 @@ export function AdBanner({ adSlot, adFormat = "auto", dataFullWidthResponsive = 
     } catch (err) {
       console.error(`AdSense error for slot ${adSlot}:`, err);
     }
-  }, [pathname]);
+  }, [pathname, adSlot]);
 
   return (
     <ins
       {...props}
-      className={cn("adsbygoogle", className)}
+      className={cn(className)}
       style={{ display: 'block' }}
       data-ad-client="ca-pub-3080938150148610"
       data-ad-slot={adSlot}
