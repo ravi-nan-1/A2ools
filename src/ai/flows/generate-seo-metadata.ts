@@ -34,6 +34,14 @@ export type GenerateSEOMetadataOutput = z.infer<
   typeof GenerateSEOMetadataOutputSchema
 >;
 
+
+const GenerateSEOMetadataAiOutputSchema = z.object({
+  seoTitle: z.string().describe('The SEO title for the tool page.'),
+  seoDescription: z.string().describe('The SEO description for the tool page.'),
+  faqContent: z.string().describe('A multi-line string containing 3-5 frequently asked questions and their answers.'),
+});
+
+
 export async function generateSEOMetadata(
   input: GenerateSEOMetadataInput
 ): Promise<GenerateSEOMetadataOutput> {
@@ -43,7 +51,7 @@ export async function generateSEOMetadata(
 const generateSEOMetadataPrompt = ai.definePrompt({
   name: 'generateSEOMetadataPrompt',
   input: {schema: GenerateSEOMetadataInputSchema},
-  output: {schema: GenerateSEOMetadataOutputSchema},
+  output: {schema: GenerateSEOMetadataAiOutputSchema},
   prompt: `You are an expert SEO content creator.
   Your task is to generate SEO metadata for a tool page based on the tool name and description provided.
 
@@ -53,8 +61,7 @@ const generateSEOMetadataPrompt = ai.definePrompt({
   Instructions:
   1.  SEO Title: Create a concise and compelling SEO title (50-60 characters).
   2.  SEO Description: Write a brief and informative SEO description (150-160 characters).
-  3.  JSON-LD Schema: Generate a valid JSON-LD WebApplication schema as a string. Include the tool's name and description. Use this template and fill in the blanks: {"@context": "https://schema.org", "@type": "WebApplication", "name": "{{{toolName}}}", "description": "{{{seoDescription}}}", "applicationCategory": "BusinessApplication", "operatingSystem": "Any"}.
-  4.  FAQ Content: Develop a list of 3-5 Frequently Asked Questions (FAQs) that address common user queries about the tool. Provide clear and concise answers. Format it as a single multi-line string.
+  3.  FAQ Content: Develop a list of 3-5 Frequently Asked Questions (FAQs) that address common user queries about the tool. Provide clear and concise answers. Format it as a single multi-line string.
   `,
 });
 
@@ -66,6 +73,20 @@ const generateSEOMetadataFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateSEOMetadataPrompt(input);
-    return output!;
+    const seoResult = output!;
+
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": input.toolName,
+      "description": seoResult.seoDescription,
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any"
+    };
+
+    return {
+      ...seoResult,
+      jsonLdSchema: JSON.stringify(jsonLd),
+    };
   }
 );
