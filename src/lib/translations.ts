@@ -14,7 +14,7 @@ export const languages = [
 export const translations: Record<string, Record<string, string>> = {
   en: {
     // Homepage
-    hero_title: 'All2ools — 30 AI Tools For Everyone',
+    hero_title: 'The Ultimate Suite of Free AI-Powered Online Tools',
     hero_subtitle: 'Finance, SEO, images, business, developer tools & more.',
     search_placeholder: 'Search for a tool...',
     filter_all: 'All',
