@@ -50,3 +50,5 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
     </Card>
   );
 }
+
+    
