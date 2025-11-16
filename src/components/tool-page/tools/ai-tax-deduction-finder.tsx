@@ -78,6 +78,13 @@ export function AiTaxDeductionFinder() {
     mode: 'onChange',
   });
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    // Prevent "e", "+", "-", "." from being entered
+    if (['e', 'E', '+', '-', '.'].includes(event.key)) {
+      event.preventDefault();
+    }
+  };
+  
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
     setResult(null);
@@ -135,6 +142,7 @@ export function AiTaxDeductionFinder() {
                       placeholder="e.g., 80000" 
                       {...field}
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
+                      onKeyDown={handleKeyDown}
                       disabled={isLoading} 
                     />
                   </FormControl>
@@ -154,6 +162,7 @@ export function AiTaxDeductionFinder() {
                       placeholder="e.g., 20000" 
                       {...field} 
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
+                      onKeyDown={handleKeyDown}
                       disabled={isLoading}
                     />
                   </FormControl>
