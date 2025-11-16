@@ -4,22 +4,51 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { Loader2, BadgeDollarSign, FileText, Lightbulb, Info, Coins } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { handleTaxAnalysis } from '@/app/actions';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const taxData = {
+  countries: [
+    {
+      name: 'United States',
+      categories: ['Home Office', 'Business Travel', 'Software & Subscriptions', 'Marketing & Advertising', 'Health Insurance Premiums', 'Office Supplies'],
+    },
+    {
+      name: 'United Kingdom',
+      categories: ['Office Costs', 'Travel Costs', 'Staff Costs', 'Financial Costs', 'Marketing & Subscriptions', 'Training Courses'],
+    },
+    {
+      name: 'Canada',
+      categories: ['Business Use-of-Home', 'Office Expenses', 'Meals & Entertainment', 'Vehicle Expenses', 'Legal & Accounting Fees', 'Salaries & Wages'],
+    },
+    {
+      name: 'Germany',
+      categories: ['Work Room (Häusliches Arbeitszimmer)', 'Business Travel', 'IT & Software', 'Work Equipment (Arbeitsmittel)', 'Telephone & Internet', 'Professional Development'],
+    },
+    {
+      name: 'India',
+      categories: ['Office Rent', 'Travel & Conveyance', 'Depreciation of Assets', 'Salaries & Employee Benefits', 'Professional Fees', 'Printing & Stationery'],
+    },
+     {
+      name: 'Australia',
+      categories: ['Home Office Expenses', 'Motor Vehicle Expenses', 'Travel Expenses', 'Cost of Goods Sold', 'Operating Expenses', 'Professional Development'],
+    },
+  ]
+};
 
 const formSchema = z.object({
   income: z.number().positive({ message: 'Income must be a positive number.' }),
   expenses: z.number().positive({ message: 'Expenses must be a positive number.' }),
-  country: z.string().min(2, { message: 'Please enter your country.'}),
-  categoryTags: z.string().min(3, { message: 'Please enter at least one category tag.' }),
+  country: z.string().min(2, { message: 'Please select your country.'}),
+  categoryTags: z.string().min(3, { message: 'Please select a category.' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,6 +65,7 @@ export function AiTaxDeductionFinder() {
   const { translate } = useLanguage();
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -76,16 +106,18 @@ export function AiTaxDeductionFinder() {
     }
   };
   
+  const availableCategories = taxData.countries.find(c => c.name === selectedCountry)?.categories || [];
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       <div className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle className='flex items-center gap-2'><Info className='text-primary' /> Sample Formats</CardTitle>
+            <CardTitle className='flex items-center gap-2'><Info className='text-primary' /> Sample Categories</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground space-y-2">
-            <p><strong>Country:</strong> e.g., United States, Germany, India</p>
-            <p><strong>Category Tags:</strong> e.g., home office, business travel, software, marketing</p>
+            <p><strong>Common Freelancer Categories:</strong></p>
+            <p>Home office costs, business travel, software subscriptions, marketing, professional development, office supplies.</p>
           </CardContent>
         </Card>
         
@@ -135,13 +167,22 @@ export function AiTaxDeductionFinder() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Your Country</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="e.g., United States" 
-                      {...field} 
-                      disabled={isLoading}
-                    />
-                  </FormControl>
+                    <Select onValueChange={(value) => {
+                        field.onChange(value);
+                        setSelectedCountry(value);
+                        form.resetField("categoryTags");
+                    }} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger disabled={isLoading}>
+                            <SelectValue placeholder="Select a country" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                        {taxData.countries.map(country => (
+                            <SelectItem key={country.name} value={country.name}>{country.name}</SelectItem>
+                        ))}
+                        </SelectContent>
+                    </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -151,14 +192,19 @@ export function AiTaxDeductionFinder() {
               name="categoryTags"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Expense Category Tags (comma-separated)</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="e.g., home office, business travel, software subscriptions"
-                      {...field} 
-                      disabled={isLoading}
-                    />
-                  </FormControl>
+                  <FormLabel>Primary Expense Category</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={isLoading || !selectedCountry}>
+                        <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                        {availableCategories.length > 0 ? availableCategories.map(category => (
+                            <SelectItem key={category} value={category}>{category}</SelectItem>
+                        )) : <SelectItem value="-" disabled>Select a country first</SelectItem>}
+                        </SelectContent>
+                    </Select>
                   <FormMessage />
                 </FormItem>
               )}
