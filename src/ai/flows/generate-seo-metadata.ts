@@ -40,6 +40,24 @@ export async function generateSEOMetadata(
   return generateSEOMetadataFlow(input);
 }
 
+// Define the prompt at the top level of the module
+const faqPrompt = ai.definePrompt({
+  name: 'generateFaqPrompt',
+  input: { schema: GenerateSEOMetadataInputSchema },
+  output: { schema: z.object({ faqContent: z.string() }) },
+  prompt: `
+    You are an expert SEO content creator.
+    Your task is to generate a list of 3-5 Frequently Asked Questions (FAQs) for a tool page based on the tool name and description provided.
+    Provide clear and concise answers. Format it as a single multi-line string.
+
+    Tool Name: {{{toolName}}}
+    Tool Description: {{{toolDescription}}}
+  `,
+  config: {
+    model: 'googleai/gemini-1.5-flash-latest',
+  },
+});
+
 const generateSEOMetadataFlow = ai.defineFlow(
   {
     name: 'generateSEOMetadataFlow',
@@ -50,23 +68,7 @@ const generateSEOMetadataFlow = ai.defineFlow(
     let faqContent = 'FAQs could not be generated at this time.';
 
     try {
-      const faqPrompt = ai.definePrompt({
-        name: 'generateFaqPrompt',
-        input: { schema: GenerateSEOMetadataInputSchema },
-        output: { schema: z.object({ faqContent: z.string() }) },
-        prompt: `
-          You are an expert SEO content creator.
-          Your task is to generate a list of 3-5 Frequently Asked Questions (FAQs) for a tool page based on the tool name and description provided.
-          Provide clear and concise answers. Format it as a single multi-line string.
-
-          Tool Name: {{{toolName}}}
-          Tool Description: {{{toolDescription}}}
-        `,
-        config: {
-          model: 'googleai/gemini-1.5-flash-latest',
-        },
-      });
-
+      // Call the pre-defined prompt
       const { output } = await faqPrompt(input);
       if (output?.faqContent) {
         faqContent = output.faqContent;
