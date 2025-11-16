@@ -22,7 +22,7 @@ interface HomePageClientProps {
   tools: ToolWithImage[];
 }
 
-const NATIVE_AD_INTERVAL = 6; // Show an ad every 6 cards
+const NATIVE_AD_INTERVAL = 10; // Show an ad every 10 cards for a 5-column layout
 
 export function HomePageClient({ tools }: HomePageClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,9 +45,9 @@ export function HomePageClient({ tools }: HomePageClientProps) {
   const itemsToRender = [];
   for (let i = 0; i < filteredTools.length; i++) {
     itemsToRender.push(<ToolCard key={filteredTools[i].slug} tool={filteredTools[i]} />);
-    if ((i + 1) > 0 && (i + 1) % NATIVE_AD_INTERVAL === 0) {
+    if ((i + 1) % NATIVE_AD_INTERVAL === 0) {
       itemsToRender.push(
-        <div key={`ad-${i}`} className="md:col-span-2 lg:col-span-3">
+        <div key={`ad-${i}`} className="p-4 md:col-span-2 lg:col-span-2">
            <AdBanner
             adSlot="YOUR_NATIVE_AD_SLOT_ID"
             adFormat="fluid"
@@ -107,7 +107,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
       </section>
 
       <section>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">
             {itemsToRender}
         </div>
         {filteredTools.length === 0 && (
