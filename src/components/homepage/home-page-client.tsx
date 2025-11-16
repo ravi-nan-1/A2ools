@@ -45,17 +45,26 @@ export function HomePageClient({ tools }: HomePageClientProps) {
   const itemsToRender = [];
   for (let i = 0; i < filteredTools.length; i++) {
     itemsToRender.push(<ToolCard key={filteredTools[i].slug} tool={filteredTools[i]} />);
+  }
+
+  // Insert ads at intervals
+  const itemsWithAds = [];
+  let lastAdIndex = -1;
+  for (let i = 0; i < itemsToRender.length; i++) {
+    itemsWithAds.push(itemsToRender[i]);
     if ((i + 1) % NATIVE_AD_INTERVAL === 0) {
-      itemsToRender.push(
-        <div key={`ad-${i}`} className="flex items-stretch">
-           <AdBanner adSlot="YOUR_NATIVE_AD_SLOT_ID" adFormat="fluid" className="w-full h-full min-h-[300px] bg-muted rounded-lg"/>
+      itemsWithAds.push(
+        <div key={`ad-${i}`} className="md:col-span-2 lg:col-span-3">
+           <AdBanner adSlot="YOUR_NATIVE_AD_SLOT_ID" adFormat="fluid" className="w-full h-full min-h-[300px] bg-muted rounded-lg flex items-center justify-center"/>
         </div>
       );
+      lastAdIndex = i;
     }
   }
 
+
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
       <section className="text-center py-12 md:py-20">
         <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tight">
           {translate('hero_title')}
@@ -99,11 +108,8 @@ export function HomePageClient({ tools }: HomePageClientProps) {
       </section>
 
       <section>
-        <div className="mb-8">
-          <AdBanner adSlot="YOUR_BANNER_AD_SLOT_ID" className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg" />
-        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {itemsToRender}
+          {itemsWithAds}
         </div>
         {filteredTools.length === 0 && (
           <div className="text-center py-16 text-muted-foreground">
