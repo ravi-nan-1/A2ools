@@ -55,7 +55,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
+    <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
       <section className="text-center py-12 md:py-20">
         <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tight">
           {translate('hero_title')}
@@ -76,6 +76,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
       </section>
 
       <section className="mb-12">
+        <AdBanner adSlot="YOUR_TOP_BANNER_AD_SLOT_ID" className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg mb-8" />
         <div className="flex justify-center flex-wrap gap-2">
           <Button
             variant={selectedCategory === 'All' ? 'default' : 'outline'}

@@ -70,6 +70,13 @@ export function ToolPageClient({ tool, aiContent, translations }: ToolPageClient
 
             <ToolInterface slug={tool.slug} />
 
+            <div className="my-8">
+              <AdBanner
+                adSlot="YOUR_IN_ARTICLE_AD_SLOT_ID"
+                className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg"
+              />
+            </div>
+
             <Card>
               <CardHeader>
                  <CardTitle className="flex items-center gap-2">

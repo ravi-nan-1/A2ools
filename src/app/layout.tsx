@@ -42,6 +42,10 @@ export default function RootLayout({
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
+            <AdBanner
+              adSlot="YOUR_BOTTOM_BANNER_AD_SLOT_ID"
+              className="w-full min-h-[100px] flex items-center justify-center bg-muted my-4"
+            />
             <Footer />
           </div>
           <Toaster />
