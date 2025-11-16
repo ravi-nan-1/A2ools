@@ -32,6 +32,7 @@ import {
   Table,
   Link,
   FileDiff,
+  GraduationCap,
 } from 'lucide-react';
 
 export type ToolCategory =
@@ -55,6 +56,40 @@ export interface Tool {
 }
 
 export const tools: Tool[] = [
+  {
+    name: 'AI Tutor',
+    slug: 'ai-tutor',
+    category: 'Business',
+    icon: 'GraduationCap',
+    description:
+      'Upload content via URL or PDF to get summaries and generate interactive quizzes.',
+    longDescription:
+      'The AI Tutor transforms any content into a personalized learning experience. Simply provide a web URL or upload a PDF document, and our advanced AI will instantly summarize the key information, making it easier to digest and understand complex topics. But it doesn\'t stop there. The AI Tutor also generates interactive quizzes with 10, 20, or 30 questions based on the content, allowing you to test your knowledge and reinforce your learning. It\'s the perfect companion for students, professionals, and lifelong learners who want to study more efficiently and effectively.',
+    features: [
+      'Content summarization from web URLs and PDFs',
+      'AI-powered quiz generation',
+      'Customizable quiz length (10, 20, or 30 questions)',
+      'Interactive learning experience',
+      'Supports a wide range of document and content types',
+      'Easy-to-use interface for quick study sessions',
+      'Helps reinforce knowledge and identify learning gaps',
+      'Perfect for students and professionals alike',
+    ],
+    howItWorks: [
+      'Launch the AI Tutor tool in its dedicated web app.',
+      'Paste a web URL or upload your PDF document.',
+      'The AI processes the content to generate a concise summary.',
+      'Choose your desired quiz length (10, 20, or 30 questions).',
+      'Take the interactive quiz to test your comprehension.',
+      'Review your results to master the material.',
+    ],
+    useCases: [
+      'Students preparing for exams by summarizing articles and textbooks.',
+      'Professionals getting up to speed on new industry reports.',
+      'Researchers quickly understanding the gist of academic papers.',
+      'Anyone looking to learn from online articles or documents more effectively.',
+    ],
+  },
   {
     name: 'TinyURL Maker – URL Shortener Tool',
     slug: 'tinyurl-maker',

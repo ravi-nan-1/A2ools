@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wrench } from 'lucide-react';
 import { TinyUrlMaker } from '@/app/tools/tinyurl-maker/tinyurl-maker';
 import { PdfToWordConverter } from '@/app/tools/pdf-to-word-converter/pdf-to-word-converter';
+import { AiTutor } from '@/app/tools/ai-tutor/ai-tutor';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -24,6 +25,8 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
         return <ApiLatencyChecker />;
       case 'pdf-to-word-converter':
         return <PdfToWordConverter />;
+      case 'ai-tutor':
+        return <AiTutor />;
       default:
         return <PlaceholderTool />;
     }
