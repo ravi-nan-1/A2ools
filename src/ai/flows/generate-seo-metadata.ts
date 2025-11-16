@@ -34,13 +34,13 @@ export type GenerateSEOMetadataOutput = z.infer<
   typeof GenerateSEOMetadataOutputSchema
 >;
 
-
-const GenerateSEOMetadataAiOutputSchema = z.object({
-  seoTitle: z.string().describe('The SEO title for the tool page.'),
-  seoDescription: z.string().describe('The SEO description for the tool page.'),
-  faqContent: z.string().describe('A multi-line string containing 3-5 frequently asked questions and their answers.'),
+const GenerateFaqOutputSchema = z.object({
+  faqContent: z
+    .string()
+    .describe(
+      'A multi-line string containing 3-5 frequently asked questions and their answers.'
+    ),
 });
-
 
 export async function generateSEOMetadata(
   input: GenerateSEOMetadataInput
@@ -48,21 +48,16 @@ export async function generateSEOMetadata(
   return generateSEOMetadataFlow(input);
 }
 
-const generateSEOMetadataPrompt = ai.definePrompt({
-  name: 'generateSEOMetadataPrompt',
+const generateFaqPrompt = ai.definePrompt({
+  name: 'generateFaqPrompt',
   input: {schema: GenerateSEOMetadataInputSchema},
-  output: {schema: GenerateSEOMetadataAiOutputSchema},
+  output: {schema: GenerateFaqOutputSchema},
   system: 'You are an expert SEO content creator.',
   prompt: `
-  Your task is to generate SEO metadata for a tool page based on the tool name and description provided.
+  Your task is to generate a list of 3-5 Frequently Asked Questions (FAQs) for a tool page based on the tool name and description provided. Provide clear and concise answers. Format it as a single multi-line string.
 
   Tool Name: {{{toolName}}}
   Tool Description: {{{toolDescription}}}
-
-  Instructions:
-  1.  SEO Title: Create a concise and compelling SEO title (50-60 characters).
-  2.  SEO Description: Write a brief and informative SEO description (150-160 characters).
-  3.  FAQ Content: Develop a list of 3-5 Frequently Asked Questions (FAQs) that address common user queries about the tool. Provide clear and concise answers. Format it as a single multi-line string.
   `,
 });
 
@@ -76,44 +71,49 @@ const generateSEOMetadataFlow = ai.defineFlow(
     const {output} = await ai.generate({
       model: 'googleai/gemini-1.5-flash-latest',
       prompt: {
-        ...generateSEOMetadataPrompt,
+        ...generateFaqPrompt,
         input,
       },
       config: {
         safetySettings: [
-            {
-                category: 'HARM_CATEGORY_HATE_SPEECH',
-                threshold: 'BLOCK_ONLY_HIGH',
-            },
-            {
-                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                threshold: 'BLOCK_ONLY_HIGH',
-            },
-            {
-                category: 'HARM_CATEGORY_HARASSMENT',
-                threshold: 'BLOCK_ONLY_HIGH',
-            },
-            {
-                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                threshold: 'BLOCK_ONLY_HIGH',
-            },
+          {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_ONLY_HIGH',
+          },
+          {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_ONLY_HIGH',
+          },
+          {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_ONLY_HIGH',
+          },
+          {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_ONLY_HIGH',
+          },
         ],
-      }
+      },
     });
-    
-    const seoResult = output!;
+
+    const faqResult = output!;
+
+    const seoTitle = `${input.toolName} | All2ools`;
+    const seoDescription = input.toolDescription.substring(0, 160);
 
     const jsonLd = {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": input.toolName,
-      "description": seoResult.seoDescription,
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Any"
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: input.toolName,
+      description: seoDescription,
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Any',
     };
 
     return {
-      ...seoResult,
+      seoTitle,
+      seoDescription,
+      faqContent: faqResult.faqContent,
       jsonLdSchema: JSON.stringify(jsonLd, null, 2),
     };
   }
