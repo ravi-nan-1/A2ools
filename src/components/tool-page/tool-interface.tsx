@@ -4,7 +4,7 @@ import { ApiLatencyChecker } from './tools/api-latency-checker';
 import { PlaceholderTool } from './tools/placeholder-tool';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wrench } from 'lucide-react';
-import { AiTaxDeductionFinder } from './tools/ai-tax-deduction-finder';
+import { TinyUrlMaker } from './tools/tinyurl-maker';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -13,14 +13,14 @@ interface ToolInterfaceProps {
 export function ToolInterface({ slug }: ToolInterfaceProps) {
   const renderTool = () => {
     switch (slug) {
+      case 'tinyurl-maker':
+        return <TinyUrlMaker />;
       case 'ai-product-background-remover':
         return <AiProductBackgroundRemover />;
       case 'content-gap-analyzer':
         return <ContentGapAnalyzer />;
       case 'api-latency-checker':
         return <ApiLatencyChecker />;
-      case 'ai-tax-deduction-finder':
-        return <AiTaxDeductionFinder />;
       default:
         return <PlaceholderTool />;
     }

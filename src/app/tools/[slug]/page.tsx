@@ -24,11 +24,16 @@ export async function generateMetadata({
     };
   }
 
-  // Specific SEO for the new tool
-  if (tool.slug === 'ai-tax-deduction-finder') {
+  if (tool.slug === 'tinyurl-maker') {
     return {
-      title: 'AI Tax Deduction Finder – Free Online Tax Saving Tool',
-      description: 'Analyze income & expenses to detect legal tax deductions worldwide.',
+      title: 'TinyURL Maker – Free URL Shortener Tool',
+      description: 'Create clean, fast, trackable short links instantly.',
+       openGraph: {
+        title: 'TinyURL Maker – Free URL Shortener Tool',
+        description: 'Create clean, fast, trackable short links instantly.',
+        type: 'website',
+        url: `https://all2ools.com/tools/tinyurl-maker`,
+      },
     };
   }
 
@@ -66,25 +71,24 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   let aiContent;
   let faqContent = '';
-  // Generate FAQ with 6 questions for the new tool
-  if (tool.slug === 'ai-tax-deduction-finder') {
+  
+  if (tool.slug === 'tinyurl-maker') {
     faqContent = [
-      '1. Is this tool a replacement for a professional tax advisor? \nNo, this tool provides informational suggestions and is not a substitute for professional tax advice. Always consult a qualified accountant.',
-      '2. Is my financial data secure? \nWe do not store any of the financial data you enter. All analysis happens in real-time.',
-      '3. Which countries does this tool support? \nOur AI has knowledge of tax laws from many countries, including the US, UK, Canada, Australia, Germany, and India. Always verify with local regulations.',
-      '4. Can I use this for my small business? \nYes, this tool is designed for individuals, freelancers, and small businesses to identify common deductions.',
-      '5. What if I forget a category tag? \nThe AI can infer some deductions from your income and expense ratio, but more detailed tags provide more accurate suggestions.',
-      '6. Does uploading receipts improve accuracy? \nYes, receipt data (a feature coming soon) will allow the AI to find more specific and less common deductions based on individual line items.'
+      '1. Is this URL shortener free to use? \nYes, this tool is completely free to use. There are no hidden charges or subscription fees.',
+      '2. Do the shortened links expire? \nNo, the links you create with our tool do not expire. They will continue to work indefinitely.',
+      '3. Can I customize the shortened URL? \nYes, you can use the "Custom Slug" field to create a personalized, branded short link that is easy to remember.',
+      '4. Is my data and privacy secure? \nWe do not store any personal data associated with the links you create. The history of your last 5 links is stored locally on your device\'s browser and is not sent to our servers.',
+      '5. What kind of analytics do you provide? \nWe provide basic, privacy-friendly analytics, including the total number of clicks a link has received and the timestamp of the last click. We do not track individual users.',
+      '6. Can I use this for commercial purposes? \nAbsolutely. You are free to use the shortened links for your business, marketing campaigns, or any other commercial activity.'
     ].join('\n\n');
   }
-
 
   try {
     aiContent = await generateSEOMetadata({
       toolName: tool.name,
       toolDescription: tool.longDescription,
     });
-    if (faqContent) { // Overwrite FAQ for the new tool
+    if (faqContent) { 
         aiContent.faqContent = faqContent;
     }
   } catch (error) {
@@ -97,14 +101,15 @@ export default async function ToolPage({ params }: ToolPageProps) {
     };
   }
   
-  if (tool.slug === 'ai-tax-deduction-finder' && aiContent.jsonLdSchema === '{}') {
+  if (tool.slug === 'tinyurl-maker' && aiContent.jsonLdSchema === '{}') {
       const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        name: "AI Tax Deduction Finder",
-        description: "Analyze income & expenses to detect legal tax deductions worldwide.",
-        applicationCategory: 'FinanceApplication',
+        name: 'TinyURL Maker – Free URL Shortener',
+        description: 'Create clean, fast, trackable short links instantly.',
+        applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Any',
+        url: 'https://all2ools.com/tools/tinyurl-maker',
         offers: {
             '@type': 'Offer',
             'price': '0'

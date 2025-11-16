@@ -1,10 +1,10 @@
 {
   "placeholderImages": [
     {
-      "id": "ai-tax-deduction-finder",
-      "description": "AI Tax Deduction Finder",
-      "imageUrl": "https://images.unsplash.com/photo-1579444741963-5ae219cfe27c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0YXglMjBmaW5hbmNlfGVufDB8fHx8MTc2MzMwNDA3MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "tax finance"
+      "id": "tinyurl-maker",
+      "description": "TinyURL Maker",
+      "imageUrl": "https://images.unsplash.com/photo-1585079374502-431f8a706294?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxsaW5rJTIwc2hvcnRlbmVyfGVufDB8fHx8MTc2MzI3ODgxMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "link shortener"
     },
     {
       "id": "startup-equity-calculator",

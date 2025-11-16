@@ -30,6 +30,7 @@ import {
   Briefcase,
   FileSearch,
   Table,
+  Link,
 } from 'lucide-react';
 
 export type ToolCategory =
@@ -54,34 +55,41 @@ export interface Tool {
 
 export const tools: Tool[] = [
   {
-    name: 'AI Tax Deduction Finder',
-    slug: 'ai-tax-deduction-finder',
-    category: 'Finance',
-    icon: 'Calculator',
+    name: 'TinyURL Maker – URL Shortener Tool',
+    slug: 'tinyurl-maker',
+    category: 'Developer',
+    icon: 'Link',
     description:
-      'Analyze income & expenses to detect legal tax deductions worldwide.',
+      'Create clean, fast, trackable short links instantly.',
     longDescription:
-      'Our AI Tax Deduction Finder is a powerful, intelligent assistant designed to help individuals, freelancers, and small businesses maximize their annual tax savings. By analyzing your income, expenses, and relevant financial categories, the tool identifies potential legal tax deductions you might have missed. It leverages a vast knowledge base of international tax regulations to provide region-specific advice, ensuring your deductions are compliant and optimized for your location. Simply input your financial data, and optionally upload receipts for a more granular analysis. The AI then generates a comprehensive report detailing estimated tax savings, a list of applicable deductions, the documents you\'ll need for filing, and personalized tips to improve your financial habits for future tax seasons. Stop leaving money on the table and let our AI do the heavy lifting for you.',
+      'The TinyURL Maker is a powerful and intuitive tool designed to transform long, cumbersome web addresses into short, clean, and memorable links. In today\'s digital world, sharing URLs is a daily activity, but long links can be distracting in social media posts, emails, and marketing materials. Our URL shortener solves this problem by creating a concise link that is easy to share and track. Beyond just shortening, the tool offers advanced features like custom slugs, allowing you to brand your links for better recognition and trust. For example, instead of a random string, you can create a link like `all2ools.com/s/summer-sale`. Additionally, every shortened link automatically generates a QR code, making it incredibly easy to share URLs in print media, presentations, or on physical products. The built-in analytics provide valuable insights into your link\'s performance, showing you how many clicks it receives and from where. This makes it an indispensable tool for marketers, content creators, and anyone looking to optimize their digital presence and understand their audience engagement better.',
     features: [
-      'Analyzes income, expenses, and category tags.',
-      'Optional receipt upload for detailed analysis.',
-      'Estimates potential tax savings in your local currency.',
-      'Generates a detailed list of applicable deductions.',
-      'Provides actionable tips for financial optimization.',
-      'Supports global tax regulations for accurate advice.',
+      'One-click URL shortening',
+      'Customizable slugs for branded links',
+      'Automatic QR code generation for every short link',
+      'Download QR codes in high-resolution PNG format',
+      'Basic click analytics (total clicks, last clicked)',
+      'Local history of your last 5 shortened URLs',
+      'One-click copy and share buttons (WhatsApp, Email, Twitter)',
+      'Clean, modern, and responsive design',
+      'Multi-language support for global users',
+      'Export link data as a JSON file'
     ],
     howItWorks: [
-      'Enter your annual income and total expenses in the provided fields.',
-      'Add relevant category tags like "home office", "business travel", or "software subscriptions".',
-      'Optionally, upload digital receipts for a more in-depth analysis (feature coming soon).',
-      'Click the "Analyze Deductions" button to let the AI process your information.',
-      'Review the output panel for your estimated savings, a list of deductions, required documents, and personalized tips.',
+      'Paste your long URL into the input box.',
+      'Optionally, enter a custom slug for your short link.',
+      'Click the "Shorten URL" button.',
+      'The tool instantly generates a short link and a corresponding QR code.',
+      'Copy the short link or download the QR code to share it.',
+      'Track basic click analytics on the results panel.'
     ],
     useCases: [
-      'Freelancers tracking and maximizing their business-related write-offs.',
-      'Small business owners preparing for annual tax filing.',
-      'Individuals with side hustles looking to reduce their tax burden.',
-      'Expatriates navigating the tax rules of a new country.',
+      'Marketers creating clean links for social media campaigns.',
+      'Students sharing research links in papers and presentations.',
+      'Content creators making custom, branded links for their audience.',
+      'Small business owners using QR codes on flyers and business cards.',
+      'Presenters sharing links with an audience via a scannable QR code.',
+      'Anyone needing to shorten a long URL for easy sharing.'
     ],
   },
   {
