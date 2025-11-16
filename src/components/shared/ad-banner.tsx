@@ -21,7 +21,6 @@ export function AdBanner({ adSlot, adFormat = "auto", dataFullWidthResponsive = 
   useEffect(() => {
     try {
       if (window.adsbygoogle) {
-        console.log('Pushing ad for slot:', adSlot);
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch (err) {
@@ -30,13 +29,14 @@ export function AdBanner({ adSlot, adFormat = "auto", dataFullWidthResponsive = 
   }, []);
 
   return (
-    <div {...props} key={`${pathname}-${adSlot}`}>
+    <div {...props}>
         <ins className="adsbygoogle"
             style={{ display: 'block' }}
             data-ad-client="ca-pub-3080938150148610"
             data-ad-slot={adSlot}
             data-ad-format={adFormat}
             data-full-width-responsive={dataFullWidthResponsive.toString()}
+            key={`${pathname}-${adSlot}`}
             >
         </ins>
     </div>
