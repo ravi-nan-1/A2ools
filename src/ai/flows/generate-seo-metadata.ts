@@ -53,7 +53,7 @@ const generateSEOMetadataPrompt = ai.definePrompt({
   Instructions:
   1.  SEO Title: Create a concise and compelling SEO title (50-60 characters).
   2.  SEO Description: Write a brief and informative SEO description (150-160 characters).
-  3.  JSON-LD Schema: Generate a valid JSON-LD WebApplication schema as a string. Include the tool's name and description.
+  3.  JSON-LD Schema: Generate a valid JSON-LD WebApplication schema as a string. Include the tool's name and description. Use this template and fill in the blanks: {"@context": "https://schema.org", "@type": "WebApplication", "name": "{{{toolName}}}", "description": "{{{seoDescription}}}", "applicationCategory": "BusinessApplication", "operatingSystem": "Any"}.
   4.  FAQ Content: Develop a list of 3-5 Frequently Asked Questions (FAQs) that address common user queries about the tool. Provide clear and concise answers. Format it as a single multi-line string.
   `,
 });
