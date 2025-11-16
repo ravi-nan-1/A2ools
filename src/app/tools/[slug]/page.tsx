@@ -6,6 +6,30 @@ import { translations } from '@/lib/translations';
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const tool = tools.find((t) => t.slug === params.slug);
+
+  if (!tool) {
+    return {
+      title: 'Tool not found',
+    };
+  }
+
+  const { seoTitle, seoDescription } = await generateSEOMetadata({
+    toolName: tool.name,
+    toolDescription: tool.longDescription,
+  });
+
+  return {
+    title: seoTitle,
+    description: seoDescription,
+  };
+}
+
 export default async function ToolPage({
   params,
 }: {
@@ -41,26 +65,19 @@ export default async function ToolPage({
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const tool = tools.find((t) => t.slug === params.slug);
+export async function generateStaticParams() {
+  // These pages have their own dedicated page.tsx files
+  const excludedSlugs = new Set([
+    'tinyurl-maker',
+    'ai-product-background-remover',
+    'content-gap-analyzer',
+    'api-latency-checker',
+    'pdf-to-word-converter',
+  ]);
 
-  if (!tool) {
-    return {
-      title: 'Tool not found',
-    };
-  }
-
-  const { seoTitle, seoDescription } = await generateSEOMetadata({
-    toolName: tool.name,
-    toolDescription: tool.longDescription,
-  });
-
-  return {
-    title: seoTitle,
-    description: seoDescription,
-  };
+  return tools
+    .filter((tool) => !excludedSlugs.has(tool.slug))
+    .map((tool) => ({
+      slug: tool.slug,
+    }));
 }
