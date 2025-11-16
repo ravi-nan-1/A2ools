@@ -52,28 +52,8 @@ const generateSEOMetadataPrompt = ai.definePrompt({
   name: 'generateSEOMetadataPrompt',
   input: {schema: GenerateSEOMetadataInputSchema},
   output: {schema: GenerateSEOMetadataAiOutputSchema},
-  model: 'googleai/gemini-2.5-flash',
-  config: {
-    safetySettings: [
-      {
-        category: 'HARM_CATEGORY_HATE_SPEECH',
-        threshold: 'BLOCK_ONLY_HIGH',
-      },
-      {
-        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-        threshold: 'BLOCK_ONLY_HIGH',
-      },
-      {
-        category: 'HARM_CATEGORY_HARASSMENT',
-        threshold: 'BLOCK_ONLY_HIGH',
-      },
-      {
-        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-        threshold: 'BLOCK_ONLY_HIGH',
-      },
-    ],
-  },
-  prompt: `You are an expert SEO content creator.
+  system: 'You are an expert SEO content creator.',
+  prompt: `
   Your task is to generate SEO metadata for a tool page based on the tool name and description provided.
 
   Tool Name: {{{toolName}}}
@@ -93,7 +73,34 @@ const generateSEOMetadataFlow = ai.defineFlow(
     outputSchema: GenerateSEOMetadataOutputSchema,
   },
   async input => {
-    const {output} = await generateSEOMetadataPrompt(input);
+    const {output} = await ai.generate({
+      model: 'googleai/gemini-1.5-flash-latest',
+      prompt: {
+        ...generateSEOMetadataPrompt,
+        input,
+      },
+      config: {
+        safetySettings: [
+            {
+                category: 'HARM_CATEGORY_HATE_SPEECH',
+                threshold: 'BLOCK_ONLY_HIGH',
+            },
+            {
+                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                threshold: 'BLOCK_ONLY_HIGH',
+            },
+            {
+                category: 'HARM_CATEGORY_HARASSMENT',
+                threshold: 'BLOCK_ONLY_HIGH',
+            },
+            {
+                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                threshold: 'BLOCK_ONLY_HIGH',
+            },
+        ],
+      }
+    });
+    
     const seoResult = output!;
 
     const jsonLd = {
