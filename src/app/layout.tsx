@@ -6,7 +6,7 @@ import { Footer } from '@/components/shared/footer';
 import { LanguageProvider } from '@/context/language-context';
 
 export const metadata: Metadata = {
-  title: 'All2ools — 30 AI Tools For Everyone',
+  title: 'All2ools | The Ultimate Suite of Free AI-Powered Online Tools',
   description: 'Finance, SEO, images, business, developer tools & more.',
 };
 
