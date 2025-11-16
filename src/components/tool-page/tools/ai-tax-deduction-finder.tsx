@@ -13,42 +13,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { handleTaxAnalysis } from '@/app/actions';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-const taxData = {
-  countries: [
-    {
-      name: 'United States',
-      categories: ['Home Office', 'Business Travel', 'Software & Subscriptions', 'Marketing & Advertising', 'Health Insurance Premiums', 'Office Supplies'],
-    },
-    {
-      name: 'United Kingdom',
-      categories: ['Office Costs', 'Travel Costs', 'Staff Costs', 'Financial Costs', 'Marketing & Subscriptions', 'Training Courses'],
-    },
-    {
-      name: 'Canada',
-      categories: ['Business Use-of-Home', 'Office Expenses', 'Meals & Entertainment', 'Vehicle Expenses', 'Legal & Accounting Fees', 'Salaries & Wages'],
-    },
-    {
-      name: 'Germany',
-      categories: ['Work Room (Häusliches Arbeitszimmer)', 'Business Travel', 'IT & Software', 'Work Equipment (Arbeitsmittel)', 'Telephone & Internet', 'Professional Development'],
-    },
-    {
-      name: 'India',
-      categories: ['Office Rent', 'Travel & Conveyance', 'Depreciation of Assets', 'Salaries & Employee Benefits', 'Professional Fees', 'Printing & Stationery'],
-    },
-     {
-      name: 'Australia',
-      categories: ['Home Office Expenses', 'Motor Vehicle Expenses', 'Travel Expenses', 'Cost of Goods Sold', 'Operating Expenses', 'Professional Development'],
-    },
-  ]
-};
 
 const formSchema = z.object({
   income: z.number().positive({ message: 'Income must be a positive number.' }),
   expenses: z.number().positive({ message: 'Expenses must be a positive number.' }),
   country: z.string().min(2, { message: 'Please select your country.'}),
-  categoryTags: z.string().min(3, { message: 'Please select a category.' }),
+  categoryTags: z.string().min(3, { message: 'Please enter at least one category tag.' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -65,26 +35,18 @@ export function AiTaxDeductionFinder() {
   const { translate } = useLanguage();
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      income: 0,
-      expenses: 0,
+      income: undefined,
+      expenses: undefined,
       country: '',
       categoryTags: '',
     },
     mode: 'onChange',
   });
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // Prevent "e", "+", "-", "." from being entered
-    if (['e', 'E', '+', '-', '.'].includes(event.key)) {
-      event.preventDefault();
-    }
-  };
-  
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
     setResult(null);
@@ -112,8 +74,6 @@ export function AiTaxDeductionFinder() {
       setIsLoading(false);
     }
   };
-  
-  const availableCategories = taxData.countries.find(c => c.name === selectedCountry)?.categories || [];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -141,8 +101,7 @@ export function AiTaxDeductionFinder() {
                       type="number" 
                       placeholder="e.g., 80000" 
                       {...field}
-                      onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
-                      onKeyDown={handleKeyDown}
+                      onChange={e => field.onChange(parseFloat(e.target.value) || undefined)} 
                       disabled={isLoading} 
                     />
                   </FormControl>
@@ -161,8 +120,7 @@ export function AiTaxDeductionFinder() {
                       type="number" 
                       placeholder="e.g., 20000" 
                       {...field} 
-                      onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
-                      onKeyDown={handleKeyDown}
+                      onChange={e => field.onChange(parseFloat(e.target.value) || undefined)} 
                       disabled={isLoading}
                     />
                   </FormControl>
@@ -176,22 +134,9 @@ export function AiTaxDeductionFinder() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Your Country</FormLabel>
-                    <Select onValueChange={(value) => {
-                        field.onChange(value);
-                        setSelectedCountry(value);
-                        form.resetField("categoryTags");
-                    }} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger disabled={isLoading}>
-                            <SelectValue placeholder="Select a country" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {taxData.countries.map(country => (
-                            <SelectItem key={country.name} value={country.name}>{country.name}</SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                  <FormControl>
+                    <Input placeholder="e.g., United States" {...field} disabled={isLoading} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -201,19 +146,10 @@ export function AiTaxDeductionFinder() {
               name="categoryTags"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Primary Expense Category</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={isLoading || !selectedCountry}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {availableCategories.length > 0 ? availableCategories.map(category => (
-                            <SelectItem key={category} value={category}>{category}</SelectItem>
-                        )) : <SelectItem value="-" disabled>Select a country first</SelectItem>}
-                        </SelectContent>
-                    </Select>
+                  <FormLabel>Expense Categories (comma-separated)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., home office, travel, software" {...field} disabled={isLoading} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
