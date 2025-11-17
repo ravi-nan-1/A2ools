@@ -6,13 +6,12 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 import { PageContentSchema } from '@/lib/types';
 
 const TranslatePageContentInputSchema = z.object({
-  content: z.any(),
+  content: PageContentSchema,
   targetLanguage: z.string().describe('The target language for translation (e.g., "Spanish", "Chinese").'),
-  schema: z.any(),
 });
 type TranslatePageContentInput = z.infer<typeof TranslatePageContentInputSchema>;
 
@@ -20,7 +19,7 @@ export async function translatePageContent(input: TranslatePageContentInput): Pr
   const prompt = ai.definePrompt({
     name: 'translatePageContentPrompt',
     input: {schema: TranslatePageContentInputSchema },
-    output: {schema: input.schema },
+    output: {schema: PageContentSchema },
     prompt: `Translate the following JSON object's string values into {{targetLanguage}}. Maintain the exact JSON structure and keys. Only return the translated JSON object, without any additional explanations or formatting.
 
   Content to translate:

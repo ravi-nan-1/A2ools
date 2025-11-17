@@ -46,7 +46,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         <Badge variant="outline" className="w-fit">{tool.category}</Badge>
       </CardHeader>
       <CardContent className="flex-grow p-4 pt-0">
-        <CardDescription className="text-sm leading-snug">{tool.description}</CardDescription>
+        <CardDescription className="text-sm leading-snug">{translate(tool.description)}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button asChild className="w-full">

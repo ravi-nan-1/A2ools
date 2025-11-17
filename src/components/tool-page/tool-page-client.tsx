@@ -2,19 +2,15 @@
 
 import type { Tool } from '@/lib/tools';
 import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata';
-import { useState, useEffect, useTransition, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/use-language';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
-import { handlePageTranslation } from '@/app/actions';
-import type { PageContent } from '@/lib/types';
-import { languages } from '@/lib/translations';
 
 interface ToolPageClientProps {
   tool: Tool & { image: string; imageHint: string };
@@ -23,39 +19,13 @@ interface ToolPageClientProps {
 }
 
 export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
-  const { translate, language } = useLanguage();
+  const { translate } = useLanguage();
   const { jsonLdSchema } = aiContent;
 
-  const [isPending, startTransition] = useTransition();
-
-  const originalContent = useMemo(() => ({
-    description: tool.longDescription,
-    faq: aiContent.faqContent,
-    features: tool.features,
-    howItWorks: tool.howItWorks,
-    useCases: tool.useCases,
-  }), [tool, aiContent]);
-
-  const [translatedContent, setTranslatedContent] = useState<PageContent>(originalContent);
-
-
-  useEffect(() => {
-    if (language === 'en') {
-      setTranslatedContent(originalContent);
-      return;
-    }
-
-    startTransition(async () => {
-      const targetLanguageName = languages.find(l => l.code === language)?.name || 'English';
-      
-      const result = await handlePageTranslation(originalContent, targetLanguageName);
-
-      if (result.data && !result.error) {
-        setTranslatedContent(result.data);
-      }
-    });
-  }, [language, originalContent]);
-
+  const faqContent = translate(`${tool.slug}_faq`)
+    .split('\n\n')
+    .map(q => q.trim())
+    .filter(Boolean);
 
   return (
     <>
@@ -97,14 +67,7 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 <CardTitle>{translate(tool.slug)}</CardTitle>
               </CardHeader>
               <CardContent>
-                {isPending ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{translate('processing')}...</span>
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground whitespace-pre-line">{translatedContent.description}</p>
-                )}
+                <p className="text-muted-foreground whitespace-pre-line">{translate(`${tool.slug}_long_description`)}</p>
               </CardContent>
             </Card>
 
@@ -124,15 +87,16 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                     {translate('faq')}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                {isPending ? (
-                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{translate('processing')}...</span>
-                  </div>
-                ) : (
-                  <pre className="text-sm text-muted-foreground bg-muted p-4 rounded-md whitespace-pre-wrap font-body">{translatedContent.faq}</pre>
-                )}
+              <CardContent className="space-y-4">
+                {faqContent.map((faqItem, index) => {
+                  const [question, ...answer] = faqItem.split('\n');
+                  return (
+                    <div key={index}>
+                      <h4 className="font-semibold text-foreground">{question}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{answer.join('\n')}</p>
+                    </div>
+                  );
+                })}
               </CardContent>
             </Card>
           </div>
@@ -147,21 +111,14 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {isPending ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{translate('processing')}...</span>
-                  </div>
-                ) : (
-                  <ul className="space-y-2 text-muted-foreground">
-                    {translatedContent.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 mt-1 shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul className="space-y-2 text-muted-foreground">
+                  {translate(`${tool.slug}_features`).split('\n').map((feature, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-1 shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
 
@@ -173,21 +130,14 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {isPending ? (
-                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{translate('processing')}...</span>
-                  </div>
-                ) : (
-                  <ol className="space-y-3 text-muted-foreground">
-                      {translatedContent.howItWorks.map((step, index) => (
-                          <li key={index} className="flex items-start gap-3">
-                              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0 mt-0.5">{index + 1}</span>
-                              <span>{step}</span>
-                          </li>
-                      ))}
-                  </ol>
-                )}
+                <ol className="space-y-3 text-muted-foreground">
+                    {translate(`${tool.slug}_how_it_works`).split('\n').map((step, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0 mt-0.5">{index + 1}</span>
+                            <span>{step}</span>
+                        </li>
+                    ))}
+                </ol>
               </CardContent>
             </Card>
 
@@ -199,21 +149,14 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {isPending ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{translate('processing')}...</span>
-                  </div>
-                ) : (
-                  <ul className="space-y-2 text-muted-foreground">
-                    {translatedContent.useCases.map((useCase, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                         <ArrowRight className="h-4 w-4 text-primary mt-1.5 shrink-0" />
-                        <span>{useCase}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ul className="space-y-2 text-muted-foreground">
+                  {translate(`${tool.slug}_use_cases`).split('\n').map((useCase, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                       <ArrowRight className="h-4 w-4 text-primary mt-1.5 shrink-0" />
+                      <span>{useCase}</span>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           </div>
