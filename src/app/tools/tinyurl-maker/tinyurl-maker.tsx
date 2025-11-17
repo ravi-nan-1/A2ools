@@ -7,8 +7,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/use-language';
 import { Loader2, Link, Copy, Check, QrCode, Download, Share2, Twitter, Mail, History, ExternalLink, BarChart2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { handleShortenUrl } from '@/app/actions';
 
 interface ShortenedLink {
   longUrl: string;
@@ -73,16 +74,31 @@ export function TinyUrlMaker() {
     setResult(null);
     setIsCopied(false);
 
-    // Placeholder function logic
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const slug = customSlug || Math.random().toString(36).substring(2, 8);
-    const shortUrl = `https://all2ools.com/s/${slug}`;
-    const qrCode = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(shortUrl)}`;
+    try {
+      const res = await handleShortenUrl(longUrl, customSlug);
+      if (res.error) {
+        throw new Error(res.error);
+      }
+      
+      const shortUrl = res.shortUrl;
+      if (!shortUrl || shortUrl.toLowerCase().includes('error')) {
+        throw new Error(shortUrl || 'The API returned an error.');
+      }
+      
+      const qrCode = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(shortUrl)}`;
 
-    setResult({ shortUrl, qrCode });
-    addToHistory(longUrl, shortUrl);
-    setIsLoading(false);
+      setResult({ shortUrl, qrCode });
+      addToHistory(longUrl, shortUrl);
+
+    } catch(e: any) {
+       toast({
+        title: 'Error shortening URL',
+        description: e.message || 'Could not shorten the URL. The custom alias may be taken.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const copyShortURL = () => {
@@ -131,14 +147,14 @@ export function TinyUrlMaker() {
               <div>
                 <label htmlFor="customSlug" className="text-sm font-medium">{translate('custom_slug_optional')}</label>
                 <div className="relative mt-1">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground text-sm">all2ools.com/s/</span>
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground text-sm">https://tinyurl.com/</span>
                   <Input
                     id="customSlug"
                     type="text"
-                    placeholder="mybrand"
+                    placeholder="my-custom-link"
                     value={customSlug}
-                    onChange={(e) => setCustomSlug(e.target.value)}
-                    className="pl-32"
+                    onChange={(e) => setCustomSlug(e.target.value.replace(/[^a-zA-Z0-9-]/g, ''))}
+                    className="pl-[120px]"
                     disabled={isLoading}
                   />
                 </div>
