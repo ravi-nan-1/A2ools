@@ -10,25 +10,39 @@ declare global {
   }
 }
 
-interface AdBannerProps extends React.HTMLAttributes<HTMLElement> {
+interface AdBannerProps extends React.HTMLAttributes<HTMLDivElement> {
     adSlot: string;
     adFormat?: string;
     dataFullWidthResponsive?: boolean;
 }
 
-export function AdBanner({ adSlot, adFormat = "auto", dataFullWidthResponsive = false, className, ...props }: AdBannerProps) {
+export function AdBanner({ 
+  adSlot, 
+  adFormat = "auto", 
+  dataFullWidthResponsive = false, 
+  className, 
+  ...props 
+}: AdBannerProps) {
   const pathname = usePathname();
 
   useEffect(() => {
     try {
-      if (window.adsbygoogle) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      }
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
       console.error(`AdSense error for slot ${adSlot}:`, err);
     }
   }, [pathname, adSlot]);
 
-  // The component now returns null, so it will not render anything.
-  return null;
+  return (
+    <div className={cn("adsbygoogle-container", className)} {...props}>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-3080938150148610"
+          data-ad-slot={adSlot}
+          data-ad-format={adFormat}
+          data-full-width-responsive={dataFullWidthResponsive.toString()}
+        ></ins>
+    </div>
+  );
 }
