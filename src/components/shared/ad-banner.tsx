@@ -32,22 +32,18 @@ export function AdBanner({
   
   useEffect(() => {
     if (isMounted) {
-      const timeoutId = setTimeout(() => {
-        try {
-          if (window.adsbygoogle) {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
-          }
-        } catch (err) {
-          console.error(`AdSense error for slot ${adSlot}:`, err);
+      try {
+        if (window.adsbygoogle) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
         }
-      }, 50);
-
-      return () => clearTimeout(timeoutId);
+      } catch (err) {
+        console.error(`AdSense error for slot ${adSlot}:`, err);
+      }
     }
   }, [pathname, isMounted, adSlot]);
 
   if (!isMounted) {
-    return null; // Render nothing on the server
+    return null;
   }
 
   return (
