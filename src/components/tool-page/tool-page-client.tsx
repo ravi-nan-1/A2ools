@@ -12,7 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
-import { handlePageTranslation, type PageContent } from '@/app/actions';
+import { handlePageTranslation } from '@/app/actions';
+import type { PageContent } from '@/app/actions';
 import { languages } from '@/lib/translations';
 
 interface ToolPageClientProps {
