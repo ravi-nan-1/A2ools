@@ -29,16 +29,22 @@ export function HomePageClient({ tools }: HomePageClientProps) {
   >('All');
   const { translate } = useLanguage();
 
-  const filteredTools = useMemo(() => {
-    return tools.filter((tool) => {
-      const matchesCategory =
-        selectedCategory === 'All' || tool.category === selectedCategory;
-      const matchesSearch =
-        tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tool.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }, [tools, searchQuery, selectedCategory]);
+  const translatedAndFilteredTools = useMemo(() => {
+    return tools
+      .map(tool => ({
+        ...tool,
+        name: translate(tool.name),
+        description: translate(tool.description),
+      }))
+      .filter((tool) => {
+        const matchesCategory =
+          selectedCategory === 'All' || tool.category === selectedCategory;
+        const matchesSearch =
+          tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+  }, [tools, searchQuery, selectedCategory, translate]);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -89,11 +95,11 @@ export function HomePageClient({ tools }: HomePageClientProps) {
 
       <section>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {filteredTools.map((tool) => (
+          {translatedAndFilteredTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
           ))}
         </div>
-        {filteredTools.length === 0 && (
+        {translatedAndFilteredTools.length === 0 && (
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-lg">No tools found.</p>
             <p>Try adjusting your search or filters.</p>
