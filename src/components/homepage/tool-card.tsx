@@ -39,7 +39,7 @@ export function ToolCard({ tool }: ToolCardProps) {
       <CardHeader className="p-4">
         <div className="flex items-start justify-between gap-4">
             <CardTitle className="text-base font-headline leading-snug">
-                {translate(tool.slug)}
+                {translate(tool.name)}
             </CardTitle>
             <Icon className="h-8 w-8 text-primary/80 shrink-0" />
         </div>
