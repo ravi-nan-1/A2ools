@@ -8,7 +8,8 @@ import { useLanguage } from '@/hooks/use-language';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, Loader2, Sparkles, BookOpen, BrainCircuit } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
 import { useState, useEffect, useCallback, useTransition } from 'react';
@@ -102,120 +103,111 @@ export function ToolPageClient({ tool, aiContent, translations }: ToolPageClient
             priority
             data-ai-hint={tool.imageHint}
           />
-           <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4">
-            <h1 className="text-3xl md:text-5xl font-bold text-white text-center font-headline tracking-tight">
+           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-start p-6 md:p-8">
+            <h1 className="text-3xl md:text-5xl font-bold text-white text-left font-headline tracking-tight">
               {translate(tool.slug)}
             </h1>
           </div>
         </header>
+        
+        <div className="mx-auto max-w-4xl">
+          <div className="space-y-12">
+              <section>
+                 <p className="text-lg text-muted-foreground leading-relaxed">
+                   {isPending ? <Loader2 className="h-6 w-6 animate-spin" /> : pageContent.longDescription}
+                 </p>
+              </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>{translate(tool.slug)}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground whitespace-pre-line">
-                  {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : pageContent.longDescription}
-                </p>
-              </CardContent>
-            </Card>
+              <section>
+                <ToolInterface slug={tool.slug} />
+              </section>
 
-            <ToolInterface slug={tool.slug} />
+              <div className="my-8">
+                <AdBanner
+                  adSlot="YOUR_IN_ARTICLE_AD_SLOT_ID"
+                  className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg"
+                />
+              </div>
 
-            <div className="my-8">
-              <AdBanner
-                adSlot="YOUR_IN_ARTICLE_AD_SLOT_ID"
-                className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg"
-              />
-            </div>
+              <section>
+                <Tabs defaultValue="features" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="features"><Sparkles className="mr-2"/>{translate('features')}</TabsTrigger>
+                    <TabsTrigger value="how-it-works"><BookOpen className="mr-2"/>{translate('how_it_works')}</TabsTrigger>
+                    <TabsTrigger value="use-cases"><BrainCircuit className="mr-2"/>{translate('use_cases')}</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="features" className="mt-6">
+                    <Card>
+                      <CardContent className="p-6">
+                        {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                          <ul className="space-y-3 text-muted-foreground">
+                            {featureItems.map((feature, index) => (
+                              <li key={index} className="flex items-start gap-3">
+                                <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 shrink-0" />
+                                <span>{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                  <TabsContent value="how-it-works" className="mt-6">
+                     <Card>
+                      <CardContent className="p-6">
+                         {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                            <ol className="space-y-4 text-muted-foreground">
+                                {howItWorksItems.map((step, index) => (
+                                    <li key={index} className="flex items-start gap-4">
+                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-base shrink-0">{index + 1}</span>
+                                        <span className="mt-1">{step}</span>
+                                    </li>
+                                ))}
+                            </ol>
+                         )}
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                  <TabsContent value="use-cases" className="mt-6">
+                    <Card>
+                      <CardContent className="p-6">
+                        {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                          <ul className="space-y-3 text-muted-foreground">
+                            {useCaseItems.map((useCase, index) => (
+                              <li key={index} className="flex items-start gap-3">
+                                 <ArrowRight className="h-4 w-4 text-primary mt-1 shrink-0" />
+                                <span>{useCase}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
+              </section>
 
-            <Card>
-              <CardHeader>
-                 <CardTitle className="flex items-center gap-2">
-                    <HelpCircle className="text-primary"/>
-                    {translate('faq')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : faqItems.map((faqItem, index) => {
-                  const [question, ...answer] = faqItem.split('\n');
-                  return (
-                    <div key={index}>
-                      <h4 className="font-semibold text-foreground">{question}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">{answer.join('\n')}</p>
-                    </div>
-                  );
-                })}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="space-y-8 sticky top-24">
-            <AdBanner adSlot="YOUR_SIDE_BANNER_AD_SLOT_ID" className="w-full min-h-[250px] bg-muted rounded-lg mb-8 hidden lg:flex items-center justify-center" />
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <CheckCircle2 className="text-primary"/>
-                    {translate('features')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
-                  <ul className="space-y-2 text-muted-foreground">
-                    {featureItems.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 mt-1 shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                 <CardTitle className="flex items-center gap-2">
-                    <List className="text-primary"/>
-                    {translate('how_it_works')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                 {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
-                    <ol className="space-y-3 text-muted-foreground">
-                        {howItWorksItems.map((step, index) => (
-                            <li key={index} className="flex items-start gap-3">
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0 mt-0.5">{index + 1}</span>
-                                <span>{step}</span>
-                            </li>
-                        ))}
-                    </ol>
-                 )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                 <CardTitle className="flex items-center gap-2">
-                    <CaseSensitive className="text-primary"/>
-                    {translate('use_cases')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
-                  <ul className="space-y-2 text-muted-foreground">
-                    {useCaseItems.map((useCase, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                         <ArrowRight className="h-4 w-4 text-primary mt-1.5 shrink-0" />
-                        <span>{useCase}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </CardContent>
-            </Card>
+              <section>
+                 <Card>
+                  <CardHeader>
+                     <CardTitle className="flex items-center gap-2 text-2xl">
+                        <HelpCircle className="text-primary"/>
+                        {translate('faq')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : faqItems.map((faqItem, index) => {
+                      const [question, ...answer] = faqItem.split('\n');
+                      return (
+                        <div key={index} className="border-l-2 border-primary pl-4">
+                          <h4 className="font-semibold text-foreground text-lg">{question}</h4>
+                          <p className="text-muted-foreground mt-1">{answer.join('\n')}</p>
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
+              </section>
           </div>
         </div>
       </div>
