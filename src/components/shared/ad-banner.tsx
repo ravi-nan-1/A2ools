@@ -29,7 +29,7 @@ export function AdBanner({
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
+  
   useEffect(() => {
     if (isMounted) {
       try {
@@ -39,6 +39,7 @@ export function AdBanner({
       }
     }
   }, [pathname, adSlot, isMounted]);
+
 
   if (!isMounted) {
     return null;
