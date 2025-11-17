@@ -41,7 +41,7 @@ export function AdBanner({
   }, [pathname, adSlot, isMounted]);
 
   if (!isMounted) {
-    return <div className={cn("adsbygoogle-container", className)} {...props} />;
+    return null;
   }
 
   return (
