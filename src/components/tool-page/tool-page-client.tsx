@@ -8,9 +8,14 @@ import { useLanguage } from '@/hooks/use-language';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
+import { useState, useEffect, useCallback, useTransition } from 'react';
+import { handlePageTranslation } from '@/app/actions';
+import type { PageContent } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
+
 
 interface ToolPageClientProps {
   tool: Tool & { image: string; imageHint: string };
@@ -18,14 +23,58 @@ interface ToolPageClientProps {
   translations: Record<string, Record<string, string>>;
 }
 
-export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
-  const { translate } = useLanguage();
+export function ToolPageClient({ tool, aiContent, translations }: ToolPageClientProps) {
+  const { language, translate } = useLanguage();
+  const { toast } = useToast();
   const { jsonLdSchema } = aiContent;
 
-  const faqContent = translate(`${tool.slug}_faq`)
-    .split('\n\n')
-    .map(q => q.trim())
-    .filter(Boolean);
+  const [isPending, startTransition] = useTransition();
+
+  const [pageContent, setPageContent] = useState<PageContent>({
+    longDescription: translate(`${tool.slug}_long_description`),
+    faq: translate(`${tool.slug}_faq`),
+    features: translate(`${tool.slug}_features`),
+    howItWorks: translate(`${tool.slug}_how_it_works`),
+    useCases: translate(`${tool.slug}_use_cases`),
+  });
+
+  const getOriginalContent = useCallback(() => {
+    return {
+      longDescription: translations['en'][`${tool.slug}_long_description`],
+      faq: translations['en'][`${tool.slug}_faq`],
+      features: translations['en'][`${tool.slug}_features`],
+      howItWorks: translations['en'][`${tool.slug}_how_it_works`],
+      useCases: translations['en'][`${tool.slug}_use_cases`],
+    };
+  }, [tool.slug, translations]);
+  
+  useEffect(() => {
+    if (language === 'en') {
+      setPageContent(getOriginalContent());
+      return;
+    }
+
+    startTransition(async () => {
+      const originalContent = getOriginalContent();
+      const result = await handlePageTranslation(originalContent, language);
+      if (result.error) {
+         toast({
+          title: "Translation Failed",
+          description: result.error,
+          variant: "destructive",
+        });
+        setPageContent(getOriginalContent()); // Revert to english on failure
+      } else {
+        setPageContent(result.data);
+      }
+    });
+
+  }, [language, tool.slug, getOriginalContent, toast]);
+
+  const faqItems = (pageContent.faq || '').split('\n\n').map(q => q.trim()).filter(Boolean);
+  const featureItems = (pageContent.features || '').split('\n').map(f => f.trim()).filter(Boolean);
+  const howItWorksItems = (pageContent.howItWorks || '').split('\n').map(s => s.trim()).filter(Boolean);
+  const useCaseItems = (pageContent.useCases || '').split('\n').map(u => u.trim()).filter(Boolean);
 
   return (
     <>
@@ -67,7 +116,9 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 <CardTitle>{translate(tool.slug)}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground whitespace-pre-line">{translate(`${tool.slug}_long_description`)}</p>
+                <p className="text-muted-foreground whitespace-pre-line">
+                  {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : pageContent.longDescription}
+                </p>
               </CardContent>
             </Card>
 
@@ -88,7 +139,7 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {faqContent.map((faqItem, index) => {
+                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : faqItems.map((faqItem, index) => {
                   const [question, ...answer] = faqItem.split('\n');
                   return (
                     <div key={index}>
@@ -111,14 +162,16 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 text-muted-foreground">
-                  {translate(`${tool.slug}_features`).split('\n').map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 mt-1 shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                  <ul className="space-y-2 text-muted-foreground">
+                    {featureItems.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 mt-1 shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </CardContent>
             </Card>
 
@@ -130,14 +183,16 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ol className="space-y-3 text-muted-foreground">
-                    {translate(`${tool.slug}_how_it_works`).split('\n').map((step, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0 mt-0.5">{index + 1}</span>
-                            <span>{step}</span>
-                        </li>
-                    ))}
-                </ol>
+                 {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                    <ol className="space-y-3 text-muted-foreground">
+                        {howItWorksItems.map((step, index) => (
+                            <li key={index} className="flex items-start gap-3">
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0 mt-0.5">{index + 1}</span>
+                                <span>{step}</span>
+                            </li>
+                        ))}
+                    </ol>
+                 )}
               </CardContent>
             </Card>
 
@@ -149,14 +204,16 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 text-muted-foreground">
-                  {translate(`${tool.slug}_use_cases`).split('\n').map((useCase, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                       <ArrowRight className="h-4 w-4 text-primary mt-1.5 shrink-0" />
-                      <span>{useCase}</span>
-                    </li>
-                  ))}
-                </ul>
+                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                  <ul className="space-y-2 text-muted-foreground">
+                    {useCaseItems.map((useCase, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                         <ArrowRight className="h-4 w-4 text-primary mt-1.5 shrink-0" />
+                        <span>{useCase}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </CardContent>
             </Card>
           </div>

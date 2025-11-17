@@ -16,7 +16,7 @@ const TranslatePageContentInputSchema = z.object({
 type TranslatePageContentInput = z.infer<typeof TranslatePageContentInputSchema>;
 
 export async function translatePageContent(input: TranslatePageContentInput): Promise<any> {
-  const prompt = ai.definePrompt({
+  const translatePageContentPrompt = ai.definePrompt({
     name: 'translatePageContentPrompt',
     input: {schema: TranslatePageContentInputSchema },
     output: {schema: PageContentSchema },
@@ -27,6 +27,6 @@ export async function translatePageContent(input: TranslatePageContentInput): Pr
   `,
   });
 
-  const {output} = await prompt(input);
+  const {output} = await translatePageContentPrompt(input);
   return output!;
 }

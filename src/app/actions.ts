@@ -6,7 +6,6 @@ import { analyzeContentGap } from "@/ai/flows/analyze-content-gap";
 import { translateContent } from "@/ai/flows/translate-content";
 import { translatePageContent } from "@/ai/flows/translate-page-content";
 import type { PageContent } from '@/lib/types';
-import { PageContentSchema } from '@/lib/types';
 
 
 async function fileToDataUri(file: File): Promise<string> {

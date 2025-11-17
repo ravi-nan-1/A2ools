@@ -109,9 +109,9 @@ export const tools: Tool[] = [
     icon: 'FileDiff',
     description: 'pdf-to-word-converter_description',
     longDescription: 'pdf-to-word-converter_long_description',
-    features: ['pdf-to-word-converter_features'],
-    howItWorks: ['pdf-to-word-converter_how_it_works'],
-    useCases: ['pdf-to-word-converter_use_cases'],
+    features: [],
+    howItWorks: [],
+    useCases: [],
   },
   {
     name: 'Global Loan Optimizer',
