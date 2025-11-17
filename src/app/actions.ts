@@ -125,7 +125,7 @@ export async function handlePageTranslation(content: PageContent, targetLanguage
     if (!content) {
       throw new Error('No content object provided for translation.');
     }
-    const result = await translatePageContent({ content, targetLanguage, schema: PageContentSchema });
+    const result = await translatePageContent({ content, targetLanguage });
     return { data: result };
   } catch (error: any) {
     return { error: error.message || 'Failed to translate page content.' };
