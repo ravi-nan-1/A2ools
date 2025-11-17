@@ -31,27 +31,30 @@ export function AdBanner({
   }, []);
   
   useEffect(() => {
+    // This effect now re-runs on both mount and pathname change
     if (isMounted) {
       // Use a timeout to push the ad script to the end of the event loop.
       // This gives the browser time to calculate container dimensions.
       const timeoutId = setTimeout(() => {
         try {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          if (window.adsbygoogle) {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          }
         } catch (err) {
           console.error(`AdSense error for slot ${adSlot}:`, err);
         }
-      }, 0);
+      }, 50); // A small delay is often sufficient
 
       return () => clearTimeout(timeoutId);
     }
-  }, [pathname, adSlot, isMounted]);
+  }, [pathname, isMounted, adSlot]); // Re-run when the path changes or on mount
 
   if (!isMounted) {
-    return null;
+    return null; // Render nothing on the server
   }
 
   return (
-    <div className={cn("adsbygoogle-container", className)} {...props}>
+    <div key={pathname} className={cn("adsbygoogle-container", className)} {...props}>
         <ins
           className="adsbygoogle"
           style={{ display: 'block' }}
