@@ -5,18 +5,16 @@ import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/use-language';
-import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, CheckCircle2, Sparkles, BookOpen, BrainCircuit, HelpCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Sparkles, BookOpen, BrainCircuit, HelpCircle, ArrowRight } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
 
 interface ToolPageClientProps {
   tool: Tool & { image: string; imageHint: string };
   aiContent: GenerateSEOMetadataOutput;
-  translations: Record<string, Record<string, string>>;
 }
 
 export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
@@ -48,7 +46,6 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
               {translate('back_to_tools')}
             </Link>
           </Button>
-          <LanguageSwitcher />
         </div>
 
         <header className="relative w-full h-56 md:h-80 rounded-xl overflow-hidden mb-8 shadow-2xl shadow-primary/10">
