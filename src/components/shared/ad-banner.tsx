@@ -29,10 +29,6 @@ export function AdBanner({ adSlot, adFormat = "auto", dataFullWidthResponsive = 
     }
   }, [pathname, adSlot]);
 
-  // Using a key that changes with the pathname forces React to re-mount the component on route changes,
-  // which is a reliable way to get AdSense to re-render the ad.
-  return (
-    <div key={pathname} className={cn("adsbygoogle-container", className)} {...props}>
-    </div>
-  );
+  // The component now returns null, so it will not render anything.
+  return null;
 }
