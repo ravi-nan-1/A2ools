@@ -7,6 +7,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { PageContentSchema } from '@/lib/types';
 
 const TranslatePageContentInputSchema = z.object({
   content: z.any(),

@@ -5,16 +5,8 @@ import { removeBackground } from "@/ai/flows/ai-product-background-remover";
 import { analyzeContentGap } from "@/ai/flows/analyze-content-gap";
 import { translateContent } from "@/ai/flows/translate-content";
 import { translatePageContent } from "@/ai/flows/translate-page-content";
-
-
-export const PageContentSchema = z.object({
-  description: z.string().describe('The main description of the tool.'),
-  faq: z.string().describe('The Frequently Asked Questions content.'),
-  features: z.array(z.string()).describe('A list of tool features.'),
-  howItWorks: z.array(z.string()).describe('A list of steps explaining how the tool works.'),
-  useCases: z.array(z.string()).describe('A list of common use cases for the tool.'),
-});
-export type PageContent = z.infer<typeof PageContentSchema>;
+import type { PageContent } from '@/lib/types';
+import { PageContentSchema } from '@/lib/types';
 
 
 async function fileToDataUri(file: File): Promise<string> {

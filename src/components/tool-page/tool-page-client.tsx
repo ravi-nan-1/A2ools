@@ -13,7 +13,7 @@ import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, L
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
 import { handlePageTranslation } from '@/app/actions';
-import type { PageContent } from '@/app/actions';
+import type { PageContent } from '@/lib/types';
 import { languages } from '@/lib/translations';
 
 interface ToolPageClientProps {
