@@ -29,15 +29,5 @@ export function AdBanner({ adSlot, adFormat = "auto", dataFullWidthResponsive = 
     }
   }, [pathname, adSlot]);
 
-  return (
-      <ins
-        className={cn('adsbygoogle', className)}
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-3080938150148610"
-        data-ad-slot={adSlot}
-        data-ad-format={adFormat}
-        data-full-width-responsive={dataFullWidthResponsive.toString()}
-        {...props}
-      ></ins>
-  );
+  return null;
 }
