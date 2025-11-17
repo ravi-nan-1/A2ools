@@ -2,15 +2,18 @@
 
 import type { Tool } from '@/lib/tools';
 import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata';
+import { useState, useEffect, useTransition } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/use-language';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, List, CaseSensitive, HelpCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
 import { AdBanner } from '@/components/shared/ad-banner';
+import { handleTranslation } from '@/app/actions';
+import { languages } from '@/lib/translations';
 
 interface ToolPageClientProps {
   tool: Tool & { image: string; imageHint: string };
@@ -18,11 +21,38 @@ interface ToolPageClientProps {
   translations: Record<string, Record<string, string>>;
 }
 
-export function ToolPageClient({ tool, aiContent, translations }: ToolPageClientProps) {
+export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
   const { translate, language } = useLanguage();
-  const { jsonLdSchema, faqContent } = aiContent;
+  const { jsonLdSchema } = aiContent;
 
-  const currentDescription = language === 'en' ? tool.longDescription : (translations[language]?.[`${tool.slug}-longDesc`] || tool.longDescription);
+  const [isPending, startTransition] = useTransition();
+  const [translatedDescription, setTranslatedDescription] = useState(tool.longDescription);
+  const [translatedFaq, setTranslatedFaq] = useState(aiContent.faqContent);
+
+  useEffect(() => {
+    if (language === 'en') {
+      setTranslatedDescription(tool.longDescription);
+      setTranslatedFaq(aiContent.faqContent);
+      return;
+    }
+
+    startTransition(async () => {
+      const targetLanguageName = languages.find(l => l.code === language)?.name || 'English';
+      
+      const [descResult, faqResult] = await Promise.all([
+        handleTranslation(tool.longDescription, targetLanguageName),
+        handleTranslation(aiContent.faqContent, targetLanguageName)
+      ]);
+
+      if (!descResult.error) {
+        setTranslatedDescription(descResult.translatedContent!);
+      }
+      if (!faqResult.error) {
+        setTranslatedFaq(faqResult.translatedContent!);
+      }
+    });
+  }, [language, tool.longDescription, aiContent.faqContent]);
+
 
   return (
     <>
@@ -64,7 +94,14 @@ export function ToolPageClient({ tool, aiContent, translations }: ToolPageClient
                 <CardTitle>{translate(tool.slug)}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground whitespace-pre-line">{currentDescription}</p>
+                {isPending ? (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>{translate('processing')}...</span>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground whitespace-pre-line">{translatedDescription}</p>
+                )}
               </CardContent>
             </Card>
 
@@ -85,7 +122,14 @@ export function ToolPageClient({ tool, aiContent, translations }: ToolPageClient
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="text-sm text-muted-foreground bg-muted p-4 rounded-md whitespace-pre-wrap font-body">{faqContent}</pre>
+                {isPending ? (
+                   <div className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>{translate('processing')}...</span>
+                  </div>
+                ) : (
+                  <pre className="text-sm text-muted-foreground bg-muted p-4 rounded-md whitespace-pre-wrap font-body">{translatedFaq}</pre>
+                )}
               </CardContent>
             </Card>
           </div>

@@ -2,6 +2,7 @@
 
 import { removeBackground } from "@/ai/flows/ai-product-background-remover";
 import { analyzeContentGap } from "@/ai/flows/analyze-content-gap";
+import { translateContent } from "@/ai/flows/translate-content";
 
 async function fileToDataUri(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -98,5 +99,17 @@ export async function handleLatencyCheck(formData: FormData) {
 
   } catch (error: any) {
     return { error: error.message || 'Failed to check latency.' };
+  }
+}
+
+export async function handleTranslation(content: string, targetLanguage: string) {
+  try {
+    if (!content) {
+      throw new Error('No content provided for translation.');
+    }
+    const result = await translateContent({ content, targetLanguage });
+    return result;
+  } catch (error: any) {
+    return { error: error.message || 'Failed to translate content.' };
   }
 }
