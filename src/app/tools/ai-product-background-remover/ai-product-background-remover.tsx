@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { handleBackgroundRemoval } from '@/app/actions';
 import { useLanguage } from '@/hooks/use-language';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Upload } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function AiProductBackgroundRemover() {
@@ -31,8 +31,7 @@ export function AiProductBackgroundRemover() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleRemoveBackground = async () => {
     if (!file) {
       toast({
         title: 'No file selected',
@@ -68,23 +67,26 @@ export function AiProductBackgroundRemover() {
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <p className="text-muted-foreground">
         {translate('upload_image_and_remove_bg')}
       </p>
-      <form onSubmit={handleSubmit} className="flex items-center gap-4">
+      <div className="space-y-4">
         <Input type="file" accept="image/*" onChange={handleFileChange} className="flex-grow" />
-        <Button type="submit" disabled={isLoading || !file}>
+        <Button onClick={handleRemoveBackground} disabled={isLoading || !file} className="w-full">
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               {translate('processing')}
             </>
           ) : (
-            translate('upload_image')
+            <>
+             <Upload className="mr-2 h-4 w-4" />
+             Remove Background
+            </>
           )}
         </Button>
-      </form>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <Card>
