@@ -43,8 +43,8 @@ export function AdBanner({
   }, [pathname, isMounted, adSlot]);
 
   if (!isMounted) {
-    // Render a placeholder or nothing on the server and initial client render
-    return <div className={cn(className)} {...props}></div>;
+    // Render nothing on the server and initial client render
+    return null;
   }
 
   return (
