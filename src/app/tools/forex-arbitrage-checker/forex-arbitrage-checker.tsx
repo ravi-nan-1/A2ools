@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Zap, Settings, LineChart, History, AlertTriangle, RefreshCw } from 'lucide-react';
+import { Loader2, Zap, Settings, LineChart, History, AlertTriangle, RefreshCw, Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ForexAnalysisChart } from '@/components/tool-page/tools/forex-analysis-chart';
 
@@ -35,6 +35,20 @@ const mockPriceFeeds = [
   { pair: 'USD/JPY', oanda: { bid: '157.45', ask: '157.46' }, fxcm: { bid: '157.44', ask: '157.45' }, ib: { bid: '157.46', ask: '157.47' } },
   { pair: 'GBP/USD', oanda: { bid: '1.2543', ask: '1.2544' }, fxcm: { bid: '1.2542', ask: '1.2543' }, ib: { bid: '1.2544', ask: '1.2545' } },
   { pair: 'AUD/USD', oanda: { bid: '0.6650', ask: '0.6651' }, fxcm: { bid: '0.6649', ask: '0.6650' }, ib: { bid: '0.6651', ask: '0.6652' } },
+];
+
+const mockLatencyData = [
+    { broker: 'OANDA', location: 'New York', latency: '2 ms' },
+    { broker: 'FXCM', location: 'London', latency: '75 ms' },
+    { broker: 'Interactive Brokers', location: 'New York', latency: '5 ms' },
+    { broker: 'Dukascopy', location: 'Geneva', latency: '82 ms' },
+];
+
+const mockSpreadData = [
+    { pair: 'EUR/USD', broker: 'Pepperstone', avgSpread: '0.1 pips' },
+    { pair: 'EUR/USD', broker: 'IC Markets', avgSpread: '0.2 pips' },
+    { pair: 'GBP/USD', broker: 'Pepperstone', avgSpread: '0.4 pips' },
+    { pair: 'GBP/USD', broker: 'IC Markets', avgSpread: '0.5 pips' },
 ];
 
 export function ForexArbitrageChecker() {
@@ -117,7 +131,7 @@ export function ForexArbitrageChecker() {
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="opportunities"><Zap className="mr-2"/>Live Opportunities</TabsTrigger>
                     <TabsTrigger value="analysis"><LineChart className="mr-2"/>Analysis Charts</TabsTrigger>
-                    <TabsTrigger value="history"><History className="mr-2"/>Historical Data</TabsTrigger>
+                    <TabsTrigger value="history"><History className="mr-2"/>Reporting & Analytics</TabsTrigger>
                 </TabsList>
                 <TabsContent value="opportunities" className="mt-6">
                     <Card>
@@ -191,40 +205,96 @@ export function ForexArbitrageChecker() {
                 <TabsContent value="history" className="mt-6">
                    <Card>
                     <CardHeader>
-                      <CardTitle>Historical Arbitrage Log</CardTitle>
+                      <CardTitle>Reporting & Analytics Dashboard</CardTitle>
                       <CardDescription>
-                        A log of mock arbitrage opportunities detected in the past.
+                        Analyze historical performance, latency, spreads, and export reports.
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Arbitrage Path</TableHead>
-                             <TableHead>Type</TableHead>
-                            <TableHead>Brokers</TableHead>
-                            <TableHead className="text-right">Est. Profit</TableHead>
-                            <TableHead className="text-right">Detected</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {mockHistoricalOpportunities.map((opp) => (
-                            <TableRow key={opp.id}>
-                              <TableCell className="font-mono">{opp.path}</TableCell>
-                               <TableCell>
-                                <Badge variant={opp.type === 'Triangular' ? 'default' : 'secondary'}>{opp.type}</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex flex-wrap gap-1">
-                                  {opp.brokers.map(b => <Badge key={b} variant="outline">{b}</Badge>)}
+                        <Tabs defaultValue="log">
+                            <div className="flex justify-between items-center mb-4">
+                                <TabsList>
+                                    <TabsTrigger value="log">Arbitrage Log</TabsTrigger>
+                                    <TabsTrigger value="latency">Latency Report</TabsTrigger>
+                                    <TabsTrigger value="spreads">Spread Report</TabsTrigger>
+                                </TabsList>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" size="sm" disabled><Download className="mr-2 h-4 w-4"/>Export CSV</Button>
+                                    <Button variant="outline" size="sm" disabled><FileText className="mr-2 h-4 w-4"/>Export PDF</Button>
+                                    <Button variant="outline" size="sm" disabled><FileSpreadsheet className="mr-2 h-4 w-4"/>Export Excel</Button>
                                 </div>
-                              </TableCell>
-                              <TableCell className="text-right font-medium text-green-600">{opp.profit}</TableCell>
-                              <TableCell className="text-right text-muted-foreground">{opp.age}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                            </div>
+                            <TabsContent value="log">
+                                 <Table>
+                                    <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Arbitrage Path</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Brokers</TableHead>
+                                        <TableHead className="text-right">Est. Profit</TableHead>
+                                        <TableHead className="text-right">Detected</TableHead>
+                                    </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                    {mockHistoricalOpportunities.map((opp) => (
+                                        <TableRow key={opp.id}>
+                                        <TableCell className="font-mono">{opp.path}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={opp.type === 'Triangular' ? 'default' : 'secondary'}>{opp.type}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-wrap gap-1">
+                                            {opp.brokers.map(b => <Badge key={b} variant="outline">{b}</Badge>)}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-right font-medium text-green-600">{opp.profit}</TableCell>
+                                        <TableCell className="text-right text-muted-foreground">{opp.age}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </TableBody>
+                                </Table>
+                            </TabsContent>
+                             <TabsContent value="latency">
+                                 <Table>
+                                    <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Broker</TableHead>
+                                        <TableHead>Server Location</TableHead>
+                                        <TableHead className="text-right">Ping Latency</TableHead>
+                                    </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                    {mockLatencyData.map((data) => (
+                                        <TableRow key={data.broker}>
+                                            <TableCell className="font-medium">{data.broker}</TableCell>
+                                            <TableCell>{data.location}</TableCell>
+                                            <TableCell className="text-right">{data.latency}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </TableBody>
+                                </Table>
+                            </TabsContent>
+                             <TabsContent value="spreads">
+                                 <Table>
+                                    <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Currency Pair</TableHead>
+                                        <TableHead>Broker</TableHead>
+                                        <TableHead className="text-right">Average Spread (24h)</TableHead>
+                                    </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                    {mockSpreadData.map((data) => (
+                                        <TableRow key={`${data.pair}-${data.broker}`}>
+                                            <TableCell className="font-medium">{data.pair}</TableCell>
+                                            <TableCell>{data.broker}</TableCell>
+                                            <TableCell className="text-right">{data.avgSpread}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </TableBody>
+                                </Table>
+                            </TabsContent>
+                        </Tabs>
                     </CardContent>
                   </Card>
                 </TabsContent>
