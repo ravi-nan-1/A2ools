@@ -32,23 +32,21 @@ export function AdBanner({
   
   useEffect(() => {
     if (isMounted) {
-      // Use a timeout to ensure the container is rendered and has a width
       const timeoutId = setTimeout(() => {
         try {
           if (window.adsbygoogle) {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            // (window.adsbygoogle = window.adsbygoogle || []).push({});
           }
         } catch (err) {
           console.error(`AdSense error for slot ${adSlot}:`, err);
         }
-      }, 100); // A small delay is often enough
+      }, 100);
       
       return () => clearTimeout(timeoutId);
     }
   }, [pathname, isMounted, adSlot]);
 
   if (!isMounted) {
-    // Render nothing on the server and initial client render to prevent hydration errors
     return null;
   }
 
