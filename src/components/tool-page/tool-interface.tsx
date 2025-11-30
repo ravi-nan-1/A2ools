@@ -14,6 +14,7 @@ import { PlagiarismChecker } from '@/app/tools/plagiarism-checker/plagiarism-che
 import { JwtDecoderValidator } from '@/app/tools/jwt-decoder-validator/jwt-decoder-validator';
 import { GlobalLoanOptimizer } from '@/app/tools/global-loan-optimizer/global-loan-optimizer';
 import { CryptoTaxCalculator } from '@/app/tools/crypto-tax-calculator/crypto-tax-calculator';
+import { ForexArbitrageChecker } from '@/app/tools/forex-arbitrage-checker/forex-arbitrage-checker';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -46,6 +47,8 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
         return <GlobalLoanOptimizer />;
       case 'crypto-tax-calculator':
         return <CryptoTaxCalculator />;
+      case 'forex-arbitrage-checker':
+        return <ForexArbitrageChecker />;
       default:
         return <PlaceholderTool />;
     }
