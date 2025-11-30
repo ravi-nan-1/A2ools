@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -24,31 +24,21 @@ export function AdBanner({
   ...props 
 }: AdBannerProps) {
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
   
   useEffect(() => {
-    if (isMounted) {
-      const timeout = setTimeout(() => {
-        try {
-          if (window.adsbygoogle) {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
-          }
-        } catch (err) {
-          console.error(`AdSense error for slot ${adSlot}:`, err);
+    const timeout = setTimeout(() => {
+      try {
+        if (window.adsbygoogle) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
         }
-      }, 100); // Small delay to ensure container is rendered and has width
+      } catch (err) {
+        console.error(`AdSense error for slot ${adSlot}:`, err);
+      }
+    }, 100); 
 
-      return () => clearTimeout(timeout);
-    }
-  }, [pathname, isMounted, adSlot]);
+    return () => clearTimeout(timeout);
+  }, [pathname, adSlot]);
 
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div key={pathname} className={cn(className)} {...props}>
