@@ -32,11 +32,11 @@ interface LoanOffer {
 }
 
 const banks = [
-    { name: 'Global Finance Corp', logo: <Banknote className="text-green-500" />, baseRateModifier: 0 },
-    { name: 'World Bank United', logo: <Landmark className="text-blue-500" />, baseRateModifier: 0.2 },
-    { name: 'International Credit', logo: <Banknote className="text-purple-500" />, baseRateModifier: -0.1 },
-    { name: 'Universal Lending', logo: <Landmark className="text-orange-500" />, baseRateModifier: 0.5 },
-    { name: 'Prime Meridian Bank', logo: <Banknote className="text-red-500" />, baseRateModifier: -0.3 }
+    { name: 'Global Finance Corp', logo: <Banknote className="text-green-500" />, baseRate: 9.8 },
+    { name: 'World Bank United', logo: <Landmark className="text-blue-500" />, baseRate: 10.2 },
+    { name: 'International Credit', logo: <Banknote className="text-purple-500" />, baseRate: 9.5 },
+    { name: 'Universal Lending', logo: <Landmark className="text-orange-500" />, baseRate: 10.5 },
+    { name: 'Prime Meridian Bank', logo: <Banknote className="text-red-500" />, baseRate: 9.9 }
 ];
 
 export function GlobalLoanOptimizer() {
@@ -61,17 +61,25 @@ export function GlobalLoanOptimizer() {
         // Simulate API call and calculation
         setTimeout(() => {
             const offers: LoanOffer[] = banks.map(bank => {
-                // Simulate interest rate based on credit score and income-to-loan ratio
-                let baseRate = 9.5; // Start with a base rate suitable for INR loans
-                baseRate -= ((data.creditScore - 300) / 600) * 4; // Max 4% reduction for high credit score
-                
-                const incomeToLoanRatio = data.annualIncome / data.loanAmount;
-                if (incomeToLoanRatio < 2) baseRate += 0.5;
-                if (incomeToLoanRatio < 1) baseRate += 1;
+                let rate = bank.baseRate;
 
-                // Add some bank-specific variance
-                const bankVariance = (Math.random() - 0.5) * 0.5; // smaller random variance
-                const finalRate = Math.max(7.0, baseRate + bank.baseRateModifier + bankVariance);
+                // Adjust rate based on credit score. A higher score lowers the rate.
+                // A score of 900 gives max reduction, 300 gives max penalty.
+                const creditScoreFactor = ((data.creditScore - 600) / 300) * 1.5; // from -1.5 to +1.5
+                rate -= creditScoreFactor;
+
+                // Adjust rate based on income-to-loan ratio. Higher ratio lowers the rate.
+                const incomeToLoanRatio = data.annualIncome / data.loanAmount;
+                if (incomeToLoanRatio > 5) {
+                    rate -= 0.5;
+                } else if (incomeToLoanRatio < 2) {
+                    rate += 0.5;
+                }
+
+                // Add a small random factor for more variance
+                rate += (Math.random() - 0.5) * 0.2; 
+                
+                const finalRate = Math.max(7.0, Math.min(15.0, rate));
 
                 const monthlyRate = finalRate / 100 / 12;
                 const numberOfPayments = data.loanTenure * 12;
@@ -179,7 +187,7 @@ export function GlobalLoanOptimizer() {
                                             {offer.bankLogo}
                                             {offer.bankName}
                                         </TableCell>
-                                        <TableCell className="text-right">{offer.interestRate}%</TableCell>
+                                        <TableCell className="text-right">{offer.interestRate.toFixed(2)}%</TableCell>
                                         <TableCell className="text-right">{formatCurrency(offer.monthlyPayment)}</TableCell>
                                         <TableCell className="text-right">{formatCurrency(offer.totalPayment)}</TableCell>
                                     </TableRow>
