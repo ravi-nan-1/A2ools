@@ -11,6 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, Zap, Settings, LineChart, History, AlertTriangle, RefreshCw, Download, FileText, FileSpreadsheet } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ForexAnalysisChart } from '@/components/tool-page/tools/forex-analysis-chart';
+import Papa from 'papaparse';
 
 const mockBrokers = ['OANDA', 'FXCM', 'Interactive Brokers', 'Dukascopy', 'Pepperstone', 'IC Markets'];
 const mockPairs = ['EUR/USD', 'USD/JPY', 'GBP/USD', 'USD/CHF', 'AUD/USD', 'USD/CAD'];
@@ -24,10 +25,10 @@ const mockOpportunities = [
 ];
 
 const mockHistoricalOpportunities = [
-    { id: 1, path: 'EUR → USD → CAD → EUR', profit: '0.09%', age: '2m 15s ago', brokers: ['OANDA', 'Dukascopy'], type: 'Triangular' },
-    { id: 2, path: 'GBP → JPY → USD → GBP', profit: '0.11%', age: '5m 45s ago', brokers: ['FXCM', 'Pepperstone'], type: 'Triangular' },
-    { id: 3, path: 'AUD/CHF (Buy IC, Sell IB)', profit: '0.07%', age: '10m 2s ago', brokers: ['IC Markets', 'Interactive Brokers'], type: 'Two-Leg' },
-    { id: 4, path: 'USD → CAD → JPY → USD', profit: '0.15%', age: '18m 30s ago', brokers: ['OANDA', 'FXCM'], type: 'Triangular' },
+    { id: 1, path: 'EUR → USD → CAD → EUR', profit: '0.09%', age: '2m 15s ago', brokers: 'OANDA, Dukascopy', type: 'Triangular' },
+    { id: 2, path: 'GBP → JPY → USD → GBP', profit: '0.11%', age: '5m 45s ago', brokers: 'FXCM, Pepperstone', type: 'Triangular' },
+    { id: 3, path: 'AUD/CHF (Buy IC, Sell IB)', profit: '0.07%', age: '10m 2s ago', brokers: 'IC Markets, Interactive Brokers', type: 'Two-Leg' },
+    { id: 4, path: 'USD → CAD → JPY → USD', profit: '0.15%', age: '18m 30s ago', brokers: 'OANDA, FXCM', type: 'Triangular' },
   ];
 
 const mockPriceFeeds = [
@@ -57,6 +58,7 @@ export function ForexArbitrageChecker() {
     const [selectedPair, setSelectedPair] = useState<string>('');
     const [arbitrageType, setArbitrageType] = useState<string>('triangular');
     const [scanResults, setScanResults] = useState<typeof mockOpportunities>([]);
+    const [activeReportTab, setActiveReportTab] = useState('log');
 
     const handleScan = () => {
         setIsScanning(true);
@@ -66,6 +68,42 @@ export function ForexArbitrageChecker() {
           setIsScanning(false);
         }, 2000);
     }
+
+    const handleExport = (format: 'csv' | 'pdf' | 'excel', data: any[], fileName: string) => {
+        if (format === 'csv') {
+          const csv = Papa.unparse(data);
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.setAttribute('download', `${fileName}.csv`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+        // PDF and Excel exports can be added here
+      };
+
+    const onExportClick = () => {
+        let data;
+        let fileName;
+        switch (activeReportTab) {
+            case 'log':
+                data = mockHistoricalOpportunities.map(d => ({...d, brokers: d.brokers}));
+                fileName = 'arbitrage_log';
+                break;
+            case 'latency':
+                data = mockLatencyData;
+                fileName = 'latency_report';
+                break;
+            case 'spreads':
+                data = mockSpreadData;
+                fileName = 'spread_report';
+                break;
+            default:
+                return;
+        }
+        handleExport('csv', data, fileName);
+    };
     
     return (
         <div className="space-y-8">
@@ -211,7 +249,7 @@ export function ForexArbitrageChecker() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Tabs defaultValue="log">
+                        <Tabs defaultValue="log" onValueChange={setActiveReportTab}>
                             <div className="flex justify-between items-center mb-4">
                                 <TabsList>
                                     <TabsTrigger value="log">Arbitrage Log</TabsTrigger>
@@ -219,7 +257,7 @@ export function ForexArbitrageChecker() {
                                     <TabsTrigger value="spreads">Spread Report</TabsTrigger>
                                 </TabsList>
                                 <div className="flex gap-2">
-                                    <Button variant="outline" size="sm" disabled><Download className="mr-2 h-4 w-4"/>Export CSV</Button>
+                                    <Button variant="outline" size="sm" onClick={onExportClick}><Download className="mr-2 h-4 w-4"/>Export CSV</Button>
                                     <Button variant="outline" size="sm" disabled><FileText className="mr-2 h-4 w-4"/>Export PDF</Button>
                                     <Button variant="outline" size="sm" disabled><FileSpreadsheet className="mr-2 h-4 w-4"/>Export Excel</Button>
                                 </div>
@@ -244,7 +282,7 @@ export function ForexArbitrageChecker() {
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-wrap gap-1">
-                                            {opp.brokers.map(b => <Badge key={b} variant="outline">{b}</Badge>)}
+                                                <Badge variant="outline">{opp.brokers}</Badge>
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right font-medium text-green-600">{opp.profit}</TableCell>
@@ -332,5 +370,3 @@ export function ForexArbitrageChecker() {
         </div>
     );
 }
-
-    
