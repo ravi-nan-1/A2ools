@@ -47,10 +47,13 @@ export default async function ToolSubPage({
       content: (
         <div className="space-y-4">
           <p>
-            This tool, part of the All2ools suite, is designed to provide best-in-class functionality for its specific purpose. Our goal is to offer powerful, free, and easy-to-use utilities for everyone.
+            The <strong>{tool.name}</strong> is a specialized utility within the All2ools ecosystem, a comprehensive suite of free, AI-powered online tools designed for professionals, students, and enthusiasts alike. Our mission is to democratize access to powerful digital utilities, making them simple, intuitive, and available to everyone, everywhere.
           </p>
           <p>
-            The <strong>{tool.name}</strong> tool helps users accomplish specific tasks efficiently. We are constantly working to improve its features and ensure it remains a top-tier resource.
+            This specific tool was developed to address the common challenges associated with <strong>{tool.description.toLowerCase().replace('ai ', '')}</strong>. We focused on creating a user-friendly interface that delivers accurate and reliable results instantly. Whether you are a seasoned professional or a newcomer, we believe this tool will streamline your workflow and enhance your productivity.
+          </p>
+           <p>
+            Like all utilities on All2ools.com, the {tool.name} is built with a commitment to quality, security, and user privacy. We are constantly working to improve its features and ensure it remains a top-tier resource in its category.
           </p>
         </div>
       ),
@@ -60,13 +63,16 @@ export default async function ToolSubPage({
       content: (
         <div className="space-y-4">
           <p>
-            If you have questions, feedback, or issues specific to the <strong>{tool.name}</strong> tool, we would love to hear from you.
+            We value your feedback and are here to help you with any questions, issues, or suggestions you may have regarding the <strong>{tool.name}</strong> tool. Your input is crucial for helping us improve and evolve our services.
           </p>
           <p>
-            Please direct all inquiries to our main support channel. You can reach us via our primary contact page or email us directly at{' '}
+            For the fastest support, please send an email to our dedicated support team at{' '}
             <a href="mailto:support@all2ools.com" className="text-primary hover:underline">
               support@all2ools.com
-            </a>. Please mention the name of the tool in your message.
+            </a>. To help us assist you more efficiently, please include "<strong>{tool.name}</strong>" in the subject line of your email.
+          </p>
+            <p>
+            If you have general inquiries about the All2ools platform or would like to suggest a new tool, feel free to visit our main <a href="/contact" className="text-primary hover:underline">Contact Page</a>. We read every message and strive to respond as promptly as possible.
           </p>
         </div>
       ),
@@ -75,8 +81,14 @@ export default async function ToolSubPage({
       title: `Privacy Policy for the ${tool.name} Tool`,
       content: (
         <div className="space-y-4">
-            <p>Your privacy is paramount when using the <strong>{tool.name}</strong> tool. For tools that process data client-side, we ensure that none of your input data is ever sent to our servers. All processing happens securely within your browser.</p>
-            <p>For tools that require server-side processing, we only handle the data necessary to perform the requested function and do not store it beyond the required processing time. For more detailed information, please refer to our main <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.</p>
+            <p>Your privacy is a top priority when you use the <strong>{tool.name}</strong> tool. We have designed our tools with a "privacy-first" approach to ensure your data remains secure and confidential.</p>
+            <p>
+                <strong>Data Handling:</strong> For many of our utilities, including this one, all data processing occurs entirely within your browser on your local machine. This means that any data, files, or content you input into the tool are <strong>never sent to our servers</strong>. This client-side processing model provides the highest level of privacy and security.
+            </p>
+            <p>
+                For the few tools that require server-side computation (such as those involving complex AI models), we only transmit the minimum data necessary to perform the requested function. This data is processed in-memory and is never stored, logged, or shared. All connections are encrypted using industry-standard protocols.
+            </p>
+            <p>For a comprehensive overview of our data practices across the entire platform, please refer to our main <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.</p>
         </div>
       ),
     },
@@ -84,8 +96,19 @@ export default async function ToolSubPage({
       title: `Terms of Service for the ${tool.name} Tool`,
       content: (
         <div className="space-y-4">
-            <p>The <strong>{tool.name}</strong> tool is provided "AS-IS" without any warranties. While we strive for accuracy and reliability, we are not liable for any issues that may arise from its use.</p>
-            <p>By using this tool, you agree to the terms laid out in our main <a href="/terms" className="text-primary hover:underline">Terms of Service</a>. Please use this tool responsibly.</p>
+            <p>By using the <strong>{tool.name}</strong> tool, you agree to be bound by the All2ools general <a href="/terms" className="text-primary hover:underline">Terms of Service</a>. The following points are particularly relevant to your use of this specific utility:</p>
+            <ul className="list-disc space-y-2 pl-6">
+                <li>
+                    <strong>"AS-IS" Provision:</strong> This tool is provided "AS-IS" and "AS-AVAILABLE" without any warranties, express or implied. While we make every effort to ensure the accuracy, reliability, and functionality of our tools, we do not guarantee that the results will be error-free or suitable for every purpose.
+                </li>
+                <li>
+                    <strong>Limitation of Liability:</strong> Your use of the {tool.name} is at your own risk. All2ools shall not be liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use this service. It is your responsibility to verify the results generated by the tool.
+                </li>
+                <li>
+                    <strong>Responsible Use:</strong> You agree not to use this tool for any illegal or unauthorized purpose. You must not, in the use of the Service, violate any laws in your jurisdiction.
+                </li>
+            </ul>
+            <p>We encourage you to read the full <a href="/terms" className="text-primary hover:underline">Terms of Service</a> for a complete understanding of your rights and obligations when using our platform.</p>
         </div>
       ),
     },
