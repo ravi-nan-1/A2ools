@@ -92,8 +92,8 @@ export function ForexArbitrageChecker() {
             <Tabs defaultValue="opportunities">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="opportunities"><Zap className="mr-2"/>Live Opportunities</TabsTrigger>
-                    <TabsTrigger value="analysis" disabled><LineChart className="mr-2"/>Analysis Charts</TabsTrigger>
-                    <TabsTrigger value="history" disabled><History className="mr-2"/>Historical Data</TabsTrigger>
+                    <TabsTrigger value="analysis"><LineChart className="mr-2"/>Analysis Charts</TabsTrigger>
+                    <TabsTrigger value="history"><History className="mr-2"/>Historical Data</TabsTrigger>
                 </TabsList>
                 <TabsContent value="opportunities" className="mt-6">
                     <Card>
@@ -137,6 +137,32 @@ export function ForexArbitrageChecker() {
                             </Table>
                         </CardContent>
                     </Card>
+                </TabsContent>
+                <TabsContent value="analysis" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Analysis Charts</CardTitle>
+                      <CardDescription>
+                        Historical price charts and volatility analysis will be displayed here.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-center h-64 text-muted-foreground">
+                      <p>Chart components are currently under development. Check back soon!</p>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="history" className="mt-6">
+                   <Card>
+                    <CardHeader>
+                      <CardTitle>Historical Arbitrage Data</CardTitle>
+                      <CardDescription>
+                        A log of past arbitrage opportunities and their outcomes will be available here.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-center h-64 text-muted-foreground">
+                      <p>Historical data logging and back-testing features are coming soon.</p>
+                    </CardContent>
+                  </Card>
                 </TabsContent>
             </Tabs>
             
