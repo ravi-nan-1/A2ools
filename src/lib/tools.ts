@@ -59,6 +59,17 @@ export interface Tool {
 
 export const tools: Tool[] = [
   {
+    name: 'Plagiarism Checker',
+    slug: 'plagiarism-checker',
+    category: 'SEO',
+    icon: 'FileSearch',
+    description: 'ai-contract-summarizer_description',
+    longDescription: 'ai-contract-summarizer_long_description',
+    features: [],
+    howItWorks: [],
+    useCases: [],
+  },
+  {
     name: 'AI Tutor',
     slug: 'ai-tutor',
     category: 'Business',
