@@ -53,7 +53,7 @@ export function AiProductBackgroundRemover() {
       if (result.error) {
         throw new Error(result.error);
       }
-      setProcessedImage(result.backgroundRemovedPhotoDataUri as string);
+      setProcessedImage(result.backgroundRemovedPhotoDataUri);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       toast({
