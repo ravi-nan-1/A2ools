@@ -15,9 +15,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Loader2, Banknote, Landmark } from 'lucide-react';
 
 const formSchema = z.object({
-  loanAmount: z.number().min(1000, "Must be at least 1,000").max(1000000, "Must be at most 1,000,000"),
-  annualIncome: z.number().min(10000, "Must be at least 10,000").max(5000000, "Must be at most 5,000,000"),
-  creditScore: z.number().min(300, "Invalid score").max(850, "Invalid score"),
+  loanAmount: z.number().min(50000, "Must be at least 50,000").max(10000000, "Must be at most 1,00,00,000"),
+  annualIncome: z.number().min(100000, "Must be at least 1,00,000").max(50000000, "Must be at most 5,00,00,000"),
+  creditScore: z.number().min(300, "Invalid score").max(900, "Invalid score"),
   loanTenure: z.number().min(1, "Must be at least 1 year").max(30, "Must be at most 30 years"),
 });
 
@@ -46,9 +46,9 @@ export function GlobalLoanOptimizer() {
     const form = useForm<LoanFormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            loanAmount: 50000,
-            annualIncome: 75000,
-            creditScore: 680,
+            loanAmount: 500000,
+            annualIncome: 1000000,
+            creditScore: 750,
             loanTenure: 5
         },
         mode: 'onChange',
@@ -62,15 +62,15 @@ export function GlobalLoanOptimizer() {
         setTimeout(() => {
             const offers: LoanOffer[] = banks.map(bank => {
                 // Simulate interest rate based on credit score and income-to-loan ratio
-                let baseRate = 8.5; // Start with a base rate
-                baseRate -= (data.creditScore - 300) / 550 * 4; // Max 4% reduction for high credit score
+                let baseRate = 9.5; // Start with a base rate suitable for INR loans
+                baseRate -= (data.creditScore - 300) / 600 * 5; // Max 5% reduction for high credit score
                 const incomeToLoanRatio = data.annualIncome / data.loanAmount;
                 if (incomeToLoanRatio < 2) baseRate += 1.5;
                 if (incomeToLoanRatio < 1) baseRate += 2;
                 
                 // Add some bank-specific variance
-                const bankVariance = (Math.random() - 0.5) * 1.5;
-                const finalRate = Math.max(3.5, baseRate + bankVariance);
+                const bankVariance = (Math.random() - 0.5) * 2;
+                const finalRate = Math.max(7.5, baseRate + bankVariance);
 
                 const monthlyRate = finalRate / 100 / 12;
                 const numberOfPayments = data.loanTenure * 12;
@@ -92,7 +92,7 @@ export function GlobalLoanOptimizer() {
     };
 
     const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
     }
     
     return (
@@ -107,7 +107,7 @@ export function GlobalLoanOptimizer() {
                             <FormItem>
                                 <FormLabel>Loan Amount: {formatCurrency(field.value)}</FormLabel>
                                 <FormControl>
-                                    <Slider min={1000} max={1000000} step={1000} onValueChange={(vals) => field.onChange(vals[0])} defaultValue={[field.value]} />
+                                    <Slider min={50000} max={10000000} step={10000} onValueChange={(vals) => field.onChange(vals[0])} defaultValue={[field.value]} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -116,7 +116,7 @@ export function GlobalLoanOptimizer() {
                              <FormItem>
                                 <FormLabel>Annual Income: {formatCurrency(field.value)}</FormLabel>
                                 <FormControl>
-                                    <Slider min={10000} max={5000000} step={5000} onValueChange={(vals) => field.onChange(vals[0])} defaultValue={[field.value]} />
+                                    <Slider min={100000} max={50000000} step={25000} onValueChange={(vals) => field.onChange(vals[0])} defaultValue={[field.value]} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -125,7 +125,7 @@ export function GlobalLoanOptimizer() {
                             <FormItem>
                                 <FormLabel>Credit Score: {field.value}</FormLabel>
                                 <FormControl>
-                                    <Slider min={300} max={850} step={1} onValueChange={(vals) => field.onChange(vals[0])} defaultValue={[field.value]} />
+                                    <Slider min={300} max={900} step={1} onValueChange={(vals) => field.onChange(vals[0])} defaultValue={[field.value]} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -190,7 +190,5 @@ export function GlobalLoanOptimizer() {
             )}
         </div>
     );
-}
-
 
     
