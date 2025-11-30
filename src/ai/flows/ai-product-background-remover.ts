@@ -38,7 +38,7 @@ const removeBackgroundFlow = ai.defineFlow(
   },
   async input => {
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.5-flash-image-preview',
+      model: 'googleai/gemini-2.0-flash-exp',
       prompt: [
         {media: {url: input.productPhotoDataUri}},
         {text: 'Remove the background from this product photo. The resulting image should have a transparent background.'},
