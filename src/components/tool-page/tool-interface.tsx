@@ -1,3 +1,4 @@
+
 import { AiProductBackgroundRemover } from '@/app/tools/ai-product-background-remover/ai-product-background-remover';
 import { ContentGapAnalyzer } from '@/app/tools/content-gap-analyzer/content-gap-analyzer';
 import { ApiLatencyChecker } from '@/app/tools/api-latency-checker/api-latency-checker';
@@ -11,6 +12,7 @@ import { ExcelPowerTools } from '@/app/tools/excel-power-tools/excel-power-tools
 import { ImageCompressor } from '@/app/tools/image-compressor/image-compressor';
 import { PlagiarismChecker } from '@/app/tools/plagiarism-checker/plagiarism-checker';
 import { JwtDecoderValidator } from '@/app/tools/jwt-decoder-validator/jwt-decoder-validator';
+import { GlobalLoanOptimizer } from '@/app/tools/global-loan-optimizer/global-loan-optimizer';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -39,6 +41,8 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
         return <PlagiarismChecker />;
       case 'jwt-decoder-validator':
         return <JwtDecoderValidator />;
+      case 'global-loan-optimizer':
+        return <GlobalLoanOptimizer />;
       default:
         return <PlaceholderTool />;
     }
@@ -56,3 +60,5 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
     </Card>
   );
 }
+
+    
