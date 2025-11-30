@@ -10,8 +10,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { UploadCloud, Link, Keyboard, AlertTriangle, ArrowRight, ArrowLeft, Loader2, Building, Wallet, Trash2, PlusCircle, Info, Calculator, Globe } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import Papa from 'papaparse';
 
 // Schemas
@@ -171,8 +173,8 @@ const calculateTaxesFIFO = (transactions: Transaction[], country: Country): TaxR
 
 // Main Component
 export function CryptoTaxCalculator() {
-  const [step, setStep] = useState<Step>('manual');
-  const [importMethod, setImportMethod] = useState<string | null>('manual');
+  const [step, setStep] = useState<Step>('method');
+  const [importMethod, setImportMethod] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [taxReport, setTaxReport] = useState<TaxReport | null>(null);
@@ -250,7 +252,7 @@ export function CryptoTaxCalculator() {
                 <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
                 <h3 className="text-xl font-semibold">Processing...</h3>
                 <p className="text-muted-foreground max-w-sm">
-                    Analyzing transactions and calculating gains. This may take a moment.
+                    {taxReport ? "Generating your report..." : "Analyzing transactions..."}
                 </p>
             </div>
         );
@@ -259,7 +261,7 @@ export function CryptoTaxCalculator() {
         return (
            <div className="space-y-6">
                 <CardHeader className="p-0 text-center">
-                    <CardTitle>Tax Report Summary ({taxReport.country})</CardTitle>
+                    <CardTitle>Tax Report Summary ({countries.find(c => c.code === taxReport.country)?.name})</CardTitle>
                     <CardDescription>Based on your transactions using the FIFO method.</CardDescription>
                 </CardHeader>
 
@@ -333,8 +335,8 @@ export function CryptoTaxCalculator() {
                   Start by adding your crypto transactions. Choose one of the methods below. You can add more later.
                 </CardDescription>
             </CardHeader>
-            <RadioGroup onValueChange={(val) => setImportMethod(val)} value={importMethod || ''}>
-              <Label htmlFor="upload-option" className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-muted/50 has-[:checked]:bg-muted has-[:checked]:border-primary">
+            <RadioGroup onValueChange={(val) => setImportMethod(val)} value={importMethod || ''} className="space-y-2">
+              <Label htmlFor="upload-option" className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-muted/50 has-[:checked]:bg-muted has-[:checked]:border-primary transition-all">
                 <RadioGroupItem value="upload" id="upload-option" className="mr-4"/>
                 <UploadCloud className="mr-4 h-6 w-6 text-primary" />
                 <div>
@@ -342,7 +344,7 @@ export function CryptoTaxCalculator() {
                   <p className="text-sm text-muted-foreground">Import a CSV file from any exchange like Coinbase, Binance, etc.</p>
                 </div>
               </Label>
-              <Label htmlFor="connect-option" className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-muted/50 has-[:checked]:bg-muted has-[:checked]:border-primary">
+              <Label htmlFor="connect-option" className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-muted/50 has-[:checked]:bg-muted has-[:checked]:border-primary transition-all">
                 <RadioGroupItem value="connect" id="connect-option" className="mr-4"/>
                 <Link className="mr-4 h-6 w-6 text-primary" />
                 <div>
@@ -350,7 +352,7 @@ export function CryptoTaxCalculator() {
                   <p className="text-sm text-muted-foreground">Sync your trades automatically via API or by connecting your wallet.</p>
                 </div>
               </Label>
-              <Label htmlFor="manual-option" className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-muted/50 has-[:checked]:bg-muted has-[:checked]:border-primary">
+              <Label htmlFor="manual-option" className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-muted/50 has-[:checked]:bg-muted has-[:checked]:border-primary transition-all">
                 <RadioGroupItem value="manual" id="manual-option" className="mr-4"/>
                 <Keyboard className="mr-4 h-6 w-6 text-primary" />
                 <div>
@@ -382,7 +384,7 @@ export function CryptoTaxCalculator() {
                 ) : (
                   <>
                     <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                    <p className="text-xs text-muted-foreground">CSV, XLS, XLSX (MAX. 100MB)</p>
+                    <p className="text-xs text-muted-foreground">CSV, XLS, XLSX</p>
                   </>
                 )}
               </div>
@@ -416,6 +418,13 @@ export function CryptoTaxCalculator() {
                          <Button key={w} variant="outline" className="justify-start gap-2" disabled><Wallet className="h-4 w-4 text-muted-foreground"/> {w}</Button>
                     ))}
                 </div>
+                 <Alert className="mt-4">
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Feature Coming Soon</AlertTitle>
+                    <AlertDescription>
+                        Automatic exchange and wallet sync is under development. Please use the CSV upload or manual entry for now.
+                    </AlertDescription>
+                </Alert>
                  <div className="flex justify-between mt-6">
                     <Button variant="outline" onClick={() => setStep('method')}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
                     <Button disabled>Connect <ArrowRight className="ml-2 h-4 w-4" /></Button>
@@ -430,27 +439,39 @@ export function CryptoTaxCalculator() {
                     <CardTitle>Manage Transactions</CardTitle>
                     <CardDescription>Add, edit, or delete your crypto transactions below. You can switch to file upload anytime.</CardDescription>
                 </CardHeader>
-                <div className="overflow-x-auto">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Type</TableHead><TableHead>Asset</TableHead><TableHead>Quantity</TableHead><TableHead>Price</TableHead><TableHead>Date</TableHead><TableHead></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {fields.map((field, index) => (
-                            <TableRow key={field.id}>
-                                <TableCell><FormField control={form.control} name={`transactions.${index}.type`} render={({ field }) => (<Select onValueChange={field.onChange} defaultValue={field.value}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="buy">Buy</SelectItem><SelectItem value="sell">Sell</SelectItem></SelectContent></Select>)} /></TableCell>
-                                <TableCell><FormField control={form.control} name={`transactions.${index}.asset`} render={({ field }) => (<Input {...field} placeholder="BTC"/>)} /></TableCell>
-                                <TableCell><FormField control={form.control} name={`transactions.${index}.quantity`} render={({ field }) => (<Input type="number" {...field} />)} /></TableCell>
-                                <TableCell><FormField control={form.control} name={`transactions.${index}.price`} render={({ field }) => (<Input type="number" {...field} />)} /></TableCell>
-                                <TableCell><FormField control={form.control} name={`transactions.${index}.date`} render={({ field }) => (<Input type="date" {...field} />)} /></TableCell>
-                                <TableCell><Button variant="ghost" size="icon" onClick={() => remove(index)}><Trash2 className="h-4 w-4 text-muted-foreground" /></Button></TableCell>
+                {fields.length > 0 ? (
+                  <div className="overflow-x-auto border rounded-lg">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[120px]">Type</TableHead>
+                                <TableHead>Asset</TableHead>
+                                <TableHead>Quantity</TableHead>
+                                <TableHead>Price</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead className="w-[50px]"></TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                </div>
+                        </TableHeader>
+                        <TableBody>
+                            {fields.map((field, index) => (
+                                <TableRow key={field.id}>
+                                    <TableCell><FormField control={form.control} name={`transactions.${index}.type`} render={({ field }) => (<Select onValueChange={field.onChange} defaultValue={field.value}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="buy">Buy</SelectItem><SelectItem value="sell">Sell</SelectItem></SelectContent></Select>)} /></TableCell>
+                                    <TableCell><FormField control={form.control} name={`transactions.${index}.asset`} render={({ field }) => (<Input {...field} placeholder="BTC"/>)} /></TableCell>
+                                    <TableCell><FormField control={form.control} name={`transactions.${index}.quantity`} render={({ field }) => (<Input type="number" {...field} />)} /></TableCell>
+                                    <TableCell><FormField control={form.control} name={`transactions.${index}.price`} render={({ field }) => (<Input type="number" {...field} />)} /></TableCell>
+                                    <TableCell><FormField control={form.control} name={`transactions.${index}.date`} render={({ field }) => (<Input type="date" {...field} />)} /></TableCell>
+                                    <TableCell><Button variant="ghost" size="icon" onClick={() => remove(index)}><Trash2 className="h-4 w-4 text-muted-foreground" /></Button></TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg">
+                    <p>No transactions added yet.</p>
+                    <p className="text-sm">Add one below or go back to upload a file.</p>
+                  </div>
+                )}
                 <Button type="button" variant="outline" onClick={() => append({ type: 'buy', asset: '', quantity: 0, price: 0, date: new Date().toISOString().split('T')[0] })}><PlusCircle className="mr-2 h-4 w-4" />Add Transaction</Button>
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t">
                     <Button variant="outline" onClick={() => setStep('method')}><ArrowLeft className="mr-2 h-4 w-4" /> Change Import Method</Button>
@@ -492,7 +513,7 @@ export function CryptoTaxCalculator() {
         <AlertTriangle className="h-4 w-4" />
         <AlertTitle>Disclaimer: For Educational & Illustrative Use Only</AlertTitle>
         <AlertDescription>
-          This is a simplified tool for educational purposes. It does not perform real tax calculations. **Do not use for official tax filing.** Always consult a qualified tax professional for your tax obligations.
+          This is a simplified tool using the FIFO method. It does not account for all transaction types, fees, or specific tax laws (like the UK's 'share pooling' rule). **Do not use for official tax filing.** Always consult a qualified tax professional.
         </AlertDescription>
       </Alert>
       
