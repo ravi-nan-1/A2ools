@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -24,9 +24,14 @@ export function AdBanner({
   ...props 
 }: AdBannerProps) {
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    if (isMounted) {
       try {
         if (window.adsbygoogle) {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -34,11 +39,13 @@ export function AdBanner({
       } catch (err) {
         console.error(`AdSense error for slot ${adSlot}:`, err);
       }
-    }, 100); 
+    }
+  }, [pathname, isMounted, adSlot]);
 
-    return () => clearTimeout(timeout);
-  }, [pathname, adSlot]);
-
+  if (!isMounted) {
+    // Render a placeholder or nothing on the server and initial client render
+    return <div className={cn(className)} {...props}></div>;
+  }
 
   return (
     <div key={pathname} className={cn(className)} {...props}>
