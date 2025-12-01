@@ -10,7 +10,8 @@ import { generateFinancialsFromPrompt } from "@/ai/flows/generate-financials-fro
 import { generateHeadshot } from '@/ai/flows/generate-headshot';
 import { generateKeywordClusters } from '@/ai/flows/generate-keyword-clusters';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
-import { generateRegexFromText, describeRegex, type GenerateRegexInput, type DescribeRegexInput } from '@/ai/flows/generate-regex-from-text';
+import { generateRegexFromText, describeRegex } from '@/ai/flows/generate-regex-from-text';
+import type { GenerateRegexInput, DescribeRegexInput } from '@/ai/flows/generate-regex-from-text';
 
 const GenerateProductDescriptionInputSchema = z.object({
   productName: z.string().min(3, 'Product name must be at least 3 characters.'),

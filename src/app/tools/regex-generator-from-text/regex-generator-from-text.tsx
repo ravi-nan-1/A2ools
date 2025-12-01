@@ -37,6 +37,7 @@ const formSchema = z.object({
   isCaseSensitive: z.boolean(),
   isGlobal: z.boolean(),
   isMultiline: z.boolean(),
+  targetLanguage: z.string().min(1, "Please select a language flavor."),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -65,6 +66,10 @@ const codeSnippets: Record<string, (regex: string) => string> = {
     go: (regex) => {
         const pattern = regex.slice(1, regex.lastIndexOf('/'));
         return `package main\n\nimport (\n\t"fmt"\n\t"regexp"\n)\n\nfunc main() {\n\tvar re = regexp.MustCompile(\`${pattern}\`)\n\tvar str = "Your test string"\n\n\tfor _, match := range re.FindAllString(str, -1) {\n\t\tfmt.Println(match)\n\t}\n}`;
+    },
+    rust: (regex) => {
+        const pattern = regex.slice(1, regex.lastIndexOf('/'));
+        return `use regex::Regex;\n\nfn main() {\n    let re = Regex::new(r"${pattern}").unwrap();\n    let text = "Your test string";\n\n    for mat in re.find_iter(text) {\n        println!("Found match: {}", mat.as_str());\n    }\n}`;
     }
 };
 
@@ -87,6 +92,7 @@ export function RegexGeneratorFromText() {
       isCaseSensitive: false,
       isGlobal: true,
       isMultiline: false,
+      targetLanguage: 'javascript',
     },
     mode: 'onChange',
   });
@@ -267,7 +273,33 @@ export function RegexGeneratorFromText() {
                         <CardHeader>
                             <CardTitle>Pattern Options</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="space-y-4">
+                             <FormField
+                                control={form.control}
+                                name="targetLanguage"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Regex Language/Flavor</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a language flavor" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="javascript">JavaScript</SelectItem>
+                                            <SelectItem value="python">Python</SelectItem>
+                                            <SelectItem value="pcre">PCRE (PHP)</SelectItem>
+                                            <SelectItem value="java">Java</SelectItem>
+                                            <SelectItem value="go">Go (RE2)</SelectItem>
+                                            <SelectItem value="rust">Rust</SelectItem>
+                                            <SelectItem value="dotnet">.NET (C#)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
                             <div className="flex flex-wrap gap-x-4 gap-y-2">
                                 <FormField
                                     control={form.control}
@@ -361,10 +393,11 @@ export function RegexGeneratorFromText() {
                                     <SelectContent>
                                         <SelectItem value="javascript">JavaScript</SelectItem>
                                         <SelectItem value="python">Python</SelectItem>
-                                        <SelectItem value="php">PHP</SelectItem>
+                                        <SelectItem value="php">PHP (PCRE)</SelectItem>
                                         <SelectItem value="java">Java</SelectItem>
-                                        <SelectItem value="csharp">C#</SelectItem>
-                                        <SelectItem value="go">Go</SelectItem>
+                                        <SelectItem value="csharp">C# (.NET)</SelectItem>
+                                        <SelectItem value="go">Go (RE2)</SelectItem>
+                                        <SelectItem value="rust">Rust</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <div className="relative">
