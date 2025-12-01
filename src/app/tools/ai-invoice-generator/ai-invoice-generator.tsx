@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -13,14 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,7 +42,6 @@ import {
   PlusCircle,
   FileText,
   Settings,
-  Eye,
   Send,
   Sparkles,
   Upload,
@@ -109,8 +100,6 @@ export function AiInvoiceGenerator() {
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
   const [isProcessingAi, setIsProcessingAi] = useState(false);
   const { toast } = useToast();
-  const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -119,7 +108,7 @@ export function AiInvoiceGenerator() {
   const form = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
-      from: 'Your Company Name\n123 Street, City, Country',
+      from: 'Your Company Name\nGSTIN: YOUR_GSTIN_HERE\n123 Street, City, Country',
       billTo: '',
       shipTo: '',
       invoiceNumber: '',
@@ -193,12 +182,13 @@ export function AiInvoiceGenerator() {
   };
   
   const formatCurrencyForPdf = (amount: number) => {
-    const currency = countries.find(c => c.code === selectedCountry)?.currency || 'USD';
+    const currencyInfo = countries.find(c => c.code === selectedCountry);
+    const currencyCode = currencyInfo?.currency || 'USD';
     const formatted = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
-    return `${currency} ${formatted}`;
+    return `${currencyCode} ${formatted}`;
   };
   
   const formatCurrencyForUi = (amount: number) => {
@@ -215,85 +205,103 @@ export function AiInvoiceGenerator() {
     const doc = new jsPDF();
 
     try {
-      // --- Template-specific styles ---
-      const professionalBlue = [0, 51, 102];
-      const modernHeader = [22, 160, 133];
+      // --- Template-specific styles & logic ---
+      const isGst = selectedTemplate === 'gst';
+      const isVat = selectedTemplate === 'vat';
+      const isSalesTax = selectedTemplate === 'sales-tax';
+      const isProfessional = selectedTemplate === 'professional';
 
-      // --- Header ---
-      if (selectedTemplate === 'professional') {
+      // --- Header Title ---
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      if (isGst) {
+        doc.text('GST TAX INVOICE', 14, 22);
+      } else if (isVat) {
+        doc.text('VAT INVOICE', 14, 22);
+      } else if (isSalesTax) {
+         doc.text('SALES TAX INVOICE', 14, 22);
+      } else if (isProfessional) {
         doc.setFont('times', 'bold');
         doc.setFontSize(26);
-        doc.setTextColor(professionalBlue[0], professionalBlue[1], professionalBlue[2]);
+        doc.setTextColor(0, 51, 102);
         doc.text('INVOICE', 20, 25);
-        doc.setDrawColor(professionalBlue[0], professionalBlue[1], professionalBlue[2]);
-        doc.line(20, 28, 190, 28);
-      } else if (selectedTemplate === 'minimal') {
-        doc.setFont('courier', 'bold');
-        doc.setFontSize(22);
-        doc.setTextColor(0, 0, 0);
-        doc.text('INVOICE', 20, 30);
-      } else { // Modern
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(20);
-        doc.text('INVOICE', 20, 30);
+      } else {
+        doc.text('INVOICE', 14, 22);
       }
+      doc.setTextColor(0,0,0); // Reset color
 
       // --- From/To Info ---
       doc.setFontSize(11);
-      doc.setTextColor(80, 80, 80);
       doc.setFont('helvetica', 'normal');
+      doc.setTextColor(80, 80, 80);
       
-      const fromX = selectedTemplate === 'professional' ? 190 : 140;
-      const fromAlign = selectedTemplate === 'professional' ? 'right' : 'left';
-      doc.text(values.from.split('\n'), fromX, 25, { align: fromAlign });
+      const fromX = isProfessional ? 190 : 140;
+      const fromAlign = isProfessional ? 'right' : 'left';
+      doc.text(values.from.split('\n'), fromX, 20, { align: fromAlign });
 
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(0, 0, 0);
-      doc.text('BILL TO', 20, 45);
+      doc.text('BILL TO:', 14, 40);
       doc.setFont('helvetica', 'normal');
-      doc.text(values.billTo.split('\n'), 20, 51);
+      doc.text(values.billTo.split('\n'), 14, 46);
 
       // --- Invoice Meta ---
+      doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.text('INVOICE #', 140, 50);
-      doc.text('DATE', 140, 56);
-      if (values.dueDate) doc.text('DUE DATE', 140, 62);
+      doc.text('Invoice #:', 140, 45);
+      doc.text('Date:', 140, 51);
+      if (values.dueDate) doc.text('Due Date:', 140, 57);
       
       doc.setFont('helvetica', 'normal');
-      doc.text(values.invoiceNumber, 190, 50, { align: 'right' });
-      doc.text(format(values.date, 'MMM dd, yyyy'), 190, 56, { align: 'right' });
-      if (values.dueDate) doc.text(format(values.dueDate, 'MMM dd, yyyy'), 190, 62, { align: 'right' });
+      doc.text(values.invoiceNumber, 190, 45, { align: 'right' });
+      doc.text(format(values.date, 'MMM dd, yyyy'), 190, 51, { align: 'right' });
+      if (values.dueDate) doc.text(format(values.dueDate, 'MMM dd, yyyy'), 190, 57, { align: 'right' });
 
-      if (selectedTemplate === 'professional') {
-        doc.line(20, 70, 190, 70);
+      if (isProfessional || isVat || isSalesTax) {
+          doc.setDrawColor(220, 220, 220);
+          doc.line(14, 65, 196, 65);
       }
       
       // --- Line Items Table ---
-      const tableColumn = ["Description", "HSN/SAC", "Qty", "Rate", "Amount"];
-      const tableRows: any[] = values.lineItems.map(item => [
+      let tableColumn = ["Description", "Quantity", "Rate", "Amount"];
+      let tableRows: any[] = values.lineItems.map(item => [
           item.description,
-          item.hsn || '-',
           item.quantity,
           formatCurrencyForPdf(item.rate),
           formatCurrencyForPdf(item.quantity * item.rate),
       ]);
+      
+      if (isGst) {
+          tableColumn = ["Description", "HSN/SAC", "Qty", "Rate", `GST ${values.tax}%`, "Total"];
+          tableRows = values.lineItems.map(item => [
+              item.description,
+              item.hsn || '-',
+              item.quantity,
+              formatCurrencyForPdf(item.rate),
+              formatCurrencyForPdf((item.quantity * item.rate * values.tax)/100),
+              formatCurrencyForPdf(item.quantity * item.rate * (1 + values.tax/100)),
+          ]);
+      }
 
-      let tableTheme: 'striped' | 'grid' | 'plain' = 'striped';
-      let headStyles: any = { fillColor: modernHeader };
+
+      let headStyles: any = { fillColor: [22, 160, 133] }; // Modern
       if (selectedTemplate === 'minimal') {
-          tableTheme = 'grid';
           headStyles = { fillColor: [240, 240, 240], textColor: 0 };
-      } else if (selectedTemplate === 'professional') {
-          tableTheme = 'grid';
-          headStyles = { fillColor: professionalBlue, textColor: 255 };
+      } else if (isProfessional) {
+          headStyles = { fillColor: [0, 51, 102], textColor: 255 };
+      } else if (isGst) {
+          headStyles = { fillColor: [240, 240, 240], textColor: 0 };
+      } else if (isVat) {
+          headStyles = { fillColor: [244, 244, 244], textColor: 0 };
       }
 
       (doc as any).autoTable({
           head: [tableColumn],
           body: tableRows,
-          startY: 75,
-          theme: tableTheme,
+          startY: 70,
+          theme: 'grid',
           headStyles: headStyles,
+          styles: { font: 'helvetica', fontSize: 10 },
       });
       let finalY = (doc as any).lastAutoTable.finalY;
 
@@ -312,8 +320,9 @@ export function AiInvoiceGenerator() {
           doc.text(`-${formatCurrencyForPdf(discountAmount)}`, 190, totalY, { align: 'right' });
           totalY += 6;
       }
-      if (values.tax > 0) {
-          doc.text(`Tax (${values.tax}%):`, totalX, totalY);
+      if (values.tax > 0 && !isGst) {
+          const taxLabel = isVat ? `VAT (${values.tax}%)` : `Sales Tax (${values.tax}%)`;
+          doc.text(`${taxLabel}:`, totalX, totalY);
           doc.text(`+${formatCurrencyForPdf(taxAmount)}`, 190, totalY, { align: 'right' });
           totalY += 6;
       }
@@ -330,9 +339,30 @@ export function AiInvoiceGenerator() {
       doc.text('TOTAL:', totalX, totalY);
       doc.text(formatCurrencyForPdf(total), 190, totalY, { align: 'right' });
 
+      // --- GST/VAT Breakdown ---
+      if (isGst && taxAmount > 0) {
+          totalY += 10;
+          doc.setFontSize(11);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Tax Breakdown:', 14, totalY);
+          (doc as any).autoTable({
+              startY: totalY + 2,
+              body: [
+                  [`CGST (${values.tax/2}%)`, formatCurrencyForPdf(taxAmount / 2)],
+                  [`SGST (${values.tax/2}%)`, formatCurrencyForPdf(taxAmount / 2)],
+                  [{content: 'Total Tax', styles: {fontStyle: 'bold'}} , {content: formatCurrencyForPdf(taxAmount), styles: {fontStyle: 'bold'}}],
+              ],
+              theme: 'grid',
+              styles: { fontSize: 10 },
+              columnStyles: { 0: { cellWidth: 30 }, 1: { halign: 'right' } }
+          });
+          finalY = (doc as any).lastAutoTable.finalY;
+      }
+
+
       // --- Footer Notes ---
       const pageHeight = doc.internal.pageSize.height;
-      let notesY = totalY + 20 > pageHeight - 60 ? totalY + 10 : pageHeight - 40;
+      let notesY = Math.max(finalY, totalY) + 20;
 
       doc.setFontSize(9);
       doc.setTextColor(100);
@@ -340,16 +370,16 @@ export function AiInvoiceGenerator() {
 
       if (values.notes) {
           doc.setFont('helvetica', 'bold');
-          doc.text('Notes:', 20, notesY);
+          doc.text('Notes:', 14, notesY);
           doc.setFont('helvetica', 'normal');
-          doc.text(values.notes.split('\n'), 20, notesY + 4, { maxWidth: 80 });
+          doc.text(values.notes.split('\n'), 14, notesY + 4, { maxWidth: 80 });
       }
 
       if (values.bankDetails) {
           doc.setFont('helvetica', 'bold');
           doc.text('Bank Details:', 110, notesY);
           doc.setFont('helvetica', 'normal');
-          doc.text(values.bankDetails.split('\n'), 110, notesY + 4);
+          doc.text(values.bankDetails.split('\n'), 110, notesY + 4, { maxWidth: 80 });
       }
 
       if (values.terms) {
@@ -633,6 +663,9 @@ export function AiInvoiceGenerator() {
                            <SelectItem value="modern">Modern</SelectItem>
                            <SelectItem value="minimal">Minimal</SelectItem>
                            <SelectItem value="professional">Professional</SelectItem>
+                           <SelectItem value="sales-tax">USA/Canada Sales Tax</SelectItem>
+                           <SelectItem value="vat">EU/UK VAT</SelectItem>
+                           <SelectItem value="gst">India GST</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
