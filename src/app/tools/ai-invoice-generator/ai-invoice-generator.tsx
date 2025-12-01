@@ -181,8 +181,13 @@ export function AiInvoiceGenerator() {
     }
   };
   
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number, forPdf = false) => {
     const currency = countries.find(c => c.code === selectedCountry)?.currency || 'USD';
+    if (forPdf) {
+      // Simple, reliable formatting for jspdf
+      return `${currency} ${amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    }
+    // Richer formatting for the UI
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
@@ -257,8 +262,8 @@ export function AiInvoiceGenerator() {
           item.description,
           item.hsn || '-',
           item.quantity,
-          formatCurrency(item.rate),
-          formatCurrency(item.quantity * item.rate),
+          formatCurrency(item.rate, true),
+          formatCurrency(item.quantity * item.rate, true),
       ]);
 
       let tableTheme: 'striped' | 'grid' | 'plain' = 'striped';
@@ -288,22 +293,22 @@ export function AiInvoiceGenerator() {
       doc.setFont('helvetica', 'normal');
       
       doc.text('Subtotal:', totalX, totalY);
-      doc.text(formatCurrency(subtotal), 190, totalY, { align: 'right' });
+      doc.text(formatCurrency(subtotal, true), 190, totalY, { align: 'right' });
       totalY += 6;
 
       if (values.discount > 0) {
           doc.text(`Discount (${values.discount}%):`, totalX, totalY);
-          doc.text(`-${formatCurrency(discountAmount)}`, 190, totalY, { align: 'right' });
+          doc.text(`-${formatCurrency(discountAmount, true)}`, 190, totalY, { align: 'right' });
           totalY += 6;
       }
       if (values.tax > 0) {
           doc.text(`Tax (${values.tax}%):`, totalX, totalY);
-          doc.text(`+${formatCurrency(taxAmount)}`, 190, totalY, { align: 'right' });
+          doc.text(`+${formatCurrency(taxAmount, true)}`, 190, totalY, { align: 'right' });
           totalY += 6;
       }
       if (values.shipping > 0) {
           doc.text(`Shipping:`, totalX, totalY);
-          doc.text(formatCurrency(values.shipping), 190, totalY, { align: 'right' });
+          doc.text(formatCurrency(values.shipping, true), 190, totalY, { align: 'right' });
           totalY += 6;
       }
       
@@ -312,7 +317,7 @@ export function AiInvoiceGenerator() {
       doc.line(totalX, totalY, 190, totalY);
       totalY += 6;
       doc.text('TOTAL:', totalX, totalY);
-      doc.text(formatCurrency(total), 190, totalY, { align: 'right' });
+      doc.text(formatCurrency(total, true), 190, totalY, { align: 'right' });
 
       // --- Footer Notes ---
       let notesY = pageHeight - 40;
