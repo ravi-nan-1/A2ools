@@ -22,13 +22,8 @@ export type RemoveBackgroundInput = z.infer<typeof RemoveBackgroundInputSchema>;
 const RemoveBackgroundOutputSchema = z.object({
   backgroundRemovedPhotoDataUri: z
     .string()
-    .describe('The product photo with the background removed, as a data URI.'),
-});
-export type RemoveBackgroundOutput = z.infer<typeof RemoveBackgroundOutputSchema>;
-
-export async function removeBackground(input: RemoveBackgroundInput): Promise<RemoveBackgroundOutput> {
-  return removeBackgroundFlow(input);
-}
+e  }
+);
 
 const removeBackgroundFlow = ai.defineFlow(
   {
@@ -38,13 +33,13 @@ const removeBackgroundFlow = ai.defineFlow(
   },
   async input => {
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-exp',
+      model: 'googleai/gemini-2.5-flash-image-preview',
       prompt: [
         {media: {url: input.productPhotoDataUri}},
         {text: 'Remove the background from this product photo. The resulting image should have a transparent background.'},
       ],
       config: {
-        responseModalities: ['IMAGE'],
+        responseModalities: ['IMAGE', 'TEXT'],
       },
     });
 
