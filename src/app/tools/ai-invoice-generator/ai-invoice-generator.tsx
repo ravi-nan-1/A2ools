@@ -55,7 +55,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 const lineItemSchema = z.object({
   description: z.string().min(1, 'Description is required.'),
@@ -193,7 +193,6 @@ export function AiInvoiceGenerator() {
   const [selectedCountry, setSelectedCountry] = useState('US');
   const [isClient, setIsClient] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
-  const { toast } = useToast();
   const invoicePrintRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -299,7 +298,11 @@ export function AiInvoiceGenerator() {
         if (action === 'download') {
             pdf.save(`invoice-${form.getValues('invoiceNumber')}.pdf`);
         } else {
-            pdf.output('dataurlnewwindow');
+            const pdfDataUri = pdf.output('datauristring');
+            const newWindow = window.open();
+            if (newWindow) {
+                newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
+            }
         }
     } catch (error) {
         console.error("Failed to generate PDF", error);
