@@ -16,6 +16,7 @@ const relatedTools = [
   { name: "Cheat Sheet / Summary Generator", description: "Instantly summarize documents and text.", href: "https://summary.all2ools.com" },
   { name: "QR Generator", description: "Create custom QR codes for your links.", href: "https://qr.all2ools.com" },
   { name: "AI Study Buddy / Tutor", description: "Your personal AI-powered study assistant.", href: "https://aitutor.all2ools.com" },
+  { name: "Image Tools", description: "Crop, resize, and enhance your images.", href: "https://imagetools.all2ools.com" }
 ];
 
 export function Footer() {
