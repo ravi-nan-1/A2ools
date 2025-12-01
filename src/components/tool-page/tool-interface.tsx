@@ -21,6 +21,7 @@ import { AiHeadshotGenerator } from '@/app/tools/ai-headshot-generator/ai-headsh
 import { KeywordClusterGenerator } from '@/app/tools/keyword-cluster-generator/keyword-cluster-generator';
 import { AiProductDescriptionGenerator } from '@/app/tools/ai-product-description-generator/ai-product-description-generator';
 import { JsonExcelConverter } from '@/app/tools/json-excel-converter/json-excel-converter';
+import { RegexGeneratorFromText } from '@/app/tools/regex-generator-from-text/regex-generator-from-text';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -67,6 +68,8 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
         return <AiProductDescriptionGenerator />;
       case 'json-excel-converter':
         return <JsonExcelConverter />;
+      case 'regex-generator-from-text':
+        return <RegexGeneratorFromText />;
       case 'ai-schema-markup-generator':
         return <PlaceholderTool />;
       default:

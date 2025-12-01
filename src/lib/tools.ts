@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from 'lucide-react';
 import {
   Calculator,
@@ -312,7 +313,7 @@ howItWorks: [],
     useCases: [],
   },
   {
-    name: 'Regex Generator From Text',
+    name: 'AI Regex Generator',
     slug: 'regex-generator-from-text',
     category: 'Developer',
     icon: 'Regex',

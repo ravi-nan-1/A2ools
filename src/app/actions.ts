@@ -10,6 +10,7 @@ import { generateFinancialsFromPrompt } from "@/ai/flows/generate-financials-fro
 import { generateHeadshot } from '@/ai/flows/generate-headshot';
 import { generateKeywordClusters } from '@/ai/flows/generate-keyword-clusters';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
+import { generateRegexFromText } from '@/ai/flows/generate-regex-from-text';
 
 const GenerateProductDescriptionInputSchema = z.object({
   productName: z.string().min(3, 'Product name must be at least 3 characters.'),
@@ -18,6 +19,12 @@ const GenerateProductDescriptionInputSchema = z.object({
   tone: z.string().min(1, 'Please select a tone.'),
 });
 
+const GenerateRegexInputSchema = z.object({
+  sampleText: z.string().min(5, 'Please provide at least 5 characters of sample text.'),
+  isCaseSensitive: z.boolean(),
+  isGlobal: z.boolean(),
+  isMultiline: z.boolean(),
+});
 
 async function fileToDataUri(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -226,4 +233,22 @@ export async function handleProductDescriptionGeneration(
   }
 }
 
+
+export async function handleRegexGeneration(
+  input: z.infer<typeof GenerateRegexInputSchema>
+) {
+  try {
+    const validatedInput = GenerateRegexInputSchema.parse(input);
+    const result = await generateRegexFromText(validatedInput);
+    return { data: result };
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return { error: error.errors.map((e) => e.message).join(', ') };
+    }
+    return {
+      error:
+        error.message || 'Failed to generate regex from text.',
+    };
+  }
+}
     
