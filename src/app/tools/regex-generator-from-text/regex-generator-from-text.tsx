@@ -124,10 +124,10 @@ export function RegexGeneratorFromText() {
 
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="space-y-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex justify-between items-center">
@@ -212,72 +212,72 @@ export function RegexGeneratorFromText() {
               )}
               Generate Regex
             </Button>
-          </form>
-        </Form>
-      </div>
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Output</CardTitle>
-            <CardDescription>
-              The generated regular expression and an explanation of how it works.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center text-center p-8 h-64">
-                <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
-                <h3 className="text-xl font-semibold">Generating Regex...</h3>
-                <p className="text-muted-foreground">The AI is analyzing your text.</p>
-              </div>
-            ) : result ? (
-              <div className="space-y-4">
-                <div>
-                  <FormLabel>Generated Regex</FormLabel>
-                  <div className="relative">
-                     <SyntaxHighlighter language="regex" style={oneLight} className="!mt-1 !p-3 !rounded-md !bg-muted">
-                        {result.regex}
-                    </SyntaxHighlighter>
-                    <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-8 w-8" onClick={() => copyToClipboard(result.regex)}><Copy/></Button>
+          </div>
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Output</CardTitle>
+                <CardDescription>
+                  The generated regular expression and an explanation of how it works.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="flex flex-col items-center justify-center text-center p-8 h-64">
+                    <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+                    <h3 className="text-xl font-semibold">Generating Regex...</h3>
+                    <p className="text-muted-foreground">The AI is analyzing your text.</p>
                   </div>
-                </div>
-                 <div>
-                  <FormLabel className="flex items-center gap-2"><Wand2/>AI Explanation</FormLabel>
-                  <div className="text-sm p-3 bg-muted rounded-md text-muted-foreground prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: result.explanation.replace(/\n/g, '<br/>') }}></div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg h-64 flex items-center justify-center">
-                <p>Your generated regex will appear here.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        
-         <Card>
-            <CardHeader><CardTitle>Live Tester</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-                <div className="space-y-1">
-                    <FormLabel htmlFor="test-string">Test String</FormLabel>
-                    <Textarea 
-                        id="test-string"
-                        placeholder="Paste text here to test the regex against it."
-                        value={testString}
-                        onChange={(e) => setTestString(e.target.value)}
-                        rows={4}
-                        disabled={!result}
-                    />
-                </div>
-                <div className="space-y-1">
-                    <FormLabel>Matches</FormLabel>
-                    <div className="p-3 bg-muted rounded-md min-h-[80px] text-sm">
-                        {getHighlightedText()}
+                ) : result ? (
+                  <div className="space-y-4">
+                    <div>
+                      <FormLabel>Generated Regex</FormLabel>
+                      <div className="relative">
+                         <SyntaxHighlighter language="regex" style={oneLight} className="!mt-1 !p-3 !rounded-md !bg-muted">
+                            {result.regex}
+                        </SyntaxHighlighter>
+                        <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-8 w-8" onClick={() => copyToClipboard(result.regex)}><Copy/></Button>
+                      </div>
                     </div>
-                </div>
-            </CardContent>
-         </Card>
+                     <div>
+                      <FormLabel className="flex items-center gap-2"><Wand2/>AI Explanation</FormLabel>
+                      <div className="text-sm p-3 bg-muted rounded-md text-muted-foreground prose prose-sm dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: result.explanation.replace(/\n/g, '<br/>') }}></div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg h-64 flex items-center justify-center">
+                    <p>Your generated regex will appear here.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+             <Card>
+                <CardHeader><CardTitle>Live Tester</CardTitle></CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="space-y-1">
+                        <FormLabel htmlFor="test-string">Test String</FormLabel>
+                        <Textarea 
+                            id="test-string"
+                            placeholder="Paste text here to test the regex against it."
+                            value={testString}
+                            onChange={(e) => setTestString(e.target.value)}
+                            rows={4}
+                            disabled={!result}
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <FormLabel>Matches</FormLabel>
+                        <div className="p-3 bg-muted rounded-md min-h-[80px] text-sm">
+                            {getHighlightedText()}
+                        </div>
+                    </div>
+                </CardContent>
+             </Card>
 
-      </div>
-    </div>
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 }
