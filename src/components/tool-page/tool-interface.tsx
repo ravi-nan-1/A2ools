@@ -18,6 +18,7 @@ import { ForexArbitrageChecker } from '@/app/tools/forex-arbitrage-checker/forex
 import { AiInvoiceGenerator } from '@/app/tools/ai-invoice-generator/ai-invoice-generator';
 import { BusinessValuationCalculator } from '@/app/tools/business-valuation-calculator/business-valuation-calculator';
 import { AiHeadshotGenerator } from '@/app/tools/ai-headshot-generator/ai-headshot-generator';
+import { KeywordClusterGenerator } from '@/app/tools/keyword-cluster-generator/keyword-cluster-generator';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -58,6 +59,8 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
         return <BusinessValuationCalculator />;
       case 'ai-headshot-generator':
         return <AiHeadshotGenerator />;
+      case 'keyword-cluster-generator':
+        return <KeywordClusterGenerator />;
       default:
         return <PlaceholderTool />;
     }

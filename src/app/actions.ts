@@ -7,6 +7,7 @@ import { translateContent } from "@/ai/flows/translate-content";
 import { generateInvoiceFromPrompt } from "@/ai/flows/generate-invoice-from-prompt";
 import { generateFinancialsFromPrompt } from "@/ai/flows/generate-financials-from-prompt";
 import { generateHeadshot } from '@/ai/flows/generate-headshot';
+import { generateKeywordClusters } from '@/ai/flows/generate-keyword-clusters';
 
 
 async function fileToDataUri(file: File): Promise<string> {
@@ -177,4 +178,23 @@ export async function handleHeadshotGeneration(formData: FormData) {
     }
     return { error: error.message || 'An unexpected error occurred during headshot generation.' };
   }
+}
+
+export async function handleKeywordClusterGeneration(formData: FormData) {
+    try {
+        const primaryKeyword = formData.get('primaryKeyword') as string;
+        const secondaryKeywords = formData.getAll('secondaryKeywords') as string[];
+
+        if (!primaryKeyword) {
+            return { error: 'Primary keyword is required.' };
+        }
+
+        const result = await generateKeywordClusters({ 
+            primaryKeyword, 
+            secondaryKeywords: secondaryKeywords.filter(k => k.trim() !== '')
+        });
+        return { data: result };
+    } catch (error: any) {
+        return { error: error.message || 'Failed to generate keyword clusters.' };
+    }
 }
