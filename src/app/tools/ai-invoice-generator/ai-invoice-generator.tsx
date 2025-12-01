@@ -47,6 +47,7 @@ import {
   CalendarIcon,
   Download,
   Loader2,
+  Globe,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -74,17 +75,19 @@ const invoiceSchema = z.object({
 
 type InvoiceFormValues = z.infer<typeof invoiceSchema>;
 
-const currencies = [
-  { code: 'USD', name: 'US Dollar' },
-  { code: 'EUR', name: 'Euro' },
-  { code: 'GBP', name: 'British Pound' },
-  { code: 'INR', name: 'Indian Rupee' },
-  { code: 'JPY', name: 'Japanese Yen' },
+const countries = [
+    { code: 'US', name: 'United States', currency: 'USD' },
+    { code: 'GB', name: 'United Kingdom', currency: 'GBP' },
+    { code: 'EU', name: 'European Union', currency: 'EUR' },
+    { code: 'IN', name: 'India', currency: 'INR' },
+    { code: 'JP', name: 'Japan', currency: 'JPY' },
+    { code: 'CA', name: 'Canada', currency: 'CAD' },
+    { code: 'AU', name: 'Australia', currency: 'AUD' },
 ];
 
 export function AiInvoiceGenerator() {
   const { toast } = useToast();
-  const [currency, setCurrency] = useState('USD');
+  const [selectedCountry, setSelectedCountry] = useState('US');
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -152,6 +155,7 @@ export function AiInvoiceGenerator() {
   };
   
   const formatCurrency = (amount: number) => {
+    const currency = countries.find(c => c.code === selectedCountry)?.currency || 'USD';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
@@ -373,11 +377,13 @@ export function AiInvoiceGenerator() {
           </CardHeader>
           <CardContent className="space-y-4">
              <div>
-                <label className="text-sm font-medium">Currency</label>
-                <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger className="mt-1"><SelectValue placeholder="Select Currency" /></SelectTrigger>
+                <label className="text-sm font-medium">Country</label>
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Select Country" />
+                    </SelectTrigger>
                     <SelectContent>
-                        {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.name} ({c.code})</SelectItem>)}
+                        {countries.map(c => <SelectItem key={c.code} value={c.code}> <Globe className="inline-block mr-2 h-4 w-4"/> {c.name} ({c.currency})</SelectItem>)}
                     </SelectContent>
                 </Select>
             </div>
