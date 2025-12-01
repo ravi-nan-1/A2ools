@@ -19,52 +19,42 @@ const styles = [
   {
     name: 'Corporate',
     prompt:
-      'a professional corporate headshot, sharp focus, neutral gray or blue background, studio lighting, wearing a business suit',
-    imageHint: 'corporate headshot',
+      'a professional corporate headshot, wearing a business suit, sharp focus, looking at camera',
   },
   {
     name: 'Creative',
     prompt:
-      'a creative, artistic headshot against a textured, abstract background with vibrant, dramatic lighting',
-    imageHint: 'creative portrait',
+      'a creative, artistic headshot, wearing a stylish outfit, with vibrant, dramatic lighting',
   },
   {
-    name: 'Classic B&W',
-    prompt:
-      'a classic black and white headshot, timeless, elegant, soft studio lighting, simple dark background',
-    imageHint: 'classic portrait',
+    name: 'Classic',
+    prompt: 'a classic black and white headshot, timeless, elegant, soft lighting',
   },
   {
-    name: 'Tech Founder',
-    prompt:
-      'a modern tech-style headshot, clean, confident expression, taken in a modern office with a slightly blurred background',
-    imageHint: 'tech professional',
-  },
-  {
-    name: 'Friendly Casual',
+    name: 'Friendly',
     prompt:
       'a friendly and approachable casual headshot, smiling, wearing a simple t-shirt or sweater, warm and inviting lighting',
-    imageHint: 'casual portrait',
-  },
-  {
-    name: 'Outdoor',
-    prompt:
-      'a professional headshot taken outdoors with natural lighting, with a softly blurred natural background like a park or modern architecture',
-    imageHint: 'outdoor portrait',
-  },
-  {
-    name: 'Dramatic',
-    prompt:
-      'a dramatic, cinematic headshot with high-contrast lighting (chiaroscuro), intense expression, dark and moody background',
-    imageHint: 'dramatic portrait',
-  },
-  {
-    name: 'Futuristic/Sci-Fi',
-    prompt:
-      'a futuristic, sci-fi style headshot with neon accents, a sleek, minimalist background, and a visionary expression',
-    imageHint: 'futuristic portrait',
   },
 ];
+
+const backgrounds = [
+    {
+        name: "Studio",
+        prompt: "against a simple, professional studio background with soft, even lighting",
+    },
+    {
+        name: "Office",
+        prompt: "in a modern office with a slightly blurred background",
+    },
+    {
+        name: "Outdoor",
+        prompt: "outdoors with natural lighting, with a softly blurred natural background like a park or modern architecture",
+    },
+    {
+        name: "Gradient",
+        prompt: "against a subtle, abstract gradient background",
+    }
+]
 
 export function AiHeadshotGenerator() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -72,6 +62,8 @@ export function AiHeadshotGenerator() {
   const [generatedUrl, setGeneratedUrl] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [selectedStyle, setSelectedStyle] = useState<string>(styles[0].prompt);
+  const [selectedBackground, setSelectedBackground] = useState<string>(backgrounds[0].prompt);
+
   const { toast } = useToast();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,9 +98,11 @@ export function AiHeadshotGenerator() {
     setIsGenerating(true);
     setGeneratedUrl('');
 
+    const finalPrompt = `${selectedStyle}, ${selectedBackground}`;
+
     const formData = new FormData();
     formData.append('image', originalFile);
-    formData.append('style', selectedStyle);
+    formData.append('style', finalPrompt);
 
     try {
       const result = await handleHeadshotGeneration(formData);
@@ -183,8 +177,8 @@ export function AiHeadshotGenerator() {
             </label>
           </div>
 
-          <div>
-            <h3 className="text-lg font-medium mb-2">Choose a Style</h3>
+          <div className='space-y-4'>
+            <h3 className="text-lg font-medium">1. Choose a Style</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {styles.map((style) => (
                 <Card
@@ -204,10 +198,32 @@ export function AiHeadshotGenerator() {
               ))}
             </div>
           </div>
+           <div className='space-y-4'>
+            <h3 className="text-lg font-medium">2. Choose a Background</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {backgrounds.map((bg) => (
+                <Card
+                  key={bg.name}
+                  onClick={() => setSelectedBackground(bg.prompt)}
+                  className={cn(
+                    'cursor-pointer transition-all',
+                    selectedBackground === bg.prompt
+                      ? 'border-primary ring-2 ring-primary'
+                      : 'hover:border-primary/50'
+                  )}
+                >
+                  <CardContent className="p-3 text-center flex items-center justify-center h-full">
+                    <p className="font-semibold text-sm">{bg.name}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Right Side: Generation and Result */}
         <div className="space-y-4 text-center">
+            <h3 className="text-lg font-medium">3. Generate Your Headshot</h3>
           <Button
             onClick={handleGenerate}
             disabled={!originalFile || isGenerating}
