@@ -102,8 +102,6 @@ export function AiInvoiceGenerator() {
   const [selectedCountry, setSelectedCountry] = useState('US');
   const [isClient, setIsClient] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
-  const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -278,14 +276,19 @@ export function AiInvoiceGenerator() {
             doc.setFont('helvetica', 'normal');
             doc.text(values.terms, 20, notesY + 4, { maxWidth: 170 });
         }
+        
+        if (values.bankDetails) {
+            notesY += (doc.getTextDimensions(values.terms || '', {maxWidth: 170}).h) + 6;
+             doc.setFont('helvetica', 'bold');
+            doc.text('Bank Details:', 20, notesY);
+            doc.setFont('helvetica', 'normal');
+            doc.text(values.bankDetails, 20, notesY + 4, { maxWidth: 170 });
+        }
 
         if (action === 'download') {
             doc.save(`invoice-${values.invoiceNumber}.pdf`);
-        } else {
-            const pdfBlob = doc.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            setPreviewPdfUrl(pdfUrl);
-            setIsPreviewOpen(true);
+        } else if (action === 'preview') {
+            doc.output('dataurlnewwindow');
         }
 
     } catch (error) {
@@ -564,30 +567,17 @@ export function AiInvoiceGenerator() {
                   </Select>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-4">
-                  <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                    <Button variant="outline" onClick={() => generatePdf('preview')} disabled={isProcessingPdf} className="w-full"><Eye className="mr-2 h-4 w-4"/>Preview</Button>
-                    <DialogContent className="max-w-4xl h-[90vh]">
-                        <DialogHeader>
-                            <DialogTitle>Invoice Preview</DialogTitle>
-                        </DialogHeader>
-                        {isProcessingPdf ? (
-                             <div className="flex items-center justify-center h-full">
-                                <Loader2 className="h-8 w-8 animate-spin" />
-                            </div>
-                        ) : previewPdfUrl ? (
-                            <iframe src={previewPdfUrl} className="w-full h-full" />
-                        ) : (
-                           <div className="flex items-center justify-center h-full text-muted-foreground">
-                                <p>Could not generate preview.</p>
-                            </div>
-                        )}
-                    </DialogContent>
-                  </Dialog>
-                  <Button variant="default" onClick={() => generatePdf('download')} disabled={isProcessingPdf}>
-                      {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Download className="mr-2 h-4 w-4"/>}
-                      Download PDF
-                  </Button>
-                  <Button className="col-span-2" onClick={handleSend}><Send className="mr-2 h-4 w-4"/>Send Invoice</Button>
+                 
+                <Button variant="outline" onClick={() => generatePdf('preview')} disabled={isProcessingPdf} className="w-full">
+                  {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Eye className="mr-2 h-4 w-4"/>}
+                  Preview
+                </Button>
+
+                <Button variant="default" onClick={() => generatePdf('download')} disabled={isProcessingPdf}>
+                    {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Download className="mr-2 h-4 w-4"/>}
+                    Download PDF
+                </Button>
+                <Button className="col-span-2" onClick={handleSend}><Send className="mr-2 h-4 w-4"/>Send Invoice</Button>
               </div>
             </CardContent>
           </Card>
