@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Calculator, AlertTriangle, Loader2, LineChart, PieChart, Landmark, DollarSign, Scale, Sparkles } from 'lucide-react';
+import { Calculator, AlertTriangle, Loader2, LineChart, PieChart, Landmark, DollarSign, Scale, Sparkles, Globe } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
@@ -51,31 +51,75 @@ interface ValuationResult {
   assetValuation: { nav: number };
 }
 
+type Country = 'US' | 'IN';
+const countries: { code: Country, name: string, currency: string, locale: string }[] = [
+    { code: 'US', name: 'United States', currency: 'USD', locale: 'en-US' },
+    { code: 'IN', name: 'India', currency: 'INR', locale: 'en-IN' },
+]
+
 export function BusinessValuationCalculator() {
   const [valuationResult, setValuationResult] = useState<ValuationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessingAi, setIsProcessingAi] = useState(false);
+  const [country, setCountry] = useState<Country>('US');
   const { toast } = useToast();
+
+  useEffect(() => {
+    try {
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (timeZone.startsWith('Asia/')) {
+            setCountry('IN');
+        } else {
+            setCountry('US');
+        }
+    } catch (error) {
+        console.error("Could not detect timezone, defaulting to US.");
+        setCountry('US');
+    }
+  }, []);
+  
+  const isIndia = country === 'IN';
 
   const form = useForm<ValuationFormData>({
     resolver: zodResolver(valuationSchema),
     defaultValues: {
-      revenue: 500000,
-      opex: 300000,
-      depreciation: 25000,
-      capex: 40000,
-      workingCapitalChange: 10000,
+      revenue: isIndia ? 5000000 : 500000,
+      opex: isIndia ? 3000000 : 300000,
+      depreciation: isIndia ? 250000 : 25000,
+      capex: isIndia ? 400000 : 40000,
+      workingCapitalChange: isIndia ? 100000 : 10000,
       taxRate: 21,
       growthRate: 15,
       discountRate: 12,
       industry: 'saas',
-      ownerSalary: 80000,
-      addBacks: 10000,
-      totalAssets: 400000,
-      totalLiabilities: 150000
+      ownerSalary: isIndia ? 1200000 : 80000,
+      addBacks: isIndia ? 100000 : 10000,
+      totalAssets: isIndia ? 4000000 : 400000,
+      totalLiabilities: isIndia ? 1500000 : 150000,
     },
     mode: 'onChange',
+    key: country, // Re-mounts form on country change
   });
+  
+  const { reset } = form;
+  useEffect(() => {
+      reset({
+        revenue: isIndia ? 5000000 : 500000,
+        opex: isIndia ? 3000000 : 300000,
+        depreciation: isIndia ? 250000 : 25000,
+        capex: isIndia ? 400000 : 40000,
+        workingCapitalChange: isIndia ? 100000 : 10000,
+        taxRate: 21,
+        growthRate: 15,
+        discountRate: 12,
+        industry: 'saas',
+        ownerSalary: isIndia ? 1200000 : 80000,
+        addBacks: isIndia ? 100000 : 10000,
+        totalAssets: isIndia ? 4000000 : 400000,
+        totalLiabilities: isIndia ? 1500000 : 150000,
+      });
+  }, [country, isIndia, reset]);
+
 
   const onSubmit = (data: ValuationFormData) => {
     setIsLoading(true);
@@ -159,13 +203,26 @@ export function BusinessValuationCalculator() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { 
+    const selectedCountry = countries.find(c => c.code === country);
+    if (!selectedCountry) return amount.toString();
+
+    return new Intl.NumberFormat(selectedCountry.locale, { 
         style: 'currency', 
-        currency: 'USD', 
+        currency: selectedCountry.currency, 
         notation: 'compact',
         maximumFractionDigits: 2 
     }).format(amount);
   }
+
+  const formatCurrencyFull = (amount: number) => {
+    const selectedCountry = countries.find(c => c.code === country);
+    if (!selectedCountry) return amount.toString();
+    return new Intl.NumberFormat(selectedCountry.locale, {
+      style: 'currency',
+      currency: selectedCountry.currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   return (
     <div className="space-y-8">
@@ -178,6 +235,22 @@ export function BusinessValuationCalculator() {
       </Alert>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
         <div className="space-y-6 md:col-span-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Settings</CardTitle>
+                </CardHeader>
+                 <CardContent>
+                    <FormLabel>Currency / Region</FormLabel>
+                    <Select value={country} onValueChange={(val) => setCountry(val as Country)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select Country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {countries.map(c => <SelectItem key={c.code} value={c.code}> <Globe className="inline-block mr-2 h-4 w-4"/> {c.name} ({c.currency})</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </CardContent>
+            </Card>
             <Card>
                  <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -210,35 +283,35 @@ export function BusinessValuationCalculator() {
                   <CardContent className="space-y-4">
                      <FormField control={form.control} name="revenue" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Last 12 Months Revenue ($)</FormLabel>
+                            <FormLabel>Last 12 Months Revenue ({country})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="opex" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Operating Expenses (Opex, ex-Depr.) ($)</FormLabel>
+                            <FormLabel>Operating Expenses (Opex, ex-Depr.) ({country})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="depreciation" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Depreciation & Amortization ($)</FormLabel>
+                            <FormLabel>Depreciation & Amortization ({country})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="capex" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Capital Expenditures (CAPEX) ($)</FormLabel>
+                            <FormLabel>Capital Expenditures (CAPEX) ({country})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="workingCapitalChange" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Annual Change in Working Capital ($)</FormLabel>
+                            <FormLabel>Annual Change in Working Capital ({country})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
@@ -284,16 +357,16 @@ export function BusinessValuationCalculator() {
                         </FormItem>
                     )} />
                     <FormField control={form.control} name="ownerSalary" render={({ field }) => (
-                        <FormItem><FormLabel>Owner's Salary ($)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Owner's Salary ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                      <FormField control={form.control} name="addBacks" render={({ field }) => (
-                        <FormItem><FormLabel>Discretionary Expenses / Add-backs ($)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Discretionary Expenses / Add-backs ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                     <FormField control={form.control} name="totalAssets" render={({ field }) => (
-                        <FormItem><FormLabel>Total Assets ($)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Total Assets ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                     <FormField control={form.control} name="totalLiabilities" render={({ field }) => (
-                        <FormItem><FormLabel>Total Liabilities ($)</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Total Liabilities ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                   </CardContent>
                 </Card>
@@ -381,3 +454,5 @@ export function BusinessValuationCalculator() {
     </div>
   );
 }
+
+    
