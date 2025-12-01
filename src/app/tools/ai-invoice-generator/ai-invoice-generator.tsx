@@ -41,7 +41,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -62,7 +61,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const lineItemSchema = z.object({
   description: z.string().min(1, 'Description is required.'),
@@ -201,7 +200,9 @@ export function AiInvoiceGenerator() {
   const [isClient, setIsClient] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const invoicePrintRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     setIsClient(true);
@@ -284,6 +285,7 @@ export function AiInvoiceGenerator() {
     if (!invoicePrintRef.current) return;
     
     setIsProcessingPdf(true);
+    setPreviewPdfUrl(null);
     
     try {
         const canvas = await html2canvas(invoicePrintRef.current, {
@@ -308,6 +310,7 @@ export function AiInvoiceGenerator() {
         } else {
             const pdfDataUri = pdf.output('datauristring');
             setPreviewPdfUrl(pdfDataUri);
+            setIsPreviewOpen(true);
         }
     } catch (error) {
         console.error("Failed to generate PDF", error);
@@ -585,19 +588,21 @@ export function AiInvoiceGenerator() {
                   </Select>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-4">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                         <Button variant="outline" onClick={() => generatePdf('preview')} disabled={isProcessingPdf}><Eye className="mr-2 h-4 w-4"/>Preview</Button>
-                    </DialogTrigger>
+                  <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+                    <Button variant="outline" onClick={() => generatePdf('preview')} disabled={isProcessingPdf} className="w-full"><Eye className="mr-2 h-4 w-4"/>Preview</Button>
                     <DialogContent className="max-w-4xl h-[90vh]">
                         <DialogHeader>
                             <DialogTitle>Invoice Preview</DialogTitle>
                         </DialogHeader>
-                        {previewPdfUrl ? (
+                        {isProcessingPdf ? (
+                             <div className="flex items-center justify-center h-full">
+                                <Loader2 className="h-8 w-8 animate-spin" />
+                            </div>
+                        ) : previewPdfUrl ? (
                             <iframe src={previewPdfUrl} className="w-full h-full" />
                         ) : (
-                            <div className="flex items-center justify-center h-full">
-                                <Loader2 className="h-8 w-8 animate-spin" />
+                           <div className="flex items-center justify-center h-full text-muted-foreground">
+                                <p>Could not generate preview.</p>
                             </div>
                         )}
                     </DialogContent>
