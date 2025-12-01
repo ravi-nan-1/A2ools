@@ -9,7 +9,14 @@ import { generateInvoiceFromPrompt } from "@/ai/flows/generate-invoice-from-prom
 import { generateFinancialsFromPrompt } from "@/ai/flows/generate-financials-from-prompt";
 import { generateHeadshot } from '@/ai/flows/generate-headshot';
 import { generateKeywordClusters } from '@/ai/flows/generate-keyword-clusters';
-import { generateProductDescription, GenerateProductDescriptionInputSchema } from '@/ai/flows/generate-product-description';
+import { generateProductDescription } from '@/ai/flows/generate-product-description';
+
+const GenerateProductDescriptionInputSchema = z.object({
+  productName: z.string().min(3, 'Product name must be at least 3 characters.'),
+  features: z.string().min(10, 'Please list at least one key feature.'),
+  targetAudience: z.string().min(3, 'Target audience is required.'),
+  tone: z.string().min(1, 'Please select a tone.'),
+});
 
 
 async function fileToDataUri(file: File): Promise<string> {

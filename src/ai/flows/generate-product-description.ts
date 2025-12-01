@@ -12,13 +12,14 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const GenerateProductDescriptionInputSchema = z.object({
+const GenerateProductDescriptionInputSchema = z.object({
   productName: z.string().describe('The name of the product.'),
   features: z
     .string()
     .describe('A list of key features, benefits, or specifications of the product.'),
   targetAudience: z
     .string()
+
     .describe('The target audience for the product (e.g., "young professionals", "new mothers", "hardcore gamers").'),
   tone: z
     .string()
@@ -28,7 +29,7 @@ export type GenerateProductDescriptionInput = z.infer<
   typeof GenerateProductDescriptionInputSchema
 >;
 
-export const GenerateProductDescriptionOutputSchema = z.object({
+const GenerateProductDescriptionOutputSchema = z.object({
   shopify: z.object({
     title: z.string().describe('An SEO-friendly and engaging title suitable for a Shopify or general e-commerce store (50-70 characters).'),
     description: z.string().describe('A detailed, persuasive product description in HTML format, using paragraphs, bold tags for emphasis, and bullet points for features.'),
