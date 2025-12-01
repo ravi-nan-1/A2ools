@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -262,27 +262,29 @@ export function AiInvoiceGenerator() {
         doc.text(formatCurrency(total), 190, finalY + 34, { align: 'right' });
 
         // Notes and Terms
-        let notesY = 250;
+        let notesY = finalY + 50 > 250 ? 250 : finalY + 50;
         doc.setFontSize(8);
         doc.setFont('helvetica', 'normal');
         if (values.notes) {
             doc.setFont('helvetica', 'bold');
             doc.text('Notes:', 20, notesY);
             doc.setFont('helvetica', 'normal');
-            doc.text(values.notes, 20, notesY + 4);
-            notesY += 10;
+            doc.text(values.notes, 20, notesY + 4, { maxWidth: 170 });
+            notesY += (doc.getTextDimensions(values.notes, {maxWidth: 170}).h) + 6;
         }
         if (values.terms) {
             doc.setFont('helvetica', 'bold');
             doc.text('Terms & Conditions:', 20, notesY);
             doc.setFont('helvetica', 'normal');
-            doc.text(values.terms, 20, notesY + 4);
+            doc.text(values.terms, 20, notesY + 4, { maxWidth: 170 });
         }
 
         if (action === 'download') {
             doc.save(`invoice-${values.invoiceNumber}.pdf`);
         } else {
-            setPreviewPdfUrl(doc.output('datauristring'));
+            const pdfBlob = doc.output('blob');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            setPreviewPdfUrl(pdfUrl);
             setIsPreviewOpen(true);
         }
 
