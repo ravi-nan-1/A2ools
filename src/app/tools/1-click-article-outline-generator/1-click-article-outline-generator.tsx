@@ -14,16 +14,20 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2, Sparkles, Copy, FileText, Bot } from 'lucide-react';
+import { Loader2, Sparkles, Copy, FileText, Bot, Link, UploadCloud, FileUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { handleArticleOutlineGeneration } from '@/app/actions';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { GenerateArticleOutlineOutput } from '@/ai/flows/generate-article-outline';
 
 const formSchema = z.object({
   topic: z.string().min(3, 'Topic must be at least 3 characters long.'),
+  sourceUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+  pastedText: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -37,9 +41,25 @@ export function OneClickArticleOutlineGenerator() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       topic: '',
+      sourceUrl: '',
+      pastedText: '',
     },
     mode: 'onChange',
   });
+  
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const text = e.target?.result as string;
+            form.setValue('pastedText', text);
+            toast({ title: 'File Content Loaded', description: 'The content of your file has been pasted into the text area.' });
+        };
+        reader.readAsText(file);
+    }
+  };
+
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -104,23 +124,98 @@ export function OneClickArticleOutlineGenerator() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Article Topic</CardTitle>
-                <CardDescription>Enter the topic or main keyword for your article.</CardDescription>
+                <CardTitle>Article Topic & Context</CardTitle>
+                <CardDescription>Enter a topic, or provide a URL/text for context.</CardDescription>
               </CardHeader>
               <CardContent>
-                <FormField
-                  control={form.control}
-                  name="topic"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Topic</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 'The benefits of content marketing'" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <Tabs defaultValue="topic" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="topic">Topic</TabsTrigger>
+                    <TabsTrigger value="url">From URL</TabsTrigger>
+                    <TabsTrigger value="paste">Paste Text</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="topic" className="mt-4">
+                     <FormField
+                      control={form.control}
+                      name="topic"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Article Topic</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g., 'The benefits of content marketing'" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                   <TabsContent value="url" className="mt-4 space-y-4">
+                     <FormField
+                      control={form.control}
+                      name="topic"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Topic (required)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g., 'Content marketing strategies'" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="sourceUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center gap-2"><Link className="h-4 w-4"/>Source URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://example.com/article-to-base-outline-on" {...field} />
+                          </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                   <TabsContent value="paste" className="mt-4 space-y-4">
+                     <FormField
+                      control={form.control}
+                      name="topic"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Topic (required)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g., 'Keyword clustering'" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="pastedText"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Pasted Text (notes, keywords, draft)</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Paste your content here..."
+                              rows={8}
+                              {...field}
+                            />
+                          </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <label htmlFor="file-upload" className="w-full">
+                        <Button variant="outline" className="w-full" asChild>
+                            <span><FileUp className="mr-2"/> Upload TXT File</span>
+                        </Button>
+                        <Input id="file-upload" type="file" className="hidden" accept=".txt" onChange={handleFileUpload} />
+                    </label>
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
             
