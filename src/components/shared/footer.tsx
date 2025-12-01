@@ -7,7 +7,6 @@ import { ExternalLink } from 'lucide-react';
 const relatedTools = [
   { name: "HUMANIZER", description: "Convert AI text to sound more human.", href: "https://humanizer.all2ools.com" },
   { name: "PDF / Word / Document Tools", description: "Convert and edit PDF & Word files.", href: "https://pdf2word.all2ools.com" },
-  { name: "STUDIO — File Flipper", description: "A universal file converter for any format.", href: "https://files-flipper.vercel.app" },
   { name: "Plagiarism Detector", description: "Check text for originality and AI content.", href: "https://plagiarism.all2ools.com" },
   { name: "Excel Pro", description: "Advanced tools for spreadsheet automation.", href: "https://iloveexcel.all2ools.com" },
   { name: "TinyURL – URL Shortener", description: "Create short, trackable links.", href: "https://tinyurl.all2ools.com" },
