@@ -21,7 +21,21 @@ import { useToast } from '@/hooks/use-toast';
 import { handleProductDescriptionGeneration } from '@/app/actions';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { GenerateProductDescriptionOutput } from '@/ai/flows/generate-product-description';
+
+interface GenerateProductDescriptionOutput {
+  shopify: {
+    title: string;
+    description: string;
+  };
+  amazon: {
+    title: string;
+    bulletPoints: string[];
+  };
+  socialMedia: {
+    instagram: string;
+    facebook: string;
+  };
+}
 
 
 const formSchema = z.object({
@@ -269,3 +283,5 @@ export function AiProductDescriptionGenerator() {
     </div>
   );
 }
+
+    
