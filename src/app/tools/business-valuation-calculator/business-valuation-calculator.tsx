@@ -71,7 +71,7 @@ export function BusinessValuationCalculator() {
         futureCashFlows.push(lastYearProfit);
       }
       const terminalValue = (lastYearProfit * (1 + 0.03)) / (data.discountRate/100 - 0.03); // Assume 3% perpetual growth
-      futureCasheFlows.push(terminalValue);
+      futureCashFlows.push(terminalValue);
 
       const dcfValuation = futureCashFlows.reduce((acc, cf, i) => {
         return acc + (cf / Math.pow(1 + data.discountRate / 100, i + 1));
