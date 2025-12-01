@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -6,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
   Card,
   CardContent,
@@ -95,17 +94,21 @@ export function RegexGeneratorFromText() {
       return <p className="text-muted-foreground">Enter a test string to see matches.</p>;
     }
     try {
-      const flags = `${result.regex.split('/').pop()}${form.getValues('isGlobal') ? 'g' : ''}${form.getValues('isCaseSensitive') ? '' : 'i'}${form.getValues('isMultiline') ? 'm' : ''}`;
+      const flags = `${form.getValues('isGlobal') ? 'g' : ''}${form.getValues('isCaseSensitive') ? '' : 'i'}${form.getValues('isMultiline') ? 'm' : ''}`;
       const pattern = new RegExp(result.regex.slice(1, result.regex.lastIndexOf('/')), flags);
       const parts = testString.split(pattern);
       const matches = testString.match(pattern);
+
+      if (!matches) {
+        return <span>{testString}</span>;
+      }
 
       return (
         <p className="whitespace-pre-wrap">
           {parts.map((part, i) => (
             <span key={i}>
               {part}
-              {matches && i < matches.length && (
+              {i < matches.length && (
                 <mark className="bg-primary/20 text-primary font-medium rounded-sm px-1">
                   {matches[i]}
                 </mark>
@@ -154,40 +157,45 @@ export function RegexGeneratorFromText() {
                     </FormItem>
                   )}
                 />
-                 <div className="space-y-2">
-                  <FormLabel>Pattern Options</FormLabel>
-                   <div className="flex flex-wrap gap-x-4 gap-y-2">
-                        <FormField
-                            control={form.control}
-                            name="isCaseSensitive"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                                <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                                <FormLabel className="font-normal">Case Sensitive</FormLabel>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="isGlobal"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                                <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                                <FormLabel className="font-normal">Global Match</FormLabel>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="isMultiline"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                                <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                                <FormLabel className="font-normal">Multi-line</FormLabel>
-                                </FormItem>
-                            )}
-                        />
-                   </div>
+              </CardContent>
+            </Card>
+
+             <Card>
+              <CardHeader>
+                <CardTitle>Pattern Options</CardTitle>
+              </CardHeader>
+              <CardContent>
+                 <div className="flex flex-wrap gap-x-4 gap-y-2">
+                      <FormField
+                          control={form.control}
+                          name="isCaseSensitive"
+                          render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                              <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                              <FormLabel className="font-normal">Case Sensitive</FormLabel>
+                              </FormItem>
+                          )}
+                      />
+                      <FormField
+                          control={form.control}
+                          name="isGlobal"
+                          render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                              <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                              <FormLabel className="font-normal">Global Match</FormLabel>
+                              </FormItem>
+                          )}
+                      />
+                      <FormField
+                          control={form.control}
+                          name="isMultiline"
+                          render={({ field }) => (
+                              <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                              <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                              <FormLabel className="font-normal">Multi-line</FormLabel>
+                              </FormItem>
+                          )}
+                      />
                  </div>
               </CardContent>
             </Card>
