@@ -294,7 +294,7 @@ export function AiInvoiceGenerator() {
         const ratio = imgWidth / pdfWidth;
         const finalHeight = imgHeight / ratio;
 
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, finalHeight);
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(pdfHeight, finalHeight));
 
         if (action === 'download') {
             pdf.save(`invoice-${form.getValues('invoiceNumber')}.pdf`);
