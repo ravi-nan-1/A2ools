@@ -22,6 +22,7 @@ import { KeywordClusterGenerator } from '@/app/tools/keyword-cluster-generator/k
 import { AiProductDescriptionGenerator } from '@/app/tools/ai-product-description-generator/ai-product-description-generator';
 import { JsonExcelConverter } from '@/app/tools/json-excel-converter/json-excel-converter';
 import { RegexGeneratorFromText } from '@/app/tools/regex-generator-from-text/regex-generator-from-text';
+import { WebhookTester } from '@/app/tools/webhook-tester/webhook-tester';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -70,6 +71,8 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
         return <JsonExcelConverter />;
       case 'regex-generator-from-text':
         return <RegexGeneratorFromText />;
+      case 'webhook-tester':
+        return <WebhookTester />;
       case 'ai-schema-markup-generator':
         return <PlaceholderTool />;
       default:

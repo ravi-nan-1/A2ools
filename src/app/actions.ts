@@ -11,6 +11,7 @@ import { generateHeadshot } from '@/ai/flows/generate-headshot';
 import { generateKeywordClusters } from '@/ai/flows/generate-keyword-clusters';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
 import { generateRegexFromText, describeRegex } from '@/ai/flows/generate-regex-from-text';
+import { generateWebhookPayload } from '@/ai/flows/webhook-tester';
 import type { GenerateRegexInput, DescribeRegexInput } from '@/ai/flows/generate-regex-from-text';
 
 const GenerateProductDescriptionInputSchema = z.object({
@@ -259,5 +260,14 @@ export async function handleRegexDescription(
         error:
             error.message || 'Failed to describe regex.',
         };
+    }
+}
+
+export async function handleWebhookPayloadGeneration(type: 'github' | 'stripe') {
+    try {
+        const result = await generateWebhookPayload({ type });
+        return { payload: result.payload };
+    } catch (error: any) {
+        return { error: error.message || `Failed to generate ${type} payload.`}
     }
 }

@@ -177,23 +177,23 @@ export const translations: Record<string, Record<string, string>> = {
   },
   es: {
     // Homepage
-    hero_title: 'El Conjunto Definitivo de Herramientas en Línea Gratuitas con IA',
-    hero_subtitle: 'Finanzas, SEO, imágenes, negocios, herramientas para desarrolladores y más.',
-    search_placeholder: 'Buscar una herramienta...',
-    filter_all: 'Todas',
-    filter_finance: 'Finanzas',
-    filter_business: 'Negocios',
-    filter_image: 'Imagen',
-    filter_seo: 'SEO',
-    filter_developer: 'Desarrollador',
-    filter_health: 'Salud',
-    use_tool: 'Usar Herramienta',
+    'hero_title': 'El Conjunto Definitivo de Herramientas en Línea Gratuitas con IA',
+    'hero_subtitle': 'Finanzas, SEO, imágenes, negocios, herramientas para desarrolladores y más.',
+    'search_placeholder': 'Buscar una herramienta...',
+    'filter_all': 'Todas',
+    'filter_finance': 'Finanzas',
+    'filter_business': 'Negocios',
+    'filter_image': 'Imagen',
+    'filter_seo': 'SEO',
+    'filter_developer': 'Desarrollador',
+    'filter_health': 'Salud',
+    'use_tool': 'Usar Herramienta',
     // Tool Page
-    back_to_tools: 'Volver a todas las herramientas',
-    features: 'Características',
-    how_it_works: 'Cómo Funciona',
-    use_cases: 'Casos de Uso Comunes',
-    faq: 'Preguntas Frecuentes',
+    'back_to_tools': 'Volver a todas las herramientas',
+    'features': 'Características',
+    'how_it_works': 'Cómo Funciona',
+    'use_cases': 'Casos de Uso Comunes',
+    'faq': 'Preguntas Frecuentes',
     // Tool Names & Descriptions
     'tinyurl-maker': 'Creador de TinyURL – Acortador de URL',
     'tinyurl-maker_description': 'Crea enlaces cortos, limpios, rápidos y rastreables al instante.',
@@ -814,7 +814,7 @@ export const translations: Record<string, Record<string, string>> = {
     'keyword-cluster-generator_description': 'Crée des clusters de mots-clés SEO en utilisant l\'intention SERP, la difficulté et le regroupement sémantique.',
     'keyword-cluster-generator_long_description': 'Améliorez votre stratégie de référencement en transformant une liste de mots-clés en clusters de sujets structurés et sémantiquement liés. Notre IA analyse l\'intention de recherche de l\'utilisateur et les données SERP pour regrouper logiquement vos mots-clés. Cela vous aide à créer de puissantes pages piliers et des hubs de contenu qui s\'alignent sur la façon dont les moteurs de recherche comprennent les sujets, ce qui améliore finalement votre classement et votre autorité.',
     'keyword-cluster-generator_features': 'Regroupement sémantique de mots-clés optimisé par l\'IA\nAnalyse l\'intention SERP pour créer des clusters pertinents\nPrend en charge une liste de mots-clés en entrée\nOrganise les résultats en groupes de mots-clés principaux et secondaires\nFournit une sortie claire et structurée pour la planification de contenu\nAide à renforcer l\'autorité thématique et les stratégies de pages piliers',
-    'keyword-cluster-generator_how_it_works': 'Saisissez votre mot-clé cible principal.\nAjoutez une liste de mots-clés secondaires connexes que vous souhaitez regrouper.\nCliquez sur le bouton "Générer des clusters".\nL\'IA traite votre liste et analyse les relations entre les mots-clés.\nAffichez les clusters générés, chacun avec un sujet principal et des sous-mots-clés associés.',
+    'keyword-cluster-generator_how_it_works': 'Saisissez votre mot-clé cible principal.\nAjoutez une liste de mots-clés secondaires connexes que vous souhaitez regrouper.\nCliquez sur le bouton "Générer des clusters".\nL\'IA traite votre liste et analyse les relations entre les mots-clés.\nAffichez les clusters générés, chacun avec un sujet principal и des sous-mots-clés associés.',
     'keyword-cluster-generator_use_cases': 'Spécialistes du référencement planifiant un calendrier de contenu.\nMarketeurs de contenu créant des clusters de sujets et des pages piliers.\nBlogueurs organisant leurs articles autour de thèmes centraux.\nAgences de marketing numérique effectuant des recherches de mots-clés pour leurs clients.',
     'keyword-cluster-generator_faq': '1. Qu\'est-ce qu\'un cluster de mots-clés ?\nUn cluster de mots-clés est un groupe de mots-clés connexes qui partagent une intention de recherche similaire. Le ciblage de ces mots-clés ensemble sur une seule page peut améliorer vos performances de référencement.\n\n2. Combien de mots-clés puis-je saisir ?\nVous pouvez généralement saisir un mot-clé principal et une liste de mots-clés secondaires. L\'outil fonctionne mieux avec une liste ciblée liée à un seul sujet principal.\n\n3. Comment l\'IA regroupe-t-elle les mots-clés ?\nL\'IA analyse les résultats de recherche et les relations sémantiques de vos mots-clés pour comprendre lesquels sont utilisés ensemble par les chercheurs et le contenu le mieux classé.',
     'ai-schema-markup-generator': 'Générateur de balisage de schéma IA',
@@ -879,8 +879,3 @@ export const translations: Record<string, Record<string, string>> = {
     'image-compressor_long_description': 'Accélérez votre site Web et économisez de l\'espace de stockage avec notre puissant compresseur d\'images. Cet outil réduit intelligemment la taille de vos fichiers image (JPEG, PNG, GIF, WEBP) tout en maintenant la meilleure qualité possible. Vous pouvez contrôler le niveau de compression et voir un aperçu en temps réel du résultat. Il est parfait pour les développeurs Web, les photographes et tous ceux qui ont besoin d\'optimiser les images.'
   }
 };
-
-    
-    
-
-
