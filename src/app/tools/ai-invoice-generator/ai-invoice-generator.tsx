@@ -36,6 +36,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Trash2,
@@ -193,6 +200,7 @@ export function AiInvoiceGenerator() {
   const [selectedCountry, setSelectedCountry] = useState('US');
   const [isClient, setIsClient] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+  const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const invoicePrintRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -299,10 +307,7 @@ export function AiInvoiceGenerator() {
             pdf.save(`invoice-${form.getValues('invoiceNumber')}.pdf`);
         } else {
             const pdfDataUri = pdf.output('datauristring');
-            const newWindow = window.open();
-            if (newWindow) {
-                newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
-            }
+            setPreviewPdfUrl(pdfDataUri);
         }
     } catch (error) {
         console.error("Failed to generate PDF", error);
@@ -580,7 +585,23 @@ export function AiInvoiceGenerator() {
                   </Select>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-4">
-                  <Button variant="outline" onClick={() => generatePdf('preview')} disabled={isProcessingPdf}><Eye className="mr-2 h-4 w-4"/>Preview</Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                         <Button variant="outline" onClick={() => generatePdf('preview')} disabled={isProcessingPdf}><Eye className="mr-2 h-4 w-4"/>Preview</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl h-[90vh]">
+                        <DialogHeader>
+                            <DialogTitle>Invoice Preview</DialogTitle>
+                        </DialogHeader>
+                        {previewPdfUrl ? (
+                            <iframe src={previewPdfUrl} className="w-full h-full" />
+                        ) : (
+                            <div className="flex items-center justify-center h-full">
+                                <Loader2 className="h-8 w-8 animate-spin" />
+                            </div>
+                        )}
+                    </DialogContent>
+                  </Dialog>
                   <Button variant="default" onClick={() => generatePdf('download')} disabled={isProcessingPdf}>
                       {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Download className="mr-2 h-4 w-4"/>}
                       Download PDF
