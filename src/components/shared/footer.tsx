@@ -2,47 +2,19 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 export function Footer() {
-  const pathname = usePathname();
-  const isToolPage = pathname.startsWith('/tools/');
-  const slug = isToolPage ? pathname.split('/')[2] : '';
-
-  const getNavLinks = () => {
-    if (isToolPage && slug) {
-      return [
-        { href: `/tools/${slug}`, label: 'Tool Home' },
-        { href: `/tools/${slug}/about`, label: 'About' },
-        { href: `/tools/${slug}/contact`, label: 'Contact' },
-        { href: `/tools/${slug}/privacy`, label: 'Privacy' },
-        { href: `/tools/${slug}/terms`, label: 'Terms' },
-      ];
-    }
-    return [
-      { href: '/', label: 'Home' },
-      { href: '/about', label: 'About' },
-      { href: '/contact', label: 'Contact' },
-      { href: '/privacy', label: 'Privacy' },
-      { href: '/terms', label: 'Terms' },
-    ];
-  };
-
-  const navLinks = getNavLinks();
-
   return (
-    <footer className="border-t bg-muted/40">
-      <div className="container flex flex-col items-center justify-between gap-4 py-8 md:flex-row">
-        <p className="text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} All2ools.com. All rights reserved.
-        </p>
-        <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm">
-          {navLinks.map(({ href, label }) => (
-            <Link key={label} href={href} className="text-muted-foreground transition-colors hover:text-primary">
-              {label}
-            </Link>
-          ))}
+    <footer className="w-full bg-background border-t border-border mt-auto py-6">
+      <div className="container mx-auto text-center text-muted-foreground">
+        <nav className="flex justify-center space-x-4 mb-4">
+          <Link href="/" className="hover:text-primary">Home</Link>
+          <Link href="/about" className="hover:text-primary">About</Link>
+          <Link href="/contact" className="hover:text-primary">Contact</Link>
+          <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-primary">Terms of Use</Link>
         </nav>
+        <p>&copy; 2025 PDF2Word. A part of All2ools.com</p>
       </div>
     </footer>
   );
