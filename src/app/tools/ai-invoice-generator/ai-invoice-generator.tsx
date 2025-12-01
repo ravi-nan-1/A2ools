@@ -41,7 +41,6 @@ import {
   Trash2,
   PlusCircle,
   FileText,
-  Settings,
   Send,
   Sparkles,
   Upload,
@@ -52,6 +51,7 @@ import {
   Banknote,
   Percent,
   RefreshCw,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -99,6 +99,7 @@ export function AiInvoiceGenerator() {
   const [isClient, setIsClient] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
   const [isProcessingAi, setIsProcessingAi] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -205,6 +206,9 @@ export function AiInvoiceGenerator() {
     const doc = new jsPDF();
 
     try {
+      if (logoUrl) {
+          doc.addImage(logoUrl, 'PNG', 14, 15, 30, 15);
+      }
       // --- Template-specific styles & logic ---
       const isGst = selectedTemplate === 'gst';
       const isVat = selectedTemplate === 'vat';
@@ -215,18 +219,18 @@ export function AiInvoiceGenerator() {
       doc.setFontSize(22);
       doc.setFont('helvetica', 'bold');
       if (isGst) {
-        doc.text('GST TAX INVOICE', 14, 22);
+        doc.text('GST TAX INVOICE', 196, 22, { align: 'right'});
       } else if (isVat) {
-        doc.text('VAT INVOICE', 14, 22);
+        doc.text('VAT INVOICE', 196, 22, { align: 'right'});
       } else if (isSalesTax) {
-         doc.text('SALES TAX INVOICE', 14, 22);
+         doc.text('SALES TAX INVOICE', 196, 22, { align: 'right'});
       } else if (isProfessional) {
         doc.setFont('times', 'bold');
         doc.setFontSize(26);
         doc.setTextColor(0, 51, 102);
-        doc.text('INVOICE', 20, 25);
+        doc.text('INVOICE', 196, 25, { align: 'right'});
       } else {
-        doc.text('INVOICE', 14, 22);
+        doc.text('INVOICE', 196, 22, { align: 'right'});
       }
       doc.setTextColor(0,0,0); // Reset color
 
@@ -235,27 +239,28 @@ export function AiInvoiceGenerator() {
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(80, 80, 80);
       
-      const fromX = isProfessional ? 190 : 140;
-      const fromAlign = isProfessional ? 'right' : 'left';
-      doc.text(values.from.split('\n'), fromX, 20, { align: fromAlign });
+      const fromY = logoUrl ? 40 : 20;
+      doc.text(values.from.split('\n'), 14, fromY);
 
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(0, 0, 0);
-      doc.text('BILL TO:', 14, 40);
+      doc.text('BILL TO:', 14, 70);
       doc.setFont('helvetica', 'normal');
-      doc.text(values.billTo.split('\n'), 14, 46);
+      doc.text(values.billTo.split('\n'), 14, 76);
 
       // --- Invoice Meta ---
+      const metaX = 140;
+      const metaY = logoUrl ? 40 : 25;
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.text('Invoice #:', 140, 45);
-      doc.text('Date:', 140, 51);
-      if (values.dueDate) doc.text('Due Date:', 140, 57);
+      doc.text('Invoice #:', metaX, metaY);
+      doc.text('Date:', metaX, metaY + 6);
+      if (values.dueDate) doc.text('Due Date:', metaX, metaY + 12);
       
       doc.setFont('helvetica', 'normal');
-      doc.text(values.invoiceNumber, 190, 45, { align: 'right' });
-      doc.text(format(values.date, 'MMM dd, yyyy'), 190, 51, { align: 'right' });
-      if (values.dueDate) doc.text(format(values.dueDate, 'MMM dd, yyyy'), 190, 57, { align: 'right' });
+      doc.text(values.invoiceNumber, 196, metaY, { align: 'right' });
+      doc.text(format(values.date, 'MMM dd, yyyy'), 196, metaY + 6, { align: 'right' });
+      if (values.dueDate) doc.text(format(values.dueDate, 'MMM dd, yyyy'), 196, metaY + 12, { align: 'right' });
 
       if (isProfessional || isVat || isSalesTax) {
           doc.setDrawColor(220, 220, 220);
@@ -271,8 +276,9 @@ export function AiInvoiceGenerator() {
           formatCurrencyForPdf(item.quantity * item.rate),
       ]);
       
-      if (isGst) {
-          tableColumn = ["Description", "HSN/SAC", "Qty", "Rate", `GST ${values.tax}%`, "Total"];
+      if (isGst || isVat || isSalesTax) {
+          const taxLabel = isGst ? `GST ${values.tax}%` : isVat ? `VAT ${values.tax}%` : `Sales Tax ${values.tax}%`;
+          tableColumn = ["Description", "HSN/SAC", "Qty", "Rate", taxLabel, "Total"];
           tableRows = values.lineItems.map(item => [
               item.description,
               item.hsn || '-',
@@ -289,16 +295,14 @@ export function AiInvoiceGenerator() {
           headStyles = { fillColor: [240, 240, 240], textColor: 0 };
       } else if (isProfessional) {
           headStyles = { fillColor: [0, 51, 102], textColor: 255 };
-      } else if (isGst) {
+      } else if (isGst || isVat || isSalesTax) {
           headStyles = { fillColor: [240, 240, 240], textColor: 0 };
-      } else if (isVat) {
-          headStyles = { fillColor: [244, 244, 244], textColor: 0 };
       }
 
       (doc as any).autoTable({
           head: [tableColumn],
           body: tableRows,
-          startY: 70,
+          startY: 100,
           theme: 'grid',
           headStyles: headStyles,
           styles: { font: 'helvetica', fontSize: 10 },
@@ -312,51 +316,62 @@ export function AiInvoiceGenerator() {
       doc.setFont('helvetica', 'normal');
       
       doc.text('Subtotal:', totalX, totalY);
-      doc.text(formatCurrencyForPdf(subtotal), 190, totalY, { align: 'right' });
+      doc.text(formatCurrencyForPdf(subtotal), 196, totalY, { align: 'right' });
       totalY += 6;
 
       if (values.discount > 0) {
           doc.text(`Discount (${values.discount}%):`, totalX, totalY);
-          doc.text(`-${formatCurrencyForPdf(discountAmount)}`, 190, totalY, { align: 'right' });
+          doc.text(`-${formatCurrencyForPdf(discountAmount)}`, 196, totalY, { align: 'right' });
           totalY += 6;
       }
-      if (values.tax > 0 && !isGst) {
-          const taxLabel = isVat ? `VAT (${values.tax}%)` : `Sales Tax (${values.tax}%)`;
-          doc.text(`${taxLabel}:`, totalX, totalY);
-          doc.text(`+${formatCurrencyForPdf(taxAmount)}`, 190, totalY, { align: 'right' });
+      if (values.tax > 0 && !(isGst || isVat || isSalesTax)) {
+          doc.text(`Tax (${values.tax}%):`, totalX, totalY);
+          doc.text(`+${formatCurrencyForPdf(taxAmount)}`, 196, totalY, { align: 'right' });
           totalY += 6;
       }
       if (values.shipping > 0) {
           doc.text(`Shipping:`, totalX, totalY);
-          doc.text(formatCurrencyForPdf(values.shipping), 190, totalY, { align: 'right' });
+          doc.text(`+${formatCurrencyForPdf(values.shipping)}`, 196, totalY, { align: 'right' });
           totalY += 6;
       }
       
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.line(totalX, totalY, 190, totalY);
+      doc.line(totalX - 2, totalY, 196, totalY);
       totalY += 6;
       doc.text('TOTAL:', totalX, totalY);
-      doc.text(formatCurrencyForPdf(total), 190, totalY, { align: 'right' });
+      doc.text(formatCurrencyForPdf(total), 196, totalY, { align: 'right' });
 
       // --- GST/VAT Breakdown ---
-      if (isGst && taxAmount > 0) {
+      if ((isGst || isVat || isSalesTax) && taxAmount > 0) {
           totalY += 10;
           doc.setFontSize(11);
           doc.setFont('helvetica', 'bold');
-          doc.text('Tax Breakdown:', 14, totalY);
+          
+          let breakdownBody: any[] = [];
+          if (isGst) {
+            doc.text('Tax Breakdown:', 14, totalY);
+            breakdownBody = [
+                [`CGST (${values.tax/2}%)`, formatCurrencyForPdf(taxAmount / 2)],
+                [`SGST (${values.tax/2}%)`, formatCurrencyForPdf(taxAmount / 2)],
+                [{content: 'Total Tax', styles: {fontStyle: 'bold'}} , {content: formatCurrencyForPdf(taxAmount), styles: {fontStyle: 'bold'}}],
+            ];
+          } else if (isVat) {
+            doc.text('VAT Breakdown:', 14, totalY);
+            breakdownBody = [[`VAT (${values.tax}%)`, formatCurrencyForPdf(taxAmount)]];
+          } else if (isSalesTax) {
+            doc.text('Sales Tax Details:', 14, totalY);
+            breakdownBody = [[`Sales Tax (${values.tax}%)`, formatCurrencyForPdf(taxAmount)]];
+          }
+
           (doc as any).autoTable({
               startY: totalY + 2,
-              body: [
-                  [`CGST (${values.tax/2}%)`, formatCurrencyForPdf(taxAmount / 2)],
-                  [`SGST (${values.tax/2}%)`, formatCurrencyForPdf(taxAmount / 2)],
-                  [{content: 'Total Tax', styles: {fontStyle: 'bold'}} , {content: formatCurrencyForPdf(taxAmount), styles: {fontStyle: 'bold'}}],
-              ],
+              body: breakdownBody,
               theme: 'grid',
               styles: { fontSize: 10 },
-              columnStyles: { 0: { cellWidth: 30 }, 1: { halign: 'right' } }
+              columnStyles: { 0: { cellWidth: 40 }, 1: { halign: 'right' } }
           });
-          finalY = (doc as any).lastAutoTable.finalY;
+          finalY = Math.max(finalY, (doc as any).lastAutoTable.finalY);
       }
 
 
@@ -406,6 +421,20 @@ export function AiInvoiceGenerator() {
     }
   };
 
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setLogoUrl(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        toast({ title: 'Invalid File', description: 'Please upload an image file.', variant: 'destructive'});
+      }
+    }
+  };
 
   const handleSend = () => {
     const subject = `Invoice ${form.getValues('invoiceNumber')}`;
@@ -435,11 +464,23 @@ export function AiInvoiceGenerator() {
             <CardContent className="space-y-6 p-6">
               {/* Header */}
               <div className="flex justify-between gap-4 items-start">
-                  <div>
-                      <Button variant="outline" size="sm" onClick={() => toast({ title: 'Feature Coming Soon' })}>
-                          <Upload className="mr-2 h-4 w-4" />
-                          Upload Logo
-                      </Button>
+                  <div className="w-1/3">
+                      {logoUrl ? (
+                          <div className="relative">
+                              <img src={logoUrl} alt="Company Logo" className="h-16 w-auto object-contain"/>
+                              <Button variant="ghost" size="icon" className="absolute -top-2 -right-2 h-6 w-6" onClick={() => setLogoUrl(null)}>
+                                  <X className="h-4 w-4"/>
+                              </Button>
+                          </div>
+                      ) : (
+                        <>
+                          <Input id="logo-upload" type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                          <Button variant="outline" size="sm" onClick={() => document.getElementById('logo-upload')?.click()}>
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload Logo
+                          </Button>
+                        </>
+                      )}
                   </div>
                    <div className="w-1/3">
                       <Input className="text-2xl font-bold text-right" defaultValue="INVOICE" />
