@@ -66,7 +66,7 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
           </div>
         </header>
         
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-7xl">
           <div className="space-y-12">
               <section>
                  <p className="text-lg text-muted-foreground leading-relaxed">

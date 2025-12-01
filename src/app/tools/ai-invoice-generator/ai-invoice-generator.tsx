@@ -55,7 +55,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 const lineItemSchema = z.object({
   description: z.string().min(1, 'Description is required.'),
@@ -93,7 +93,6 @@ const countries = [
 ];
 
 export function AiInvoiceGenerator() {
-  const { toast } = useToast();
   const [selectedCountry, setSelectedCountry] = useState('US');
   const [isClient, setIsClient] = useState(false);
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
@@ -235,8 +234,8 @@ export function AiInvoiceGenerator() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-      <div className="lg:col-span-2" ref={invoiceRef}>
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+      <div className="lg:col-span-3" ref={invoiceRef}>
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -423,7 +422,7 @@ export function AiInvoiceGenerator() {
         </Card>
       </div>
 
-      <div className="lg:col-span-1 space-y-6">
+      <div className="lg:col-span-2 space-y-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
