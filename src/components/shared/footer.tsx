@@ -22,11 +22,11 @@ const relatedTools = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-background border-t border-border mt-auto py-8">
-      <div className="container mx-auto text-center text-muted-foreground">
-        <div className="mb-10">
-          <h3 className="text-xl font-bold text-foreground mb-2">Related Tools</h3>
-          <p className="mb-6">To improve productivity, try our other free tools:</p>
+    <footer className="w-full bg-background border-t border-border mt-auto py-12">
+      <div className="container mx-auto text-center">
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold text-foreground mb-3 font-headline">Related Tools</h3>
+          <p className="mb-8 text-muted-foreground">To improve productivity, try our other free tools:</p>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 text-sm">
             {relatedTools.map((tool) => (
               <a 
@@ -34,7 +34,7 @@ export function Footer() {
                 href={tool.href} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-primary hover:underline"
+                className="group flex items-center justify-center p-4 h-24 rounded-lg bg-muted/50 border text-center font-semibold text-primary/80 transition-all hover:bg-primary/10 hover:text-primary hover:border-primary/50 hover:shadow-lg hover:-translate-y-1"
               >
                 {tool.name}
               </a>
@@ -42,15 +42,15 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="border-t pt-6">
-          <nav className="flex justify-center flex-wrap gap-x-4 gap-y-2 mb-4">
+        <div className="border-t pt-8 text-muted-foreground">
+          <nav className="flex justify-center flex-wrap gap-x-6 gap-y-2 mb-4">
             <Link href="/" className="hover:text-primary">Home</Link>
             <Link href="/about" className="hover:text-primary">About</Link>
             <Link href="/contact" className="hover:text-primary">Contact</Link>
             <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-primary">Terms of Use</Link>
           </nav>
-          <p>&copy; 2025 PDF2Word. A part of All2ools.com</p>
+          <p className="text-sm">&copy; 2025 PDF2Word. A part of All2ools.com</p>
         </div>
       </div>
     </footer>
