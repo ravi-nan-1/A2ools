@@ -22,8 +22,17 @@ export type RemoveBackgroundInput = z.infer<typeof RemoveBackgroundInputSchema>;
 const RemoveBackgroundOutputSchema = z.object({
   backgroundRemovedPhotoDataUri: z
     .string()
-e  }
-);
+    .describe('The background-removed product photo, as a data URI.'),
+});
+export type RemoveBackgroundOutput = z.infer<
+  typeof RemoveBackgroundOutputSchema
+>;
+
+export async function removeBackground(
+  input: RemoveBackgroundInput
+): Promise<RemoveBackgroundOutput> {
+  return removeBackgroundFlow(input);
+}
 
 const removeBackgroundFlow = ai.defineFlow(
   {
