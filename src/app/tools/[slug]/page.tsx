@@ -86,7 +86,6 @@ export async function generateStaticParams() {
     'ai-headshot-generator',
     'keyword-cluster-generator',
     'ai-product-description-generator',
-    'ai-schema-markup-generator',
     'json-excel-converter',
     'regex-generator-from-text',
     'webhook-tester',
