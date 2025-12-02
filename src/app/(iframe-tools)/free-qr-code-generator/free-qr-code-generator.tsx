@@ -8,6 +8,7 @@ export function FreeQrCodeGenerator() {
     <iframe
       src={toolUrl}
       className="w-full h-full border-0"
+      style={{ height: '200%' }}
       title="Free QR Code Generator"
       allow="fullscreen"
     />
