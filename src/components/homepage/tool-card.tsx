@@ -32,8 +32,8 @@ export function ToolCard({ tool }: ToolCardProps) {
           <Image
             src={tool.image}
             alt={tool.name}
-            width={tool.width}
-            height={tool.height}
+            width={500}
+            height={300}
             className="rounded-t-lg object-cover"
             data-ai-hint={tool.imageHint}
           />
