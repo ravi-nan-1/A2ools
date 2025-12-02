@@ -38,6 +38,7 @@ import {
   Minimize,
   Feather,
   QrCode,
+  BookCopy,
 } from 'lucide-react';
 
 export type ToolCategory =
@@ -61,6 +62,17 @@ export interface Tool {
 }
 
 export const tools: Tool[] = [
+  {
+    name: 'Free Cheat Sheet Generator',
+    slug: 'free-cheat-sheet-generator',
+    category: 'Business',
+    icon: 'BookCopy',
+    description: 'free-cheat-sheet-generator_description',
+    longDescription: 'free-cheat-sheet-generator_long_description',
+    features: ['free-cheat-sheet-generator_features'],
+    howItWorks: ['free-cheat-sheet-generator_how_it_works'],
+    useCases: ['free-cheat-sheet-generator_use_cases'],
+  },
   {
     name: 'AI Humanizer',
     slug: 'ai-humanizer',

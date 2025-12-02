@@ -26,6 +26,8 @@ import { WebhookTester } from '@/app/tools/webhook-tester/webhook-tester';
 import { OneClickArticleOutlineGenerator } from '@/app/tools/1-click-article-outline-generator/1-click-article-outline-generator';
 import { InvoiceExcelExtractor } from '@/app/tools/invoice-excel-extractor/invoice-excel-extractor';
 import { AiHumanizer } from '@/app/(iframe-tools)/ai-humanizer/ai-humanizer';
+import { FreeQrCodeGenerator } from '@/app/(iframe-tools)/free-qr-code-generator/free-qr-code-generator';
+import { FreeCheatSheetGenerator } from '@/app/(iframe-tools)/free-cheat-sheet-generator/free-cheat-sheet-generator';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -34,8 +36,12 @@ interface ToolInterfaceProps {
 export function ToolInterface({ slug }: ToolInterfaceProps) {
   const renderTool = () => {
     switch (slug) {
+      case 'free-cheat-sheet-generator':
+        return <FreeCheatSheetGenerator />;
       case 'ai-humanizer':
         return <AiHumanizer />;
+      case 'free-qr-code-generator':
+        return <FreeQrCodeGenerator />;
       case 'tinyurl-maker':
         return <TinyUrlMaker />;
       case 'ai-product-background-remover':

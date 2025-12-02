@@ -1,6 +1,12 @@
 {
   "placeholderImages": [
     {
+      "id": "free-cheat-sheet-generator",
+      "description": "Free Cheat Sheet Generator",
+      "imageUrl": "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdW1tYXJ5fGVufDB8fHx8MTc2NTMyMzgwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "summary document"
+    },
+    {
       "id": "ai-humanizer",
       "description": "AI Humanizer",
       "imageUrl": "https://images.unsplash.com/photo-1516131206008-dd041a9764fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3cml0aW5nfGVufDB8fHx8MTc2MzMyNDQyN3ww&ixlib=rb-4.1.0&q=80&w=1080",
@@ -9,7 +15,7 @@
     {
       "id": "free-qr-code-generator",
       "description": "Free QR Code Generator",
-      "imageUrl": "https://images.unsplash.com/photo-1600147131759-880e94a6185f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxxciUyMGNvZGV8ZW58MHx8fHwxNzY0NjQ5Njk4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://placehold.co/300x300/29abe2/ffffff?text=QR+Code",
       "imageHint": "qr code"
     },
     {
