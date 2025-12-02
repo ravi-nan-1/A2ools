@@ -1,4 +1,3 @@
-
 "use client";
 
 import { AiHumanizer } from './ai-humanizer';
