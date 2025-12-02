@@ -28,6 +28,7 @@ import { InvoiceExcelExtractor } from '@/app/tools/invoice-excel-extractor/invoi
 import { AiHumanizer } from '@/app/(iframe-tools)/ai-humanizer/ai-humanizer';
 import { FreeQrCodeGenerator } from '@/app/(iframe-tools)/free-qr-code-generator/free-qr-code-generator';
 import { FreeCheatSheetGenerator } from '@/app/(iframe-tools)/free-cheat-sheet-generator/free-cheat-sheet-generator';
+import { FreeImageFileCompressor } from '@/app/(iframe-tools)/free-image-file-compressor/free-image-file-compressor';
 
 interface ToolInterfaceProps {
   slug: string;
@@ -36,6 +37,8 @@ interface ToolInterfaceProps {
 export function ToolInterface({ slug }: ToolInterfaceProps) {
   const renderTool = () => {
     switch (slug) {
+      case 'free-image-file-compressor':
+        return <FreeImageFileCompressor />;
       case 'free-cheat-sheet-generator':
         return <FreeCheatSheetGenerator />;
       case 'ai-humanizer':

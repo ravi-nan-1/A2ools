@@ -63,6 +63,17 @@ export interface Tool {
 
 export const tools: Tool[] = [
   {
+    name: 'Free Image/File Compressor',
+    slug: 'free-image-file-compressor',
+    category: 'Image',
+    icon: 'Minimize',
+    description: 'free-image-file-compressor_description',
+    longDescription: 'free-image-file-compressor_long_description',
+    features: ['free-image-file-compressor_features'],
+    howItWorks: ['free-image-file-compressor_how_it_works'],
+    useCases: ['free-image-file-compressor_use_cases'],
+  },
+  {
     name: 'Free Cheat Sheet Generator',
     slug: 'free-cheat-sheet-generator',
     category: 'Business',
