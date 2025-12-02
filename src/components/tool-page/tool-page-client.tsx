@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Tool } from '@/lib/tools';
@@ -54,7 +55,7 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                 src={tool.image}
                 alt={`${tool.name} banner`}
                 fill
-                className="object-cover animate-ken-burns"
+                className="object-cover"
                 priority
                 data-ai-hint={tool.imageHint}
               />
