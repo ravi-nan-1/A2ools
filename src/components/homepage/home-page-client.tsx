@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, Fragment } from 'react';
@@ -95,8 +96,8 @@ export function HomePageClient({ tools }: HomePageClientProps) {
 
       <section>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {translatedAndFilteredTools.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} />
+          {translatedAndFilteredTools.map((tool, index) => (
+            <ToolCard key={tool.slug} tool={tool} priority={index < 4} />
           ))}
         </div>
         {translatedAndFilteredTools.length === 0 && (

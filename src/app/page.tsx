@@ -11,8 +11,8 @@ export default function Home() {
     return {
       ...toolWithoutIcon,
       icon: tool.icon,
-      image: image?.imageUrl || `https://picsum.photos/seed/${tool.slug}/500/300`,
-      width: 500,
+      image: image?.imageUrl || `https://picsum.photos/seed/${tool.slug}/300/300`,
+      width: 300,
       height: 300,
       imageHint: image?.imageHint || 'tool illustration',
     };
@@ -20,4 +20,3 @@ export default function Home() {
 
   return <HomePageClient tools={toolsWithImages} />;
 }
-

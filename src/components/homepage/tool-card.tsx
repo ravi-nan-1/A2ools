@@ -20,9 +20,10 @@ export type ToolWithImage = Tool & { image: string; imageHint: string, width: nu
 
 interface ToolCardProps {
   tool: ToolWithImage;
+  priority?: boolean;
 }
 
-export function ToolCard({ tool }: ToolCardProps) {
+export function ToolCard({ tool, priority = false }: ToolCardProps) {
   const { translate } = useLanguage();
   const Icon = icons[tool.icon as keyof typeof icons] || Wrench;
 
@@ -36,6 +37,7 @@ export function ToolCard({ tool }: ToolCardProps) {
             className="rounded-t-lg object-cover"
             data-ai-hint={tool.imageHint}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            priority={priority}
           />
         </div>
       <CardHeader className="p-4">
