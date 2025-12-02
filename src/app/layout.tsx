@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { LanguageProvider } from '@/context/language-context';
-import { AdBanner } from '@/components/shared/ad-banner';
+import { DeferredAdBanner } from '@/components/shared/deferred-ad-banner';
 
 export const metadata: Metadata = {
   title: 'All2ools | Free AI-Powered Tools for Finance, SEO, & Business',
@@ -39,14 +39,14 @@ export default function RootLayout({
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
-            <AdBanner
+            <DeferredAdBanner
               adSlot="YOUR_BOTTOM_BANNER_AD_SLOT_ID"
               className="w-full min-h-[100px] flex items-center justify-center bg-muted my-4"
             />
             <Footer />
           </div>
           <Toaster />
-          <AdBanner
+          <DeferredAdBanner
             adSlot="YOUR_STICKY_AD_SLOT_ID"
             adFormat="auto"
             dataFullWidthResponsive={true}

@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, CheckCircle2, Sparkles, BookOpen, BrainCircuit, HelpCircle, ArrowRight } from 'lucide-react';
 import { ToolInterface } from './tool-interface';
-import { AdBanner } from '@/components/shared/ad-banner';
+import { DeferredAdBanner } from '@/components/shared/deferred-ad-banner';
 
 interface ToolPageClientProps {
   tool: Tool & { image: string; imageHint: string };
@@ -79,7 +79,7 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
               </section>
 
               <div className="my-8">
-                <AdBanner
+                <DeferredAdBanner
                   adSlot="YOUR_IN_ARTICLE_AD_SLOT_ID"
                   className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg"
                 />

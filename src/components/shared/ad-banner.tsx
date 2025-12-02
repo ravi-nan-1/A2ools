@@ -24,31 +24,16 @@ export function AdBanner({
   ...props 
 }: AdBannerProps) {
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
-  useEffect(() => {
-    if (isMounted) {
-      const timeoutId = setTimeout(() => {
-        try {
-          if (window.adsbygoogle) {
-            // (window.adsbygoogle = window.adsbygoogle || []).push({});
-          }
-        } catch (err) {
-          console.error(`AdSense error for slot ${adSlot}:`, err);
-        }
-      }, 100);
-      
-      return () => clearTimeout(timeoutId);
+    try {
+      if (window.adsbygoogle) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch (err) {
+      console.error(`AdSense error for slot ${adSlot}:`, err);
     }
-  }, [pathname, isMounted, adSlot]);
-
-  if (!isMounted) {
-    return null;
-  }
+  }, [pathname, adSlot]);
 
   return (
     <div key={pathname} className={cn(className)} {...props}>
