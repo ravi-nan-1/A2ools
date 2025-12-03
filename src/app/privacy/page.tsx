@@ -18,7 +18,7 @@ import {
   CheckCircle,
   XCircle,
   Database,
-  Link,
+  Link as LinkIcon,
   Bot
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
