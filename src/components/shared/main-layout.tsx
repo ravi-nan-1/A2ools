@@ -27,6 +27,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const slug = pathname.split('/')[2];
   const isIframePage = iframeTools.includes(slug);
+  const isHomePage = pathname === '/';
 
   if (isIframePage) {
     return (
@@ -54,7 +55,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           className="w-full min-h-[100px] flex items-center justify-center bg-muted my-4"
         />
       </ClientOnly>
-      <Footer />
+      <Footer showRelatedTools={!isHomePage} />
     </div>
   );
 }
