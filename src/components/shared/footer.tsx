@@ -3,23 +3,19 @@
 
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
-
-const relatedTools = [
-  { name: "HUMANIZER", description: "Convert AI text to sound more human.", href: "https://humanizer.all2ools.com" },
-  { name: "PDF / Word / Document Tools", description: "Convert and edit PDF & Word files.", href: "https://pdf2word.all2ools.com" },
-  { name: "Plagiarism Detector", description: "Check text for originality and AI content.", href: "https://plagiarism.all2ools.com" },
-  { name: "Excel Pro", description: "Advanced tools for spreadsheet automation.", href: "https://iloveexcel.all2ools.com" },
-  { name: "TinyURL – URL Shortener", description: "Create short, trackable links.", href: "https://tinyurl.all2ools.com" },
-  { name: "Image Converter", description: "Convert images between JPG, PNG, WEBP, etc.", href: "https://image.all2ools.com" },
-  { name: "Rent Apartment Map Tool", description: "Find rental listings on an interactive map.", href: "https://rent.all2ools.com" },
-  { name: "Image Compressor", description: "Reduce image file sizes for free.", href: "https://imagecompressor.all2ools.com" },
-  { name: "Cheat Sheet / Summary Generator", description: "Instantly summarize documents and text.", href: "https://summary.all2ools.com" },
-  { name: "QR Generator", description: "Create custom QR codes for your links.", href: "https://qr.all2ools.com" },
-  { name: "AI Study Buddy / Tutor", description: "Your personal AI-powered study assistant.", href: "https://aitutor.all2ools.com" },
-  { name: "Image Tools", description: "Crop, resize, and enhance your images.", href: "https://imagetools.all2ools.com" }
-];
+import { tools } from '@/lib/tools';
+import { useLanguage } from '@/hooks/use-language';
 
 export function Footer() {
+  const { translate } = useLanguage();
+
+  const relatedTools = tools.map(tool => ({
+    name: translate(tool.name),
+    description: translate(tool.description),
+    href: `/tools/${tool.slug}`,
+  }));
+
+
   return (
     <footer className="w-full bg-background border-t border-border mt-auto py-12">
       <div className="container mx-auto text-center">
@@ -28,19 +24,17 @@ export function Footer() {
           <p className="mb-8 text-muted-foreground">To improve productivity, try our other free tools:</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {relatedTools.map((tool) => (
-              <a 
+              <Link
                 key={tool.name} 
                 href={tool.href} 
-                target="_blank" 
-                rel="noopener noreferrer" 
                 className="group block p-6 rounded-lg bg-card border text-left transition-all hover:border-primary/50 hover:shadow-lg hover:-translate-y-1"
               >
                 <h4 className="font-bold text-base text-foreground flex justify-between items-center">
                   {tool.name}
-                  <ExternalLink className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
                 </h4>
                 <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
-              </a>
+              </Link>
             ))}
              <a 
                 href="https://www.all2ools.com" 

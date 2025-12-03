@@ -29,7 +29,7 @@ export function ToolCard({ tool, priority = false }: ToolCardProps) {
 
   return (
     <Card className="flex flex-col overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-       <div className="relative aspect-[1/1] w-full">
+       <div className="relative aspect-square w-full">
           <Image
             src={tool.image}
             alt={tool.name}
