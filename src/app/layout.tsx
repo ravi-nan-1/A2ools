@@ -3,8 +3,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/context/language-context';
-import { ClientOnly } from '@/components/shared/client-only';
-import { DeferredAdBanner } from '@/components/shared/deferred-ad-banner';
 import { Suspense } from 'react';
 import { MainLayout } from '@/components/shared/main-layout';
 
@@ -47,15 +45,6 @@ export default function RootLayout({
             <MainLayout>{children}</MainLayout>
           </Suspense>
           <Toaster />
-          <ClientOnly>
-            <DeferredAdBanner
-              adSlot="YOUR_STICKY_AD_SLOT_ID"
-              adFormat="auto"
-              dataFullWidthResponsive={true}
-              className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-center border-t bg-background"
-              style={{ minHeight: '50px' }}
-            />
-          </ClientOnly>
         </LanguageProvider>
       </body>
     </html>
