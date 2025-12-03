@@ -8,7 +8,6 @@ import {
   Megaphone,
   Store,
 } from 'lucide-react';
-import Image from 'next/image';
 
 const personas = [
   {
@@ -46,38 +45,26 @@ const personas = [
 export function Personas() {
   return (
     <section className="py-16 md:py-24">
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative aspect-square max-w-md mx-auto">
-                 <Image
-                    src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80"
-                    alt="A diverse group of professionals working collaboratively"
-                    fill
-                    className="rounded-xl object-cover shadow-lg"
-                    data-ai-hint="professionals collaborating"
-                />
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-extrabold tracking-tight md:text-5xl font-headline mb-4">
+          Built for Everyone
+        </h2>
+        <p className="max-w-3xl mx-auto text-lg text-muted-foreground mb-12">
+          All2ools is designed for anyone who works with digital content, data, or
+          online tools—essentially, everyone in the modern world.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 text-left">
+          {personas.map(persona => (
+            <div key={persona.name} className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10">
+                <persona.icon className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h4 className="font-semibold">{persona.name}</h4>
+                <p className="text-sm text-muted-foreground">{persona.description}</p>
+              </div>
             </div>
-            <div>
-                 <h2 className="text-3xl font-extrabold tracking-tight md:text-5xl font-headline mb-4">
-                    Built for Everyone
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                    All2ools is designed for anyone who works with digital content, data, or online tools—essentially, everyone in the modern world.
-                </p>
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {personas.map(persona => (
-                        <div key={persona.name} className="flex items-start gap-4">
-                            <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10">
-                                <persona.icon className="w-6 h-6 text-primary"/>
-                            </div>
-                            <div>
-                                <h4 className="font-semibold">{persona.name}</h4>
-                                <p className="text-sm text-muted-foreground">{persona.description}</p>
-                            </div>
-                        </div>
-                    ))}
-                 </div>
-            </div>
+          ))}
         </div>
       </div>
     </section>
