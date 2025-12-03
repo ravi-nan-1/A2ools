@@ -6,6 +6,9 @@ import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { ClientOnly } from '@/components/shared/client-only';
 import { DeferredAdBanner } from '@/components/shared/deferred-ad-banner';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const iframeTools = [
   'ai-humanizer',
@@ -26,7 +29,19 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const isIframePage = iframeTools.includes(slug);
 
   if (isIframePage) {
-    return <div className="w-full h-screen overflow-hidden">{children}</div>;
+    return (
+      <>
+        <div className="w-full h-screen overflow-hidden">{children}</div>
+        <div className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-center border-t bg-background p-2" style={{ minHeight: '50px' }}>
+          <Button asChild variant="ghost">
+             <Link href="/">
+               <ArrowLeft className="mr-2 h-4 w-4" />
+               Back to All2ools.com
+             </Link>
+          </Button>
+        </div>
+      </>
+    );
   }
 
   return (
