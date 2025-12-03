@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ArrowRight } from 'lucide-react';
 import { tools } from '@/lib/tools';
 import { useLanguage } from '@/hooks/use-language';
 
