@@ -6,6 +6,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.-m-8 {
+    margin: 0rem;
+}
+
 @layer base {
   :root {
     --background: 0 0% 96.1%; /* #f5f5f5 */
