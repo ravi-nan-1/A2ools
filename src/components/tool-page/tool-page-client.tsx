@@ -35,6 +35,113 @@ const iframeTools = [
     'plagiarism-checker'
   ];
 
+const ContentSection = ({ title, content, icon: Icon }: { title: string, content: string, icon: React.ElementType }) => {
+    if (!content || content.startsWith(`${title.toLowerCase().replace(/ /g, '_')}_`)) {
+        return (
+             <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Icon className="mr-2"/>{title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground">The {title.toLowerCase()} for this tool are being updated. Please check back soon.</p>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    const items = content.split('\n').map(item => item.trim()).filter(Boolean);
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Icon className="mr-2"/>{title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ul className="space-y-3 text-muted-foreground">
+                    {items.map((item, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 shrink-0" />
+                            <span>{item}</span>
+                        </li>
+                    ))}
+                </ul>
+            </CardContent>
+        </Card>
+    );
+};
+
+
+const HowItWorksSection = ({ content }: { content: string }) => {
+    if (!content || content.startsWith('how_it_works_')) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><BookOpen className="mr-2"/>How It Works</CardTitle>
+                </CardHeader>
+                <CardContent>
+                     <p className="text-muted-foreground">The instructions for this tool are being updated. Please check back soon.</p>
+                </CardContent>
+            </Card>
+        )
+    }
+    const items = content.split('\n').map(item => item.trim()).filter(Boolean);
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><BookOpen className="mr-2"/>How It Works</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ol className="space-y-4 text-muted-foreground">
+                    {items.map((step, index) => (
+                        <li key={index} className="flex items-start gap-4">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-base shrink-0">{index + 1}</span>
+                            <span className="mt-1">{step}</span>
+                        </li>
+                    ))}
+                </ol>
+            </CardContent>
+        </Card>
+    );
+}
+
+const FaqSection = ({ content }: { content: string }) => {
+    if (!content || content.startsWith('faq_')) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><HelpCircle className="text-primary"/>Frequently Asked Questions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground">FAQs for this tool are being updated. Please check back soon.</p>
+                </CardContent>
+            </Card>
+        );
+    }
+    const items = content.split('\n\n').map(q => q.trim()).filter(Boolean);
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                    <HelpCircle className="text-primary"/>
+                    Frequently Asked Questions
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {items.map((faqItem, index) => {
+                    const [question, ...answerParts] = faqItem.split('\n');
+                    const answer = answerParts.join('\n');
+                    return (
+                        <div key={index} className="border-l-2 border-primary pl-4">
+                            <h4 className="font-semibold text-foreground text-lg">{question.replace(/^\d+\.\s*/, '')}</h4>
+                            <p className="text-muted-foreground mt-1">{answer}</p>
+                        </div>
+                    );
+                })}
+            </CardContent>
+        </Card>
+    );
+}
+
 export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
   const { translate } = useLanguage();
   const { jsonLdSchema } = aiContent;
@@ -45,11 +152,6 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
   const howItWorksContent = translate(`${tool.slug}_how_it_works`);
   const useCasesContent = translate(`${tool.slug}_use_cases`);
   
-  const faqItems = faqContent.split('\n\n').map(q => q.trim()).filter(Boolean);
-  const featureItems = featuresContent.split('\n').map(f => f.trim()).filter(Boolean);
-  const howItWorksItems = howItWorksContent.split('\n').map(s => s.trim()).filter(Boolean);
-  const useCaseItems = useCasesContent.split('\n').map(u => u.trim()).filter(Boolean);
-
   const isIframeTool = iframeTools.includes(tool.slug);
 
   const relatedCluster = toolClusters.find(cluster => cluster.slugs.includes(tool.slug));
@@ -110,7 +212,7 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
           <div className="space-y-12">
               <section>
                  <p className="text-lg text-muted-foreground leading-relaxed">
-                   {longDescription}
+                   {longDescription.startsWith(`${tool.slug}_`) ? 'The description for this tool is being updated. Please check back soon.' : longDescription}
                  </p>
               </section>
 
@@ -144,70 +246,19 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
                     <TabsTrigger value="use-cases"><BrainCircuit className="mr-2"/>{translate('use_cases')}</TabsTrigger>
                   </TabsList>
                   <TabsContent value="features" className="mt-6">
-                    <Card>
-                      <CardContent className="p-6">
-                          <ul className="space-y-3 text-muted-foreground">
-                            {featureItems.map((feature, index) => (
-                              <li key={index} className="flex items-start gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 shrink-0" />
-                                <span>{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                      </CardContent>
-                    </Card>
+                    <ContentSection title="Features" content={featuresContent} icon={Sparkles} />
                   </TabsContent>
                   <TabsContent value="how-it-works" className="mt-6">
-                     <Card>
-                      <CardContent className="p-6">
-                            <ol className="space-y-4 text-muted-foreground">
-                                {howItWorksItems.map((step, index) => (
-                                    <li key={index} className="flex items-start gap-4">
-                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-base shrink-0">{index + 1}</span>
-                                        <span className="mt-1">{step}</span>
-                                    </li>
-                                ))}
-                            </ol>
-                      </CardContent>
-                    </Card>
+                     <HowItWorksSection content={howItWorksContent} />
                   </TabsContent>
                   <TabsContent value="use-cases" className="mt-6">
-                    <Card>
-                      <CardContent className="p-6">
-                          <ul className="space-y-3 text-muted-foreground">
-                            {useCaseItems.map((useCase, index) => (
-                              <li key={index} className="flex items-start gap-3">
-                                 <ArrowRight className="h-4 w-4 text-primary mt-1 shrink-0" />
-                                <span>{useCase}</span>
-                              </li>
-                            ))}
-                          </ul>
-                      </CardContent>
-                    </Card>
+                    <ContentSection title="Common Use Cases" content={useCasesContent} icon={BrainCircuit} />
                   </TabsContent>
                 </Tabs>
               </section>
 
               <section>
-                 <Card>
-                  <CardHeader>
-                     <CardTitle className="flex items-center gap-2 text-2xl">
-                        <HelpCircle className="text-primary"/>
-                        {translate('faq')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {faqItems.map((faqItem, index) => {
-                      const [question, ...answer] = faqItem.split('\n');
-                      return (
-                        <div key={index} className="border-l-2 border-primary pl-4">
-                          <h4 className="font-semibold text-foreground text-lg">{question}</h4>
-                          <p className="text-muted-foreground mt-1">{answer.join('\n')}</p>
-                        </div>
-                      );
-                    })}
-                  </CardContent>
-                </Card>
+                 <FaqSection content={faqContent} />
               </section>
           </div>
         </div>
@@ -215,3 +266,4 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
     </>
   );
 }
+
