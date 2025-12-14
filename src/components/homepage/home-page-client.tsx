@@ -8,13 +8,13 @@ import { Button } from '@/components/ui/button';
 import { ToolCard, type ToolWithImage } from './tool-card';
 import { useLanguage } from '@/hooks/use-language';
 import { Search, ArrowRight, Check } from 'lucide-react';
-import { AdBanner } from '@/components/shared/ad-banner';
 import { WhyAll2ools } from './why-all2ools';
 import { ToolCategories } from './tool-categories';
 import { HomepageFaq } from './homepage-faq';
 import { Personas } from './personas';
 import { FeaturedTools } from './featured-tools';
 import Link from 'next/link';
+import { DeferredAdBanner } from '../shared/deferred-ad-banner';
 
 const categories: ToolCategory[] = [
   'Finance',
@@ -55,14 +55,14 @@ export function HomePageClient({ tools }: HomePageClientProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <section className="relative bg-gradient-to-b from-background to-muted/20 py-20 px-4 text-center">
+      <section className="relative bg-background py-20 px-4 text-center">
         <div className="container mx-auto max-w-6xl text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            30+ Free AI Tools for SEO, Business, Finance & More
+            Free Online AI Tools | PDF, SEO, Image & Business Tools
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            All2ools offers a complete suite of free online tools. Convert PDF to Word, compress images, convert JSON to Excel, check API latency, find forex arbitrage opportunities, and more. Fast, easy, and no signup required.
+            All2ools offers 30+ free AI tools for PDFs, PDF to Word, SEO, images, and business tasks. Fast, easy, and no signup required.
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm text-muted-foreground">
@@ -146,7 +146,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
       </section>
       
       <div className="my-16 md:my-24">
-        <AdBanner
+        <DeferredAdBanner
           adSlot="YOUR_TOP_BANNER_AD_SLOT_ID"
           className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg"
         />
@@ -159,7 +159,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
       <Personas />
       
       <div className="my-16 md:my-24" id="popular">
-         <AdBanner
+         <DeferredAdBanner
           adSlot="YOUR_MID_BANNER_AD_SLOT_ID"
           className="w-full min-h-[100px] flex items-center justify-center bg-muted rounded-lg"
         />

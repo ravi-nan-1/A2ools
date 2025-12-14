@@ -5,7 +5,20 @@ import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/context/language-context';
 import { Suspense } from 'react';
 import { MainLayout } from '@/components/shared/main-layout';
+import { Inter, Source_Code_Pro } from 'next/font/google';
+import { cn } from '@/lib/utils';
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const sourceCodePro = Source_Code_Pro({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-source-code-pro',
+});
 
 export const metadata: Metadata = {
   title: 'Free Online AI Tools | PDF, SEO, Image & Business Tools',
@@ -28,19 +41,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro&display=swap"
-        />
       </head>
-      <body className="font-body antialiased">
+      <body className={cn("font-body antialiased", inter.variable, sourceCodePro.variable)}>
         <LanguageProvider>
           <Suspense fallback={<div>Loading...</div>}>
             <MainLayout>{children}</MainLayout>
