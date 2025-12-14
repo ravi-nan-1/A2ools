@@ -62,7 +62,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            All2ools offers a complete suite of free online tools. Compress images, convert JSON to Excel, check API latency, find forex arbitrage opportunities, and more. Fast, easy, and no signup required.
+            All2ools offers a complete suite of free online tools. Convert PDF to Word, compress images, convert JSON to Excel, check API latency, find forex arbitrage opportunities, and more. Fast, easy, and no signup required.
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm text-muted-foreground">
