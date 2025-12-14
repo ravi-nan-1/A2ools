@@ -40,7 +40,7 @@ export default function Home() {
     '@type': 'Organization',
     name: 'All2ools',
     url: 'https://all2ools.com/',
-    logo: 'https://all2ools.com/logo.png', // Assuming you have a logo here
+    logo: 'https://all2ools.com/logo.svg',
     sameAs: [],
   };
 

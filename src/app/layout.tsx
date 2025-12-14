@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'All2ools offers 30+ free AI tools for PDFs, SEO, images, and business tasks. Fast, easy, and no signup required.',
   keywords: 'ai humanizer, text humanizer, humanize ai text, convert ai text to human, pdf to word, word to pdf, pdf editor, pdf converter, file converter, universal file converter, plagiarism checker, detect plagiarism online, excel tools, excel automation, url shortener, shorten link, image converter, jpg to png, rent map, apartment finder, compress image, reduce image size, pdf summarizer, ai summary tool, online tools, free web tools, pdf tools, image tools, writing tools, seo tools, ai tools, productivity tools, all-in-one online tools, convert files online, qr code generator, free qr creator, ai tutor, study assistant ai, image crop, image resize',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/logo.svg',
   },
   other: {
     'google-adsense-account': 'ca-pub-3080938150148610',
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

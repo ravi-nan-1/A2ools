@@ -45,7 +45,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg mr-6">
-          <Image src="/logo.png" alt="All2ools Logo" width={24} height={24} className="h-6 w-6" />
+          <Image src="/logo.svg" alt="Free Online AI Tools | PDF, SEO, Image & Business Tools" width={24} height={24} className="h-6 w-6" />
           <span className="font-headline">All2ools</span>
         </Link>
         
