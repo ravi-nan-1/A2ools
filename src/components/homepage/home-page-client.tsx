@@ -62,9 +62,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            Access 30+ professional-grade tools including AI humanizer, image compressor, 
-            PDF converter, loan calculator, and more. Completely free, no signup required, 
-            unlimited usage forever.
+            All2ools offers 30+ free AI tools for PDFs, SEO, images, and business tasks. Fast, easy, and no signup required.
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-10 text-sm text-muted-foreground">
@@ -136,7 +134,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {translatedAndFilteredTools.map((tool, index) => (
-            <ToolCard key={tool.slug} tool={tool} priority={index < 5} />
+            <ToolCard key={tool.slug} tool={tool} />
           ))}
         </div>
         {translatedAndFilteredTools.length === 0 && (
