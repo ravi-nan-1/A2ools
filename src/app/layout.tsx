@@ -7,6 +7,8 @@ import { Suspense } from 'react';
 import { MainLayout } from '@/components/shared/main-layout';
 import { Inter, Source_Code_Pro } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import { ClientOnly } from '@/components/shared/client-only';
+import { AdBanner } from '@/components/shared/ad-banner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,7 +25,7 @@ const sourceCodePro = Source_Code_Pro({
 export const metadata: Metadata = {
   title: 'Free Online AI Tools | PDF, SEO, Image & Business Tools',
   description: 'All2ools offers 30+ free AI tools for PDFs, PDF to Word, SEO, images, and business tasks. Fast, easy, and no signup required.',
-  keywords: 'ai humanizer, text humanizer, humanize ai text, convert ai text to human, pdf to word, word to pdf, pdf editor, pdf converter, file converter, universal file converter, plagiarism checker, detect plagiarism online, excel tools, excel automation, url shortener, shorten link, image converter, jpg to png, rent map, apartment finder, compress image, reduce image size, pdf summarizer, ai summary tool, online tools, free web tools, pdf tools, image tools, writing tools, seo tools, ai tools, productivity tools, all-in-one online tools, convert files online, qr code generator, free qr creator, ai tutor, study assistant ai, image crop, image resize',
+  keywords: 'pdf to word converter online, compress pdf online, image compressor online, text to speech online, paraphrasing tool online, ai image generator free, ai chatbot, plagiarism checker, website seo checker, backlink checker, tool ai, online for free, forex arbitrage, api latency, convert json, json to excel, no signup',
   icons: {
     icon: '/logo.svg',
   },

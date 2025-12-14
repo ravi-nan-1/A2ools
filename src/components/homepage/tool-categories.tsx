@@ -15,7 +15,7 @@ const toolCategories = [
   {
     icon: AreaChart,
     title: 'SEO Tools',
-    description: 'Improve rankings with keyword clusters, plagiarism checking, and content analysis. Generate SEO-friendly outlines and product descriptions to dominate search results.',
+    description: 'Improve search rankings with our free plagiarism checker, keyword cluster generator, backlink checker, and content gap analyzer. Dominate search results with the best SEO audit tools.',
     links: [
         {name: 'Keyword Cluster Generator', href: '/tools/keyword-cluster-generator'},
         {name: 'Content Gap Analyzer', href: '/tools/content-gap-analyzer'},
@@ -25,7 +25,7 @@ const toolCategories = [
   {
     icon: Building2,
     title: 'Business Tools',
-    description: 'Generate invoices, extract data from documents, calculate business valuations, and manage your financial workflows with our suite of business automation tools.',
+    description: 'Generate invoices, extract data from documents with our PDF to Excel tool, calculate business valuations, and manage your financial workflows with our suite of free business automation tools online.',
      links: [
         {name: 'AI Invoice Generator', href: '/tools/ai-invoice-generator'},
         {name: 'Business Valuation Calculator', href: '/tools/business-valuation-calculator'},
@@ -35,7 +35,7 @@ const toolCategories = [
    {
     icon: Image,
     title: 'Image Tools',
-    description: 'Compress images for faster websites, remove backgrounds from product photos with one click, and generate professional AI headshots without a photoshoot.',
+    description: 'Compress images for faster websites with our image compressor online, remove backgrounds from product photos, cartoonize photos with AI, and generate professional AI headshots without a photoshoot.',
      links: [
         {name: 'Image Compressor', href: '/tools/image-compressor'},
         {name: 'AI Product Background Remover', href: '/tools/ai-product-background-remover'},
@@ -45,7 +45,7 @@ const toolCategories = [
   {
     icon: FileText,
     title: 'PDF & Document Tools',
-    description: 'Convert PDFs to editable Word documents, extract tables and text from invoices, and automate your most repetitive office tasks with our document utilities.',
+    description: 'Use our PDF to Word converter online, merge PDFs, or extract tables from invoices to Excel. Automate your most repetitive office tasks with our free PDF tools online.',
      links: [
         {name: 'PDF to Word Converter', href: '/tools/pdf-to-word-converter'},
         {name: 'Invoice -> Excel Extractor', href: '/tools/invoice-excel-extractor'},
@@ -55,7 +55,7 @@ const toolCategories = [
   {
     icon: Code,
     title: 'Developer Tools',
-    description: 'Test API latency from global locations, decode JWT tokens, generate complex Regex from plain text, and convert JSON to Excel for easy debugging.',
+    description: 'Test API latency from global locations, decode JWT tokens, generate complex Regex from plain text, and convert JSON to Excel for easy debugging with our free developer tools.',
      links: [
         {name: 'API Latency Checker', href: '/tools/api-latency-checker'},
         {name: 'Webhook Tester', href: '/tools/webhook-tester'},
@@ -64,8 +64,8 @@ const toolCategories = [
   },
    {
     icon: BrainCircuit,
-    title: 'Finance Tools',
-    description: 'Estimate your crypto tax liability, find forex arbitrage opportunities, and compare global loan options to make smarter financial decisions.',
+    title: 'AI Tools',
+    description: 'Leverage our free AI tools including an AI image generator, text summarizer, text-to-speech online, and AI chatbot to enhance your projects and automate creative tasks.',
      links: [
         {name: 'Crypto Tax Calculator', href: '/tools/crypto-tax-calculator'},
         {name: 'Global Loan Optimizer', href: '/tools/global-loan-optimizer'},

@@ -28,13 +28,13 @@ export function WhyAll2ools() {
     <section className="space-y-20 py-16 md:py-24">
       <header className="text-center max-w-4xl mx-auto">
         <h2 className="text-3xl font-extrabold tracking-tight text-primary md:text-5xl font-headline">
-          Why Use All2ools?
+          Why Use All2ools for Free Online Tools?
         </h2>
         <p className="mx-auto mt-4 text-lg text-muted-foreground">
-          In a world where digital work is becoming faster, smarter, and more demanding, having the right tools at the right time makes all the difference. All2ools is built to solve this exact problem. Instead of searching the internet for dozens of separate utilities, you get everything in one unified platform — simple, fast, and always free.
+          In a world where digital work is becoming faster, smarter, and more demanding, having the right tools at the right time makes all the difference. All2ools is built to solve this exact problem. Instead of searching the internet for dozens of separate utilities, you get everything in one unified platform — simple, fast, and always free online.
         </p>
         <p className="mt-4 text-lg text-muted-foreground">
-            All2ools brings together AI-powered tools, image utilities, PDF converters, SEO tools, finance calculators, and developer utilities, all designed to help you work smarter and finish tasks in seconds.
+            All2ools brings together AI-powered tools, image utilities like our image compressor online, PDF converters like our PDF to Word converter, SEO tools, finance calculators, and developer utilities, all designed to help you work smarter and finish tasks in seconds.
         </p>
       </header>
 

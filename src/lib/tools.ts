@@ -408,7 +408,7 @@ export const tools: Tool[] = [
     
     description: 'Detect plagiarism instantly with our free online checker. Scan essays, articles, and content against billions of web pages and academic papers.',
     
-    longDescription: 'Our advanced plagiarism detection tool scans your content against billions of web pages, academic databases, and published works to identify copied or duplicated content. Perfect for students checking assignments before submission, teachers verifying student work, content creators ensuring originality, and SEO professionals avoiding duplicate content penalties. Get detailed similarity reports with highlighted matches and source URLs.',
+    longDescription: 'Ensure your work is original with our free online plagiarism checker. This tool scans your text and compares it against billions of web pages and academic papers to find duplicate content. It\'s an essential tool for students to check essays, for writers to verify originality, and for teachers to screen assignments. Get a detailed report with similarity percentages and source links.',
     
     features: [
       'Scan against billions of web pages and academic sources',
@@ -642,7 +642,7 @@ export const tools: Tool[] = [
     
     description: 'Compress images online for free. Reduce JPG, PNG, and WebP file sizes up to 90% while maintaining quality. Perfect for websites and SEO.',
     
-    longDescription: 'Our advanced image compression tool uses smart algorithms to reduce image file sizes by up to 90% while preserving visual quality. Perfect for optimizing website images for faster loading, improving SEO rankings, reducing storage costs, and speeding up file transfers. Supports batch processing, maintains EXIF data, and works with JPG, PNG, WebP, and GIF formats. No watermarks, no signup required.',
+    longDescription: 'Our advanced image compressor tool uses smart algorithms to reduce image file sizes by up to 90% while preserving visual quality. Perfect for optimizing website images for faster loading, improving SEO rankings, reducing storage costs, and speeding up file transfers. Supports batch processing, maintains EXIF data, and works with JPG, PNG, WebP, and GIF formats. No watermarks, no signup required.',
     
     features: [
       'Compress images up to 90% with minimal quality loss',
@@ -798,7 +798,7 @@ export const tools: Tool[] = [
     
     description: 'Convert PDF to editable Word documents online for free. Maintain formatting, images, and tables. No software installation required.',
     
-    longDescription: 'Our advanced PDF to Word converter transforms PDF files into fully editable Microsoft Word documents (.docx) while preserving formatting, fonts, images, tables, and layouts. Perfect for editing contracts, reports, forms, and documents received as PDFs. Uses OCR technology to convert scanned PDFs into editable text. Fast, accurate, and completely free with no file size limits or watermarks.',
+    longDescription: 'Our advanced PDF to Word converter online transforms PDF files into fully editable Microsoft Word documents (.docx) while preserving formatting, fonts, images, tables, and layouts. Perfect for editing contracts, reports, forms, and documents received as PDFs. Uses OCR technology to convert scanned PDFs into editable text. Fast, accurate, and completely free with no file size limits or watermarks.',
     
     features: [
       'Convert PDF to Word (DOCX) in seconds',
@@ -882,7 +882,7 @@ export const tools: Tool[] = [
       'Detailed amortization schedules',
       'Support for mortgage, auto, personal, and business loans',
       'Real-time currency conversion',
-      'Export comparison reports to PDF',
+      'Export to PDF',
     ],
     howItWorks: [
       'Enter your loan amount and desired term',
@@ -1391,5 +1391,3 @@ export const tools: Tool[] = [
     metaDescription: 'Extract invoice data to Excel automatically with AI. Convert PDF and image invoices to spreadsheets. Free for accounting and bookkeeping!',
   },
 ];
-
-    
