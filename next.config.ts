@@ -5,9 +5,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -29,6 +26,27 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    // Use Webpack 5's asset modules for WASM files.
+    config.module.rules.push({
+      test: /\.wasm$/,
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/wasm/[name].[hash][ext]',
+        publicPath: '/_next/static/wasm/',
+      }
+    });
+    
+    if (!isServer) {
+        config.resolve.fallback = {
+            fs: false,
+            path: false,
+            crypto: false,
+        };
+    }
+
+    return config;
   },
 };
 

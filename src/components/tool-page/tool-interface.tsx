@@ -4,7 +4,6 @@ import { ApiLatencyChecker } from '@/app/tools/api-latency-checker/api-latency-c
 import { PlaceholderTool } from './tools/placeholder-tool';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wrench } from 'lucide-react';
-import { ImageCompressor } from '@/app/tools/image-compressor/image-compressor';
 import { PlagiarismChecker } from '@/app/tools/plagiarism-checker/plagiarism-checker';
 import { JwtDecoderValidator } from '@/app/tools/jwt-decoder-validator/jwt-decoder-validator';
 import { GlobalLoanOptimizer } from '@/app/tools/global-loan-optimizer/global-loan-optimizer';
@@ -60,7 +59,7 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
       case 'excel-power-tools':
         return <ExcelPowerTools />;
       case 'image-compressor':
-        return <ImageCompressor />;
+        return <FreeImageFileCompressor />;
       case 'plagiarism-checker':
         return <PlagiarismChecker />;
       case 'jwt-decoder-validator':
@@ -101,6 +100,7 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
     'free-qr-code-generator',
     'free-cheat-sheet-generator',
     'free-image-file-compressor',
+    'image-compressor',
     'tinyurl-maker',
     'ai-product-background-remover',
     'pdf-to-word-converter',

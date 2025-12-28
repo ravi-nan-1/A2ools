@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 
 const iframeTools = [
   'ai-humanizer',
-  'free-qr-code-generator',
   'free-cheat-sheet-generator',
   'free-image-file-compressor',
   'tinyurl-maker',
@@ -32,7 +31,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   if (isIframePage) {
     return (
       <>
-        <div className="w-full h-screen overflow-hidden">{children}</div>
+        <div className="w-full h-screen">{children}</div>
         <div className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-center border-t bg-background p-2" style={{ minHeight: '50px' }}>
           <Button asChild variant="ghost">
              <Link href="/">

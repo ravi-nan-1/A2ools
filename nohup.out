@@ -1,0 +1,12 @@
+
+> nextn@0.1.0 dev
+> next dev --webpack -p 9006 -H 0.0.0.0
+
+▲ Next.js 16.1.0 (webpack)
+- Local:         http://localhost:9006
+- Network:       http://0.0.0.0:9006
+
+✓ Starting...
+⨯ Unable to acquire lock at /home/user/All2ools/.next/dev/lock, is another instance of next dev running?
+  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
+[?25h

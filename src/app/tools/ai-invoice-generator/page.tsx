@@ -6,6 +6,7 @@ import { ToolPageClient } from '@/components/tool-page/tool-page-client';
 import { translations } from '@/lib/translations';
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
+import { LanguageProvider } from '@/context/language-context';
 
 const SLUG = 'ai-invoice-generator';
 
@@ -51,10 +52,12 @@ export default async function ToolPage() {
   const { icon, ...rest } = toolWithImage;
 
   return (
-    <ToolPageClient
-      tool={{ ...rest, icon: tool.icon }}
-      aiContent={aiContent}
-      translations={translations}
-    />
+    <LanguageProvider>
+      <ToolPageClient
+        tool={{ ...rest, icon: tool.icon }}
+        aiContent={aiContent}
+        translations={translations}
+      />
+    </LanguageProvider>
   );
 }

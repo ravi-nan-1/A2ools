@@ -1,16 +1,15 @@
-
 import { tools } from '@/lib/tools';
 import { HomePageClient } from '@/components/homepage/home-page-client';
 import { placeholderImages } from '@/lib/placeholder-images';
+import { LanguageProvider } from '@/context/language-context';
 
 export default function Home() {
   const toolsWithImages = tools.map((tool) => {
     const image = placeholderImages.find((img) => img.id === tool.slug);
     // Don't pass the icon component to the client
-    const { ...toolWithoutIcon } = tool;
+    const { icon, ...toolWithoutIcon } = tool;
     return {
       ...toolWithoutIcon,
-      icon: tool.icon,
       image: image?.imageUrl || `https://picsum.photos/seed/${tool.slug}/300/300`,
       width: 300,
       height: 300,
@@ -126,7 +125,9 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
-      <HomePageClient tools={toolsWithImages} />
+      <LanguageProvider>
+        <HomePageClient tools={toolsWithImages} />
+      </LanguageProvider>
     </>
   );
 }

@@ -191,4 +191,14 @@ function useToast() {
   }
 }
 
+
+toast.success = (props: Toast) => {
+  toast({ ...props, variant: "success" });
+};
+
+toast.error = (props: Toast) => {
+  toast({ ...props, variant: "destructive" });
+};
+
+
 export { useToast, toast }

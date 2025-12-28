@@ -1,0 +1,1 @@
+src/app/tools/1-click-article-outline-generator/ToolPageClient.tsx
