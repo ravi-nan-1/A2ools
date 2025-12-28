@@ -15,6 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!tool) {
     return {
       title: 'Tool not found',
+      alternates: {
+        canonical: 'https://www.all2ools.com/tools',
+      },
     };
   }
 
@@ -24,8 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 
   return {
-    title: seoTitle,
-    description: seoDescription,
+    title: seoTitle || tool.metaTitle || tool.name,
+    description: seoDescription || tool.metaDescription || tool.description,
+    alternates: {
+      canonical: `https://www.all2ools.com/tools/${SLUG}`,
+    },
   };
 }
 

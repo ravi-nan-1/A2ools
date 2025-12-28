@@ -10,8 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { UploadCloud, FileText, FileSignature, ArrowRight, Download, X, FileImage, FileSpreadsheet, Presentation, FileCode } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
 import { cn } from "@/lib/utils";
 
 export type ConversionType = 
@@ -324,7 +324,7 @@ function FilePreview({ files, fromIcon, onRemove, isSingle }: {
   )
 }
 
-export function PdfToWordConverter({ conversionType, setConversionType }: FileConverterProps) {
+export function FileConverter({ conversionType, setConversionType }: FileConverterProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [htmlContent, setHtmlContent] = useState<string>("");
   const [status, setStatus] = useState<ConversionStatus>("idle");

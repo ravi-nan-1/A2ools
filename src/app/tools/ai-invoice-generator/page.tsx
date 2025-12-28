@@ -6,7 +6,6 @@ import { ToolPageClient } from '@/components/tool-page/tool-page-client';
 import { translations } from '@/lib/translations';
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
-import { LanguageProvider } from '@/context/language-context';
 
 const SLUG = 'ai-invoice-generator';
 
@@ -16,6 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!tool) {
     return {
       title: 'Tool not found',
+      alternates: {
+        canonical: 'https://www.all2ools.com/tools',
+      },
     };
   }
 
@@ -25,8 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 
   return {
-    title: seoTitle,
-    description: seoDescription,
+    title: seoTitle || tool.metaTitle || tool.name,
+    description: seoDescription || tool.metaDescription || tool.description,
+    alternates: {
+      canonical: `https://www.all2ools.com/tools/${SLUG}`,
+    },
   };
 }
 
@@ -52,12 +57,10 @@ export default async function ToolPage() {
   const { icon, ...rest } = toolWithImage;
 
   return (
-    <LanguageProvider>
-      <ToolPageClient
-        tool={{ ...rest, icon: tool.icon }}
-        aiContent={aiContent}
-        translations={translations}
-      />
-    </LanguageProvider>
+    <ToolPageClient
+      tool={{ ...rest, icon: tool.icon }}
+      aiContent={aiContent}
+      translations={translations}
+    />
   );
 }

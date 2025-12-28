@@ -26,6 +26,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: seoTitle,
     description: seoDescription,
+    alternates: {
+      canonical: `https://www.all2ools.com/tools/${SLUG}`,
+    },
   };
 }
 

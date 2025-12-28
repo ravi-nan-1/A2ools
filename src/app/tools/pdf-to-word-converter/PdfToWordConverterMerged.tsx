@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-language";
 import { UploadCloud, FileText, FileSignature, ArrowRight, Download, X, FileImage, FileSpreadsheet, Presentation, FileCode } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -324,7 +324,7 @@ function FilePreview({ files, fromIcon, onRemove, isSingle }: {
   )
 }
 
-export function PdfToWordConverter({ conversionType, setConversionType }: FileConverterProps) {
+export function FileConverter({ conversionType, setConversionType }: FileConverterProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [htmlContent, setHtmlContent] = useState<string>("");
   const [status, setStatus] = useState<ConversionStatus>("idle");
@@ -574,3 +574,4 @@ export function PdfToWordConverter({ conversionType, setConversionType }: FileCo
     </Card>
   );
 }
+

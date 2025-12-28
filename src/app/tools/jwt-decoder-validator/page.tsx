@@ -7,7 +7,7 @@ import { translations } from '@/lib/translations';
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
 
-const SLUG = 'excel-power-tools';
+const SLUG = 'jwt-decoder-validator';
 
 export async function generateMetadata(): Promise<Metadata> {
   const tool = tools.find((t) => t.slug === SLUG);
