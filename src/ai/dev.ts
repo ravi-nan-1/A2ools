@@ -1,18 +1,10 @@
-
-'use server';
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/ai-product-background-remover.ts';
-import '@/ai/flows/generate-seo-metadata.ts';
-import '@/ai/flows/analyze-content-gap.ts';
-import '@/ai/flows/find-tax-deductions.ts';
-import '@/ai/flows/translate-content.ts';
-import '@/ai/flows/generate-invoice-from-prompt.ts';
-import '@/ai/flows/generate-financials-from-prompt.ts';
-import '@/ai/flows/generate-headshot.ts';
-import '@/ai/flows/generate-keyword-clusters.ts';
-import '@/ai/flows/generate-product-description.ts';
-import '@/ai/flows/generate-regex-from-text.ts';
-import '@/ai/flows/webhook-tester.ts';
-import '@/ai/flows/generate-article-outline.ts';
+import '@/ai/flows/similarity-analysis-api.ts';
+import '@/ai/flows/file-upload-plagiarism-check.ts';
+import '@/ai/flows/compare-two-texts.ts';
+import '@/ai/flows/ai-powered-contextual-analysis.ts';
+import '@/ai/flows/advanced-plagiarism-check.ts';
+import '@/ai/flows/grammar-check.ts';
+import '@/ai/flows/text-summarizer.ts';
