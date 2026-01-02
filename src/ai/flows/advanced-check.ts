@@ -1,4 +1,4 @@
-'use client';
+import 'server-only';
 
 import { z } from 'zod';
 import { defineFlow } from 'genkit';
@@ -11,7 +11,7 @@ const AdvancedCheckInputSchema = z.object({
   comparisonText: z.string(),
 });
 
-export const advancedCheck = defineFlow(
+export const advancedCheckFlow = defineFlow(
   {
     name: 'advancedCheck',
     inputSchema: AdvancedCheckInputSchema,
@@ -19,10 +19,12 @@ export const advancedCheck = defineFlow(
   },
   async (input) => {
     const prompt = advancedCheckPrompt(input);
+
     const llmResponse = await geminiPro.generate({
       prompt,
       config: { temperature: 0.5 },
     });
+
     return llmResponse.output();
   }
 );
