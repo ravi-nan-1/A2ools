@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { advancedCheck } from '@/ai/flows/advanced-check';
 import type { AdvancedCheckOutput } from '@/ai/flows/advanced-check-types';
 import { PlagiarismChecker } from '../plagiarism-checker';
 
@@ -41,7 +40,19 @@ export default function AdvancedCheckPage() {
     setIsLoading(true);
     setResult(null);
     try {
-      const analysisResult = await advancedCheck(values);
+      const response = await fetch('/api/advanced-check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Analysis failed');
+      }
+
+      const analysisResult = await response.json();
       setResult(analysisResult);
     } catch (error) {
       console.error("Analysis failed:", error);
@@ -80,7 +91,7 @@ export default function AdvancedCheckPage() {
                 name="comparisonText"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comparison Text</FormLabel>
+                    <FormLabel>Comparison Text</Label>
                     <FormControl>
                       <Textarea placeholder="Paste your comparison text here..." className="min-h-[200px]" {...field} />
                     </FormControl>
