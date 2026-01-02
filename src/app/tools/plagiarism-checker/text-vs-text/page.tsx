@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { textVsTextCheck } from '@/ai/flows/text-vs-text-check';
 import type { TextVsTextCheckOutput } from '@/ai/flows/text-vs-text-check-types';
 import { PlagiarismChecker } from '../plagiarism-checker';
 
@@ -41,7 +40,19 @@ export default function TextVsTextPage() {
     setIsLoading(true);
     setResult(null);
     try {
-      const analysisResult = await textVsTextCheck(values);
+      const response = await fetch('/api/text-vs-text-check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Analysis failed');
+      }
+
+      const analysisResult = await response.json();
       setResult(analysisResult);
     } catch (error) {
       console.error("Analysis failed:", error);
