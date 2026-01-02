@@ -91,7 +91,7 @@ export default function AdvancedCheckPage() {
                 name="comparisonText"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comparison Text</Label>
+                    <FormLabel>Comparison Text</FormLabel>
                     <FormControl>
                       <Textarea placeholder="Paste your comparison text here..." className="min-h-[200px]" {...field} />
                     </FormControl>
