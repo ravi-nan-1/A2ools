@@ -2,6 +2,7 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  transpilePackages: ['@opentelemetry/api', '@opentelemetry/sdk-trace-base', 'genkit'],
   typescript: {
     ignoreBuildErrors: true,
   },
