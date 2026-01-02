@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { aiContextualAnalysis } from '@/ai/flows/ai-contextual-analysis';
 import type { AIContextualAnalysisOutput } from '@/ai/flows/ai-contextual-analysis-types';
-import PlagiarismCheckerLayout from './plagiarism-checker-layout';
+import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({
   text: z.string().min(1, { message: 'Text is required.' }),
@@ -54,7 +54,7 @@ export default function AIContextualAnalysisPage() {
   }
 
   return (
-    <PlagiarismCheckerLayout>
+    <PlagiarismChecker>
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">AI Contextual Analysis</h2>
         <p className="text-gray-500 mb-6">Analyze text for subtle plagiarism like paraphrasing and structural similarity.</p>
@@ -107,6 +107,6 @@ export default function AIContextualAnalysisPage() {
           </div>
         )}
       </div>
-    </PlagiarismCheckerLayout>
+    </PlagiarismChecker>
   );
 }

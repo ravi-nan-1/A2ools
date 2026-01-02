@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { advancedCheck } from '@/ai/flows/advanced-check';
 import type { AdvancedCheckOutput } from '@/ai/flows/advanced-check-types';
-import PlagiarismCheckerLayout from '../plagiarism-checker-layout';
+import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({
   sourceText: z.string().min(1, { message: 'Source text is required.' }),
@@ -56,7 +56,7 @@ export default function AdvancedCheckPage() {
   }
 
   return (
-    <PlagiarismCheckerLayout>
+    <PlagiarismChecker>
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Advanced Plagiarism Check</h2>
         <p className="text-gray-500 mb-6">Get a comprehensive analysis of two texts, including originality and paraphrasing scores.</p>
@@ -133,6 +133,6 @@ export default function AdvancedCheckPage() {
           </div>
         )}
       </div>
-    </PlagiarismCheckerLayout>
+    </PlagiarismChecker>
   );
 }

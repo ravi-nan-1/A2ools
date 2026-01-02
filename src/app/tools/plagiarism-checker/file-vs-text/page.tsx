@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { fileVsTextCheck } from '@/ai/flows/file-vs-text-check';
 import type { FileVsTextCheckOutput } from '@/ai/flows/file-vs-text-check-types';
-import PlagiarismCheckerLayout from '../plagiarism-checker-layout';
+import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({
   file: z.any(),
@@ -73,7 +73,7 @@ export default function FileVsTextPage() {
   }
 
   return (
-    <PlagiarismCheckerLayout>
+    <PlagiarismChecker>
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">File vs. Text</h2>
         <p className="text-gray-500 mb-6">Upload a file and enter a piece of text to check for similarities.</p>
@@ -133,6 +133,6 @@ export default function FileVsTextPage() {
           </div>
         )}
       </div>
-    </PlagiarismCheckerLayout>
+    </PlagiarismChecker>
   );
 }

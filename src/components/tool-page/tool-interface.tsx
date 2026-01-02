@@ -22,7 +22,7 @@ import { InvoiceExcelExtractor } from '@/app/tools/invoice-excel-extractor/invoi
 import { AiHumanizer } from '@/app/(iframe-tools)/ai-humanizer/ai-humanizer';
 import { FreeQrCodeGenerator } from '@/app/(iframe-tools)/free-qr-code-generator/free-qr-code-generator';
 import { FreeCheatSheetGenerator } from '@/app/(iframe-tools)/free-cheat-sheet-generator/free-cheat-sheet-generator';
-import { FreeImageFileCompressor } from '@/app/(iframe-tools)/free-image-file-compressor/free-image-file-compressor';
+import { ImageCompressor  } from '@/app/tools/free-image-file-compressor/image-compressor';
 import { TinyUrlMaker } from '@/app/tools/tinyurl-maker/tinyurl-maker';
 import { PdfToWordConverter } from '@/app/tools/pdf-to-word-converter/pdf-to-word-converter';
 import { AiTutor } from '@/app/tools/ai-tutor/ai-tutor';
@@ -59,7 +59,7 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
       case 'excel-power-tools':
         return <ExcelPowerTools />;
       case 'image-compressor':
-        return <FreeImageFileCompressor />;
+        return <ImageCompressor />;
       case 'plagiarism-checker':
         return <PlagiarismChecker />;
       case 'jwt-decoder-validator':
@@ -99,7 +99,6 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
     'ai-humanizer',
     'free-qr-code-generator',
     'free-cheat-sheet-generator',
-    'free-image-file-compressor',
     'image-compressor',
     'tinyurl-maker',
     'ai-product-background-remover',

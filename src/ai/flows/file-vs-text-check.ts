@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { defineFlow, runFlow } from 'genkit';
-import { geminiPro } from 'genkitx/googleai';
+import { geminiPro } from '@genkit-ai/googleai';
 import { fileVsTextCheckPrompt } from './prompts';
 import { FileVsTextCheckOutputSchema } from './file-vs-text-check-types';
 

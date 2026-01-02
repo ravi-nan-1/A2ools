@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { textSummarizer } from '@/ai/flows/text-summarizer';
 import type { TextSummarizerOutput } from '@/ai/flows/text-summarizer-types';
-import PlagiarismCheckerLayout from '../plagiarism-checker-layout';
+import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({
   text: z.string().min(1, { message: 'Text is required.' }),
@@ -57,7 +57,7 @@ export default function TextSummarizerPage() {
   }
 
   return (
-    <PlagiarismCheckerLayout>
+    <PlagiarismChecker>
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Text Summarizer</h2>
         <p className="text-gray-500 mb-6">Summarize a long piece of text into a few key sentences.</p>
@@ -121,6 +121,6 @@ export default function TextSummarizerPage() {
           </div>
         )}
       </div>
-    </PlagiarismCheckerLayout>
+    </PlagiarismChecker>
   );
 }

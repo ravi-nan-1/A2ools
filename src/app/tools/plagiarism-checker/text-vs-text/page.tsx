@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { textVsTextCheck } from '@/ai/flows/text-vs-text-check';
 import type { TextVsTextCheckOutput } from '@/ai/flows/text-vs-text-check-types';
-import PlagiarismCheckerLayout from '../plagiarism-checker-layout';
+import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({
   sourceText: z.string().min(1, { message: 'Source text is required.' }),
@@ -56,7 +56,7 @@ export default function TextVsTextPage() {
   }
 
   return (
-    <PlagiarismCheckerLayout>
+    <PlagiarismChecker>
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Compare Two Texts</h2>
         <p className="text-gray-500 mb-6">Enter two pieces of text below to check for similarities.</p>
@@ -116,6 +116,6 @@ export default function TextVsTextPage() {
           </div>
         )}
       </div>
-    </PlagiarismCheckerLayout>
+    </PlagiarismChecker>
   );
 }

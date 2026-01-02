@@ -9,7 +9,6 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import * as cheerio from 'cheerio';
 
 const ExtractTextFromUrlInputSchema = z.object({
   url: z.string().url().describe('The URL to scrape.'),
@@ -33,6 +32,7 @@ const extractTextFromUrlFlow = ai.defineFlow(
   },
   async ({ url }) => {
     try {
+      const cheerio = await import('cheerio');
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Failed to fetch URL: ${response.statusText}`);
