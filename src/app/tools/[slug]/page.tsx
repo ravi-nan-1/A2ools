@@ -8,11 +8,11 @@ import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
 
 export async function generateMetadata({
-  params,
+  params: { slug },
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const tool = tools.find((t) => t.slug === params.slug);
+  const tool = tools.find((t) => t.slug === slug);
 
   if (!tool) {
     return {
@@ -32,17 +32,16 @@ export async function generateMetadata({
     title: seoTitle || tool.metaTitle || tool.name,
     description: seoDescription || tool.metaDescription || tool.description,
     alternates: {
-      canonical: `https://www.all2ools.com/tools/${params.slug}`,
+      canonical: `https://www.all2ools.com/tools/${slug}`,
     },
   };
 }
 
 export default async function ToolPage({
-  params,
+  params: { slug },
 }: {
   params: { slug: string };
 }) {
-  const { slug } = params;
   const tool = tools.find((t) => t.slug === slug);
 
   if (!tool) {

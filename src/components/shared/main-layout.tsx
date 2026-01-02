@@ -19,7 +19,6 @@ const iframeTools = [
   'pdf-to-word-converter',
   'ai-tutor',
   'excel-power-tools',
-  'plagiarism-checker',
 ];
 
 export function MainLayout({ children }: { children: React.ReactNode }) {

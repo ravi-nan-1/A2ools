@@ -266,4 +266,3 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
     </>
   );
 }
-

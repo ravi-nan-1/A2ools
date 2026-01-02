@@ -1,10 +1,8 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/similarity-analysis-api.ts';
-import '@/ai/flows/file-upload-plagiarism-check.ts';
-import '@/ai/flows/compare-two-texts.ts';
-import '@/ai/flows/ai-powered-contextual-analysis.ts';
-import '@/ai/flows/advanced-plagiarism-check.ts';
-import '@/ai/flows/grammar-check.ts';
-import '@/ai/flows/text-summarizer.ts';
+import '@/ai/flows/summarize-content-generate-cheatsheet.ts';
+import '@/ai/flows/classify-content-type.ts';
+import '@/ai/flows/extract-key-information.ts';
+import '@/ai/flows/extract-text-from-url.ts';
+import '@/ai/flows/extract-text-from-pdf.ts';
