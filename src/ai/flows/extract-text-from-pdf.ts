@@ -1,14 +1,8 @@
-'use server';
-/**
- * @fileOverview A flow to extract text from a PDF file.
- *
- * - extractTextFromPdf - A function that parses a PDF and returns the text.
- * - ExtractTextFromPdfInput - The input type for the extractTextFromPdf function.
- * - ExtractTextFromPdfOutput - The return type for the extractTextFromPdf function.
- */
+// src/ai/flows/extract-text-from-pdf.ts
+import 'server-only';
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const ExtractTextFromPdfInputSchema = z.object({
   pdf: z.string().describe("A PDF file encoded as a data URI. Expected format: 'data:application/pdf;base64,<encoded_data>'."),
@@ -32,7 +26,10 @@ const extractTextFromPdfFlow = ai.defineFlow(
     outputSchema: ExtractTextFromPdfOutputSchema,
   },
   async ({ pdf: pdfDataUri }) => {
-    const pdf = (await import('pdf-parse')).default;
+    // ✅ Use type assertion to bypass TypeScript
+    const pdfParseModule: any = await import('pdf-parse');
+    const pdfParse = pdfParseModule.default || pdfParseModule;
+    
     // Extract the base64 part of the data URI
     const base64Data = pdfDataUri.split(',')[1];
     if (!base64Data) {
@@ -40,7 +37,7 @@ const extractTextFromPdfFlow = ai.defineFlow(
     }
     
     const pdfBuffer = Buffer.from(base64Data, 'base64');
-    const data = await pdf(pdfBuffer);
+    const data = await pdfParse(pdfBuffer);
 
     // Clean up the extracted text
     let text = data.text;

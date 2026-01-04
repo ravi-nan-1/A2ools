@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import type { FileVsTextCheckOutput } from '@/ai/flows/file-vs-text-check-types';
+import type { FileVsTextCheckOutput } from '@/types/ai-flows';
 import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({

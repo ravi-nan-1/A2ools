@@ -1,4 +1,5 @@
-'use server';
+// src/ai/flows/compare-two-texts.ts
+import 'server-only';
 
 /**
  * @fileOverview A plagiarism checker AI agent that compares two texts for similarity.
@@ -8,8 +9,8 @@
  * - CompareTwoTextsOutput - The return type for the compareTwoTexts function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit';
+import { z } from 'zod';
 import { computeCosineSimilarity } from '@/lib/similarity';
 
 const CompareTwoTextsInputSchema = z.object({
@@ -32,8 +33,8 @@ export async function compareTwoTexts(input: CompareTwoTextsInput): Promise<Comp
 
 const prompt = ai.definePrompt({
   name: 'compareTwoTextsPrompt',
-  input: {schema: CompareTwoTextsInputSchema},
-  output: {schema: CompareTwoTextsOutputSchema},
+  input: { schema: CompareTwoTextsInputSchema },
+  output: { schema: CompareTwoTextsOutputSchema },
   prompt: `You are a plagiarism detection tool.
 
   Determine the similarity between the following two texts using cosine similarity.
@@ -56,13 +57,13 @@ const compareTwoTextsFlow = ai.defineFlow(
     const similarityScore = computeCosineSimilarity(input.text1, input.text2);
     
     // The prompt will identify matched phrases. Here we just call the prompt.
-    const {output} = await prompt(input);
+    const { output } = await prompt(input);
 
     if (!output) {
-        return {
-            similarityScore,
-            matchedPhrases: [],
-        }
+      return {
+        similarityScore,
+        matchedPhrases: [],
+      };
     }
 
     // We use the JS-calculated score but return the AI's matched phrases.

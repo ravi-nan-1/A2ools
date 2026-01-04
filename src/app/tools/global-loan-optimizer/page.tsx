@@ -1,9 +1,7 @@
-
 import { tools } from '@/lib/tools';
 import { notFound } from 'next/navigation';
-import { generateSEOMetadata } from '@/ai/flows/generate-seo-metadata';
+import type { GenerateSEOMetadataOutput } from '@/types/ai-flows';
 import { ToolPageClient } from '@/components/tool-page/tool-page-client';
-import { translations } from '@/lib/translations';
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
 
@@ -21,14 +19,9 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  const { seoTitle, seoDescription } = await generateSEOMetadata({
-    toolName: tool.name,
-    toolDescription: tool.longDescription,
-  });
-
   return {
-    title: seoTitle || tool.metaTitle || tool.name,
-    description: seoDescription || tool.metaDescription || tool.description,
+    title: tool.metaTitle || tool.name,
+    description: tool.metaDescription || tool.description,
     alternates: {
       canonical: `https://www.all2ools.com/tools/${SLUG}`,
     },
@@ -42,10 +35,10 @@ export default async function ToolPage() {
     notFound();
   }
 
-  let aiContent = await generateSEOMetadata({
-    toolName: tool.name,
-    toolDescription: tool.longDescription,
-  });
+  const aiContent: GenerateSEOMetadataOutput = {
+    seoTitle: tool.metaTitle || tool.name,
+    seoDescription: tool.metaDescription || tool.description,
+  };
 
   const image = placeholderImages.find((img) => img.id === tool.slug);
   const toolWithImage = {
@@ -60,7 +53,6 @@ export default async function ToolPage() {
     <ToolPageClient
       tool={{ ...rest, icon: tool.icon }}
       aiContent={aiContent}
-      translations={translations}
     />
   );
 }

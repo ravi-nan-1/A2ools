@@ -2,7 +2,7 @@
 "use client";
 
 import type { Tool } from '@/lib/tools';
-import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata';
+import type { GenerateSEOMetadataOutput } from '@/types/ai-flows';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/hooks/use-language';

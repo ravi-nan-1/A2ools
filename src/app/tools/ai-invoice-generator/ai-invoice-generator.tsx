@@ -76,9 +76,9 @@ export const invoiceSchema = z.object({
   notes: z.string().optional(),
   terms: z.string().optional(),
   bankDetails: z.string().optional(),
-  tax: z.coerce.number().min(0).max(100).default(0),
-  discount: z.coerce.number().min(0).default(0),
-  shipping: z.coerce.number().min(0).default(0),
+  tax: z.coerce.number().min(0).max(100).optional().default(0),
+  discount: z.coerce.number().min(0).optional().default(0),
+  shipping: z.coerce.number().min(0).optional().default(0),
 });
 
 export type InvoiceFormValues = z.infer<typeof invoiceSchema>;

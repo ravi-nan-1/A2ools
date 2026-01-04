@@ -16,15 +16,17 @@ export const aiContextualAnalysis = ai.defineFlow(
     outputSchema: AIContextualAnalysisOutputSchema,
   },
   async (input) => {
-    const prompt = `Perform a contextual analysis on the following text:
+    const prompt = `Perform a contextual analysis on the following text to detect originality, paraphrasing, and structural similarity:
 
+Text:
 ${input.text}
 
-Provide a detailed contextual analysis including:
-1. Main themes and topics
-2. Writing style and tone
-3. Target audience
-4. Key insights`;
+Provide:
+1. Originality score (0-100): How original is this text?
+2. Paraphrasing score (0-100): How likely is it that this text is paraphrased from other sources?
+3. Structural similarity score (0-100): How similar is the structure to common patterns?
+4. Highlighted text: Mark sections that appear paraphrased or structurally similar
+5. Detailed analysis of the text's originality`;
 
     const { output } = await ai.generate({
       prompt,
@@ -34,10 +36,11 @@ Provide a detailed contextual analysis including:
 
     if (!output) {
       return {
+        originalityScore: 50,
+        paraphrasingScore: 0,
+        structuralSimilarityScore: 0,
+        highlightedText: input.text,
         analysis: 'Unable to perform contextual analysis. Please try again.',
-        themes: [],
-        tone: 'neutral',
-        insights: [],
       };
     }
 

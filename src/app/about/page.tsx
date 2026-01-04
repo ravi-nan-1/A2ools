@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import {
   HeartHandshake,
@@ -18,7 +17,8 @@ import {
   Code,
   FileText,
   ShieldCheck,
-  Rocket
+  Rocket,
+  Globe
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,7 +37,7 @@ const FeatureCard = ({
 }: {
   icon: React.ElementType;
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode; // ✅ Made optional
 }) => (
   <Card className="bg-card/50 text-center">
     <CardHeader>
@@ -46,9 +46,11 @@ const FeatureCard = ({
       </div>
       <CardTitle>{title}</CardTitle>
     </CardHeader>
-    <CardContent>
-      <p className="text-muted-foreground">{children}</p>
-    </CardContent>
+    {children && ( // ✅ Only render if children exist
+      <CardContent>
+        <p className="text-muted-foreground">{children}</p>
+      </CardContent>
+    )}
   </Card>
 );
 
@@ -89,8 +91,8 @@ export default function AboutPage() {
         <section className="mx-auto my-16 max-w-4xl text-center">
            <Quote className="mx-auto h-12 w-12 text-primary/30" />
           <blockquote className="mt-4 text-2xl font-medium text-foreground md:text-3xl">
-            “Make everyday digital tasks simple, accessible, and lightning-fast
-            for everyone.”
+            "Make everyday digital tasks simple, accessible, and lightning-fast
+            for everyone."
           </blockquote>
           <p className="mt-4 text-muted-foreground">
             Welcome to All2ools, a powerful collection of smart, fast, and free online tools designed to help you work better, save time, and get things done—without installing anything.
@@ -104,7 +106,7 @@ export default function AboutPage() {
               <div>
                 <h2 className="text-3xl font-bold font-headline">Why All2ools Exists</h2>
                 <p className="mt-4 text-muted-foreground">
-                  Modern work requires dozens of small tools for converting, calculating, generating, and optimizing. But searching for each tool separately wastes time and breaks your workflow. That’s why we created All2ools.
+                  Modern work requires dozens of small tools for converting, calculating, generating, and optimizing. But searching for each tool separately wastes time and breaks your workflow. That's why we created All2ools.
                 </p>
                 <div className="mt-8 space-y-4">
                     <BenefitItem icon={CheckCircle}>One Platform, One Interface</BenefitItem>
@@ -128,12 +130,12 @@ export default function AboutPage() {
               All2ools includes 25+ free tools across critical categories to power your personal and professional projects.
             </p>
             <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-                <FeatureCard icon={Briefcase} title="Business"></FeatureCard>
-                <FeatureCard icon={BrainCircuit} title="AI Tools"></FeatureCard>
-                <FeatureCard icon={Image} title="Image"></FeatureCard>
-                <FeatureCard icon={AreaChart} title="Finance"></FeatureCard>
-                <FeatureCard icon={Code} title="Developer"></FeatureCard>
-                <FeatureCard icon={FileText} title="SEO & Docs"></FeatureCard>
+                <FeatureCard icon={Briefcase} title="Business" />
+                <FeatureCard icon={BrainCircuit} title="AI Tools" />
+                <FeatureCard icon={Image} title="Image" />
+                <FeatureCard icon={AreaChart} title="Finance" />
+                <FeatureCard icon={Code} title="Developer" />
+                <FeatureCard icon={FileText} title="SEO & Docs" />
             </div>
             <p className="mt-8 text-muted-foreground">Our goal is to expand All2ools into a complete ecosystem of 50+ tools.</p>
           </section>
@@ -202,14 +204,14 @@ export default function AboutPage() {
                   <CardTitle className="flex items-center gap-2"><ShieldCheck className="text-primary"/>How We Handle Privacy</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">We take privacy seriously. All2ools does not sell your data, track sensitive information, or store your uploaded files permanently. We only process data for the duration of the tool’s function, and then it’s deleted.</p>
+                  <p className="text-muted-foreground">We take privacy seriously. All2ools does not sell your data, track sensitive information, or store your uploaded files permanently. We only process data for the duration of the tool's function, and then it's deleted.</p>
                 </CardContent>
               </Card>
             </div>
              <div>
               <h2 className="text-3xl font-bold font-headline">Our Story & Vision</h2>
               <p className="mt-4 text-muted-foreground">All2ools started as a personal project and has evolved into a platform serving thousands of users. We are continuously adding new features and tools based on community feedback.</p>
-              <p className="mt-4 text-muted-foreground">Our vision is for All2ools to become the internet’s most trusted utility hub, with more AI tools, predictive automation, and advanced utilities to power your entire workflow.</p>
+              <p className="mt-4 text-muted-foreground">Our vision is for All2ools to become the internet's most trusted utility hub, with more AI tools, predictive automation, and advanced utilities to power your entire workflow.</p>
             </div>
           </section>
 
@@ -218,7 +220,7 @@ export default function AboutPage() {
             <Rocket className="mx-auto h-12 w-12 text-primary" />
             <h2 className="mt-4 text-2xl font-bold">Have a Tool Idea?</h2>
             <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
-              We love building new tools. If you want a tool that doesn’t exist yet, or have an idea for an improvement, please let us know. We read every request.
+              We love building new tools. If you want a tool that doesn't exist yet, or have an idea for an improvement, please let us know. We read every request.
             </p>
             <Button asChild className="mt-6">
               <Link href="mailto:support@all2ools.com">

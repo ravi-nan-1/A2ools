@@ -3,17 +3,17 @@
 import { LanguageProvider } from '@/context/language-context';
 import { ToolPageClient } from '@/components/tool-page/tool-page-client';
 import type { Tool } from '@/lib/tools';
-import type { GenerateSEOMetadataOutput } from '@/ai/flows/generate-seo-metadata';
+import type { GenerateSEOMetadataOutput } from '@/types/ai-flows';
 
 interface ClientWrapperProps {
   tool: Tool & { image: string; imageHint: string };
   aiContent: GenerateSEOMetadataOutput;
-  translations: any;
+  
 }
 
-export default function ClientWrapper({ tool, aiContent, translations }: ClientWrapperProps) {
+export default function ClientWrapper({ tool, aiContent }: ClientWrapperProps) {
   return (
-    <LanguageProvider translations={translations}>
+    <LanguageProvider>
       <ToolPageClient tool={tool} aiContent={aiContent} />
     </LanguageProvider>
   );

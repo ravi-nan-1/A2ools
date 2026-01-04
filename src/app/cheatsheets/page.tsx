@@ -1,9 +1,7 @@
+// src/app/cheatsheets/page.tsx
 'use client';
 
 import { useState, useRef, useContext } from 'react';
-import { summarizeContentAndGenerateCheatSheet, type SummarizeContentAndGenerateCheatSheetOutput } from '@/ai/flows/summarize-content-generate-cheatsheet';
-import { extractTextFromUrl } from '@/ai/flows/extract-text-from-url';
-import { extractTextFromPdf } from '@/ai/flows/extract-text-from-pdf';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,14 +9,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Sparkles, AlertCircle, Download, Share2, FileText, Link, Upload, CheckCircle } from "lucide-react";
+import { Loader2, Sparkles, AlertCircle, Download, Share2, FileText, Link, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Logo } from '@/components/icons';
 import { CheatSheetSkeleton } from '@/components/cheat-sheet-skeleton';
 import { LanguageContext } from '@/context/language-context';
-import { LanguageSwitcher } from '@/components/language-switcher';
 import { languages, type Language } from '@/lib/translations';
 
+interface SummarizeContentAndGenerateCheatSheetOutput {
+  cheatSheetHtml: string;
+  contentType: string;
+}
 
 type CheatSheetResult = SummarizeContentAndGenerateCheatSheetOutput | null;
 
@@ -35,9 +35,14 @@ export default function CheatSheetPage() {
   const { toast } = useToast();
   const cheatSheetRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { t } = useContext(LanguageContext);
+  
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('LanguageContext must be used within LanguageProvider');
+  }
+  const { translate: t } = context;
+  
   const [targetLanguage, setTargetLanguage] = useState<Language>('en');
-
 
   const handleGenerate = async () => {
     let contentToProcess = '';
@@ -62,8 +67,17 @@ export default function CheatSheetPage() {
           return;
         }
         setLoadingMessage(t('creator.loading.scraping'));
-        const urlResult = await extractTextFromUrl({ url });
+        
+        const response = await fetch('/api/extract-url-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+        
+        if (!response.ok) throw new Error('Failed to extract text from URL');
+        const urlResult = await response.json();
         contentToProcess = urlResult.text;
+        
       } else if (activeTab === 'pdf') {
         if (!pdfFile) {
           toast({ variant: 'destructive', title: t('toast.inputPdf.title'), description: t('toast.inputPdf.description') });
@@ -74,10 +88,18 @@ export default function CheatSheetPage() {
         const fileBuffer = await pdfFile.arrayBuffer();
         const base64Pdf = Buffer.from(fileBuffer).toString('base64');
         const pdfDataUri = `data:application/pdf;base64,${base64Pdf}`;
-        const pdfResult = await extractTextFromPdf({ pdf: pdfDataUri });
+        
+        const response = await fetch('/api/extract-pdf-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pdf: pdfDataUri }),
+        });
+        
+        if (!response.ok) throw new Error('Failed to extract text from PDF');
+        const pdfResult = await response.json();
         contentToProcess = pdfResult.text;
         setPdfPageCount(pdfResult.numPages);
-        setLoadingMessage(t('creator.loading.summarizingPdf', { count: pdfResult.numPages }));
+        setLoadingMessage('Summarizing PDF (' + pdfResult.numPages + ' pages)...');
       }
 
       if (!contentToProcess.trim()) {
@@ -86,14 +108,22 @@ export default function CheatSheetPage() {
 
       const selectedLanguageName = languages.find(l => l.code === targetLanguage)?.name || 'English';
 
-      const result = await summarizeContentAndGenerateCheatSheet({ text: contentToProcess, targetLanguage: selectedLanguageName });
-       if (!result || !result.cheatSheetHtml) {
+      const response = await fetch('/api/generate-cheatsheet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: contentToProcess, targetLanguage: selectedLanguageName }),
+      });
+      
+      if (!response.ok) throw new Error('Failed to generate cheat sheet');
+      const result = await response.json();
+      
+      if (!result || !result.cheatSheetHtml) {
         throw new Error(t('errors.generationFailed'));
       }
       setCheatSheet(result);
       toast({
         title: t('toast.success.title'),
-        description: t('toast.success.description', { contentType: result.contentType }),
+        description: 'Successfully generated ' + result.contentType,
       });
     } catch (e: any) {
       const errorMessage = e.message || t('errors.unexpected');
@@ -173,7 +203,7 @@ export default function CheatSheetPage() {
         return;
       }
       setPdfFile(file);
-      setPdfPageCount(null); // Reset page count on new file
+      setPdfPageCount(null);
     }
   };
 
@@ -221,24 +251,24 @@ export default function CheatSheetPage() {
                     <Upload className="mr-2" />
                     {pdfFile ? t('creator.pdf.change') : t('creator.pdf.upload')}
                   </Button>
-                  {pdfFile && <span className="text-sm text-muted-foreground truncate">{t('creator.pdf.selected', {fileName: pdfFile.name})}</span>}
+                  {pdfFile && <span className="text-sm text-muted-foreground truncate">{'Selected: ' + pdfFile.name}</span>}
                 </div>
               </TabsContent>
             </Tabs>
-             <div className="mt-4 space-y-2">
-               <label className="text-sm font-medium">{t('creator.language.label')}</label>
-                <Select value={targetLanguage} onValueChange={(value) => setTargetLanguage(value as Language)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('creator.language.placeholder')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {languages.map((lang) => (
-                      <SelectItem key={lang.code} value={lang.code}>
-                        {lang.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <div className="mt-4 space-y-2">
+              <label className="text-sm font-medium">{t('creator.language.label')}</label>
+              <Select value={targetLanguage} onValueChange={(value) => setTargetLanguage(value as Language)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('creator.language.placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {languages.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
           <CardFooter>

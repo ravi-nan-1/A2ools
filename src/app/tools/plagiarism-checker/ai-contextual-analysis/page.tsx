@@ -16,7 +16,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 
-import type { AIContextualAnalysisOutput } from '@/ai/flows/ai-contextual-analysis-types';
+import type { AIContextualAnalysisOutput } from '@/types/ai-flows';
 import { PlagiarismChecker } from '../plagiarism-checker';
 
 const formSchema = z.object({

@@ -24,7 +24,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { Cluster } from '@/ai/flows/generate-keyword-clusters';
+import type { Cluster } from '@/types/ai-flows';
 
 const formSchema = z.object({
   primaryKeyword: z.string().min(1, 'Primary keyword is required.'),

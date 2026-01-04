@@ -2,7 +2,7 @@
 import { tools } from '@/lib/tools';
 import { notFound } from 'next/navigation';
 import { ToolPageClient } from '@/components/tool-page/tool-page-client';
-import { translations } from '@/lib/translations';
+
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
 
@@ -96,7 +96,6 @@ export default async function ToolPage({ params }: PageProps) {
     <ToolPageClient
       tool={{ ...rest, icon: tool.icon }}
       aiContent={aiContent}
-      translations={translations}
     />
   );
 }

@@ -106,7 +106,7 @@ export function AiHeadshotGenerator() {
 
     try {
       const result = await handleHeadshotGeneration(formData);
-      if (result.error) {
+      if ('error' in result) {
         throw new Error(result.error);
       }
       setGeneratedUrl(result.generatedHeadshotDataUri as string);
