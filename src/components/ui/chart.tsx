@@ -355,6 +355,8 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config]
 }
 
+
+
 export {
   ChartContainer,
   ChartTooltip,
@@ -363,3 +365,6 @@ export {
   ChartLegendContent,
   ChartStyle,
 }
+
+// ✅ ADD THIS LINE - Export ChartContainer as Chart
+export { ChartContainer as Chart }

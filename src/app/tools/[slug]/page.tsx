@@ -1,17 +1,51 @@
-
+// src/app/tools/[slug]/page.tsx
 import { tools } from '@/lib/tools';
 import { notFound } from 'next/navigation';
-import { generateSEOMetadata } from '@/ai/flows/generate-seo-metadata';
 import { ToolPageClient } from '@/components/tool-page/tool-page-client';
 import { translations } from '@/lib/translations';
 import type { Metadata } from 'next';
 import { placeholderImages } from '@/lib/placeholder-images';
 
-export async function generateMetadata({
-  params: { slug },
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+// ✅ Define the props interface
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+// ✅ Type for AI content
+interface AIContent {
+  seoTitle: string;
+  seoDescription: string;
+}
+
+// ✅ Helper function to get SEO metadata via API or fallback
+async function getSEOMetadata(toolName: string, toolDescription: string): Promise<AIContent> {
+  try {
+    // Try to call the API route
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/generate-seo-metadata`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ toolName, toolDescription }),
+      cache: 'force-cache', // Cache the response for static generation
+    });
+    
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (error) {
+    console.error('Failed to generate SEO metadata:', error);
+  }
+  
+  // Fallback
+  return {
+    seoTitle: toolName,
+    seoDescription: toolDescription,
+  };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  // ✅ Await the params
+  const { slug } = await params;
+  
   const tool = tools.find((t) => t.slug === slug);
 
   if (!tool) {
@@ -23,35 +57,31 @@ export async function generateMetadata({
     };
   }
 
-  const { seoTitle, seoDescription } = await generateSEOMetadata({
-    toolName: tool.name,
-    toolDescription: tool.longDescription,
-  });
-
+  // Use fallback metadata for static generation
   return {
-    title: seoTitle || tool.metaTitle || tool.name,
-    description: seoDescription || tool.metaDescription || tool.description,
+    title: tool.metaTitle || tool.name,
+    description: tool.metaDescription || tool.description,
     alternates: {
       canonical: `https://www.all2ools.com/tools/${slug}`,
     },
   };
 }
 
-export default async function ToolPage({
-  params: { slug },
-}: {
-  params: { slug: string };
-}) {
+export default async function ToolPage({ params }: PageProps) {
+  // ✅ Await the params
+  const { slug } = await params;
+  
   const tool = tools.find((t) => t.slug === slug);
 
   if (!tool) {
     notFound();
   }
 
-  let aiContent = await generateSEOMetadata({
-    toolName: tool.name,
-    toolDescription: tool.longDescription,
-  });
+  // Use static fallback for build time
+  const aiContent: AIContent = {
+    seoTitle: tool.metaTitle || tool.name,
+    seoDescription: tool.metaDescription || tool.description,
+  };
 
   const image = placeholderImages.find((img) => img.id === tool.slug);
   const toolWithImage = {
@@ -72,7 +102,6 @@ export default async function ToolPage({
 }
 
 export async function generateStaticParams() {
-  // These pages have their own dedicated page.tsx files
   const excludedSlugs = new Set([
     'ai-humanizer',
     'tinyurl-maker',

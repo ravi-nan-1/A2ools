@@ -16,7 +16,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { fileVsTextCheck } from '@/ai/flows/file-vs-text-check';
 import type { FileVsTextCheckOutput } from '@/ai/flows/file-vs-text-check-types';
 import { PlagiarismChecker } from '../plagiarism-checker';
 
@@ -56,7 +55,19 @@ export default function FileVsTextPage() {
     reader.onload = async (event) => {
       const fileContent = event.target?.result as string;
       try {
-        const analysisResult = await fileVsTextCheck({ fileContent, text: values.text });
+        const response = await fetch('/api/file-vs-text-check', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ fileContent, text: values.text }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to run analysis');
+        }
+
+        const analysisResult = await response.json();
         setResult(analysisResult);
       } catch (error) {
         console.error("Analysis failed:", error);

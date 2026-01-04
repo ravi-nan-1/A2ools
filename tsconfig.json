@@ -41,6 +41,9 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "reference_project",
+    "pdf2word_temp",
+    "src/ai/dev.ts"
   ]
 }

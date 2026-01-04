@@ -1,3 +1,4 @@
+// src/app/tools/plagiarism-checker/text-summarizer/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -16,9 +17,17 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { textSummarizer } from '@/ai/flows/text-summarizer';
-import type { TextSummarizerOutput } from '@/ai/flows/text-summarizer-types';
 import { PlagiarismChecker } from '../plagiarism-checker';
+
+// ❌ REMOVED:
+// import { textSummarizer } from '@/ai/flows/text-summarizer';
+// import type { TextSummarizerOutput } from '@/ai/flows/text-summarizer-types';
+
+// ✅ ADD TYPE INLINE:
+interface TextSummarizerOutput {
+  summary: string;
+  keyPoints: string[];
+}
 
 const formSchema = z.object({
   text: z.string().min(1, { message: 'Text is required.' }),
@@ -42,7 +51,20 @@ export default function TextSummarizerPage() {
     setIsLoading(true);
     setResult(null);
     try {
-      const summarizationResult = await textSummarizer(values);
+      // ✅ USE API ROUTE INSTEAD OF DIRECT IMPORT
+      const response = await fetch('/api/text-summarizer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to summarize text');
+      }
+
+      const summarizationResult = await response.json();
       setResult(summarizationResult);
     } catch (error) {
       console.error("Summarization failed:", error);

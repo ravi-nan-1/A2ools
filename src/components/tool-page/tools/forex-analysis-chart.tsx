@@ -1,7 +1,9 @@
+// src/components/tool-page/tools/forex-analysis-chart.tsx
 "use client"
 
 import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts"
-import { Chart, ChartTooltipContent } from "@/components/ui/chart"
+// ✅ CHANGE THIS:
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
 
 const chartData = [
   { time: "09:00", price: 1.0712 },
@@ -25,7 +27,8 @@ const chartConfig = {
 
 export function ForexAnalysisChart() {
   return (
-    <Chart config={chartConfig} className="min-h-[200px] w-full">
+    // ✅ CHANGE Chart to ChartContainer:
+    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <LineChart
         data={chartData}
         margin={{
@@ -62,6 +65,6 @@ export function ForexAnalysisChart() {
           dot={false}
         />
       </LineChart>
-    </Chart>
+    </ChartContainer>
   )
 }

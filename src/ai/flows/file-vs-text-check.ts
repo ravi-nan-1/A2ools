@@ -1,7 +1,5 @@
-'use client';
-
 import { z } from 'zod';
-import { defineFlow, runFlow } from 'genkit';
+import { defineFlow } from '@genkit-ai/core';
 import { geminiPro } from '@genkit-ai/googleai';
 import { fileVsTextCheckPrompt } from './prompts';
 import { FileVsTextCheckOutputSchema } from './file-vs-text-check-types';

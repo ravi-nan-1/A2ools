@@ -140,7 +140,7 @@ export async function initializeModel(forceModelId?: string): Promise<boolean> {
     }
     
     state.model = await AutoModel.from_pretrained(FALLBACK_MODEL_ID, {
-      progress_callback: (progress) => {
+      progress_callback: (progress: number) => {
         console.log(`Loading model: ${Math.round(progress * 100)}%`);
       }
     });

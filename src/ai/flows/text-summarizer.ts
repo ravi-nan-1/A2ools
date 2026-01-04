@@ -1,8 +1,9 @@
-'use client';
+// src/ai/flows/text-summarizer.ts
+import 'server-only';
 
 import { z } from 'zod';
-import { defineFlow } from 'genkit';
-import { geminiPro } from '@genkit-ai/googleai';
+import { gemini15Pro } from '@genkit-ai/googleai';
+import { ai } from '../genkit';
 import { textSummarizerPrompt } from './prompts';
 import { TextSummarizerOutputSchema } from './text-summarizer-types';
 
@@ -11,7 +12,7 @@ const TextSummarizerInputSchema = z.object({
   length: z.enum(['short', 'medium', 'long']),
 });
 
-export const textSummarizer = defineFlow(
+export const textSummarizer = ai.defineFlow(
   {
     name: 'textSummarizer',
     inputSchema: TextSummarizerInputSchema,
@@ -19,10 +20,14 @@ export const textSummarizer = defineFlow(
   },
   async (input) => {
     const prompt = textSummarizerPrompt(input);
-    const llmResponse = await geminiPro.generate({
+
+    const { output } = await ai.generate({
+      model: gemini15Pro,
       prompt,
       config: { temperature: 0.5 },
+      output: { schema: TextSummarizerOutputSchema },
     });
-    return llmResponse.output();
+
+    return output;
   }
 );

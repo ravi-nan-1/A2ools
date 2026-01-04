@@ -1,6 +1,22 @@
+// next.config.ts
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  /**
+   * Server-only packages (Genkit and dependencies)
+   * This prevents them from being bundled for client-side
+   */
+  serverExternalPackages: [
+    'genkit',
+    '@genkit-ai/googleai',
+    '@genkit-ai/core',
+    '@google/generative-ai',
+    '@grpc/grpc-js',
+    '@opentelemetry/sdk-node',
+    '@opentelemetry/exporter-trace-otlp-grpc',
+    '@opentelemetry/otlp-grpc-exporter-base',
+  ],
+
   /**
    * Image optimization configuration
    */
@@ -26,9 +42,9 @@ const nextConfig: NextConfig = {
 
   /**
    * Webpack configuration
-   * (WASM support only – no server polyfills)
    */
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // WASM support
     config.module.rules.push({
       test: /\.wasm$/,
       type: 'asset/resource',
@@ -38,12 +54,30 @@ const nextConfig: NextConfig = {
       },
     });
 
+    // Client-side fallbacks for Node.js modules
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        crypto: false,
+        os: false,
+        path: false,
+        stream: false,
+        http: false,
+        https: false,
+        zlib: false,
+        dns: false,
+        child_process: false,
+      };
+    }
+
     return config;
   },
 
   /**
    * TypeScript safety
-   * (DO NOT ignore build errors in production)
    */
   typescript: {
     ignoreBuildErrors: false,

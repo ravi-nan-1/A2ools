@@ -1,4 +1,4 @@
-'use client';
+import 'server-only';
 
 import { z } from 'zod';
 import { defineFlow } from 'genkit';
