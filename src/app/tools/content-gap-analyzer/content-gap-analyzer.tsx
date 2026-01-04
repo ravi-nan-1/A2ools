@@ -57,7 +57,7 @@ export function ContentGapAnalyzer() {
     
     try {
       const analysisResult = await handleContentAnalysis(formData);
-      if (analysisResult.error) {
+      if ('error' in analysisResult) {
         throw new Error(analysisResult.error);
       }
       setResult(analysisResult.advice as string);

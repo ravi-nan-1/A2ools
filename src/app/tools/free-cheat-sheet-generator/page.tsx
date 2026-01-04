@@ -1,4 +1,4 @@
-// src/app/cheatsheets/page.tsx
+// src/app/tools/free-cheat-sheet-generator/page.tsx
 'use client';
 
 import { useState, useRef, useContext } from 'react';
@@ -15,7 +15,6 @@ import { CheatSheetSkeleton } from '@/components/cheat-sheet-skeleton';
 import { LanguageContext } from '@/context/language-context';
 import { languages, type Language } from '@/lib/translations';
 
-// ✅ Define types locally (no import from flow)
 interface SummarizeContentAndGenerateCheatSheetOutput {
   cheatSheetHtml: string;
   contentType: string;
@@ -36,7 +35,11 @@ export default function CheatSheetPage() {
   const { toast } = useToast();
   const cheatSheetRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { t } = useContext(LanguageContext);
+  
+  // ✅ FIXED: Proper context usage with type guard
+  const context = useContext(LanguageContext);
+  const t = context?.translate || ((key: string) => key);
+  
   const [targetLanguage, setTargetLanguage] = useState<Language>('en');
 
   const handleGenerate = async () => {
@@ -63,7 +66,6 @@ export default function CheatSheetPage() {
         }
         setLoadingMessage(t('creator.loading.scraping'));
         
-        // ✅ Use API route instead
         const response = await fetch('/api/extract-url-text', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -85,7 +87,6 @@ export default function CheatSheetPage() {
         const base64Pdf = Buffer.from(fileBuffer).toString('base64');
         const pdfDataUri = `data:application/pdf;base64,${base64Pdf}`;
         
-        // ✅ Use API route instead
         const response = await fetch('/api/extract-pdf-text', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -96,7 +97,7 @@ export default function CheatSheetPage() {
         const pdfResult = await response.json();
         contentToProcess = pdfResult.text;
         setPdfPageCount(pdfResult.numPages);
-        setLoadingMessage(t('creator.loading.summarizingPdf', { count: pdfResult.numPages }));
+        setLoadingMessage('Summarizing PDF (' + pdfResult.numPages + ' pages)...');
       }
 
       if (!contentToProcess.trim()) {
@@ -105,7 +106,6 @@ export default function CheatSheetPage() {
 
       const selectedLanguageName = languages.find(l => l.code === targetLanguage)?.name || 'English';
 
-      // ✅ Use API route instead
       const response = await fetch('/api/generate-cheatsheet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -121,7 +121,7 @@ export default function CheatSheetPage() {
       setCheatSheet(result);
       toast({
         title: t('toast.success.title'),
-        description: t('toast.success.description', { contentType: result.contentType }),
+        description: 'Successfully generated ' + result.contentType,
       });
     } catch (e: any) {
       const errorMessage = e.message || t('errors.unexpected');
@@ -162,14 +162,14 @@ export default function CheatSheetPage() {
       </html>`;
     
     const blob = new Blob([pageStyles], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
+    const downloadUrl = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
+    a.href = downloadUrl;
     a.download = 'cheatsheet.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(downloadUrl);
 
     toast({
       title: t('toast.download.title'),
@@ -249,7 +249,7 @@ export default function CheatSheetPage() {
                     <Upload className="mr-2" />
                     {pdfFile ? t('creator.pdf.change') : t('creator.pdf.upload')}
                   </Button>
-                  {pdfFile && <span className="text-sm text-muted-foreground truncate">{t('creator.pdf.selected', {fileName: pdfFile.name})}</span>}
+                  {pdfFile && <span className="text-sm text-muted-foreground truncate">{'Selected: ' + pdfFile.name}</span>}
                 </div>
               </TabsContent>
             </Tabs>

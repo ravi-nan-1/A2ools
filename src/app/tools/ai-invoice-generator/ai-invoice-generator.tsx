@@ -9,7 +9,6 @@ import 'jspdf-autotable';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -65,6 +64,7 @@ const lineItemSchema = z.object({
   rate: z.coerce.number().min(0, 'Rate must be positive.'),
 });
 
+// ✅ Schema WITHOUT .default() for form compatibility
 export const invoiceSchema = z.object({
   from: z.string().min(1, 'This field is required.'),
   billTo: z.string().min(1, 'This field is required.'),
@@ -76,9 +76,9 @@ export const invoiceSchema = z.object({
   notes: z.string().optional(),
   terms: z.string().optional(),
   bankDetails: z.string().optional(),
-  tax: z.coerce.number().min(0).max(100).optional().default(0),
-  discount: z.coerce.number().min(0).optional().default(0),
-  shipping: z.coerce.number().min(0).optional().default(0),
+  tax: z.coerce.number().min(0).max(100),
+  discount: z.coerce.number().min(0),
+  shipping: z.coerce.number().min(0),
 });
 
 export type InvoiceFormValues = z.infer<typeof invoiceSchema>;
@@ -109,6 +109,7 @@ export function AiInvoiceGenerator() {
   const form = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
+      date: new Date(),
       from: 'Your Company Name\nGSTIN: YOUR_GSTIN_HERE\n123 Street, City, Country',
       billTo: '',
       shipTo: '',
@@ -122,6 +123,9 @@ export function AiInvoiceGenerator() {
       shipping: 0,
     },
   });
+
+  // ... rest of your code stays exactly the same from here
+  
 
   useEffect(() => {
     if (isClient) {

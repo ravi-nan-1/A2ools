@@ -84,7 +84,7 @@ export function GlobalLoanOptimizer() {
             loanTenure: 5
         },
         mode: 'onChange',
-        key: country, // Re-mounts the form when country changes
+        
     });
     
     const { reset } = form;
