@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { processImages, initializeModel, getModelInfo } from "../../../lib/process";
+import { processImages } from "../../../lib/process";
 import { Images } from "@/components/tool-page/tools/ai-product-background-remover/Images";
 
 interface AppError {
@@ -24,32 +24,15 @@ const sampleImages = [
   "https://images.unsplash.com/photo-1574158622682-e40e69881006?q=80&w=600",
 ];
 
-const isMobileSafari = () => {
-  const ua = window.navigator.userAgent;
-  return /iPhone|iPad/i.test(ua) && /WebKit/i.test(ua);
-};
-
 export default function BackgroundRemoverPage() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<AppError | null>(null);
-  const [isWebGPU, setIsWebGPU] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-
-  useEffect(() => {
-    if (isMobileSafari()) {
-      window.location.href = 'https://bg-mobile.addy.ie';
-      return;
-    }
-    const info = getModelInfo();
-    setIsIOS(info.isIOS);
-  }, []);
 
   /* LOAD SAMPLE IMAGE */
   const handleSampleImageClick = async (url: string) => {
     try {
       setIsLoading(true);
-      await initializeModel();
 
       const res = await fetch(url);
       const blob = await res.blob();
@@ -78,20 +61,6 @@ export default function BackgroundRemoverPage() {
 
     setImages(prev => [...prev, ...newImages]);
 
-    if (images.length === 0) {
-      setIsLoading(true);
-      try {
-        await initializeModel();
-        const info = getModelInfo();
-        setIsWebGPU(info.isWebGPUSupported);
-      } catch {
-        setError({ message: "Failed to initialize AI model" });
-        setIsLoading(false);
-        return;
-      }
-      setIsLoading(false);
-    }
-
     for (const img of newImages) {
       try {
         const result = await processImages([img.file]);
@@ -104,7 +73,7 @@ export default function BackgroundRemoverPage() {
         console.error("Image processing failed");
       }
     }
-  }, [images.length]);
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
