@@ -44,6 +44,11 @@
     "node_modules",
     "reference_project",
     "pdf2word_temp",
-    "src/ai/dev.ts"
+    "src/ai/dev.ts",
+    "node_modules",
+    ".next",
+    "dist",
+    "temp-detective-project",
+    "temp_rulewise"
   ]
 }

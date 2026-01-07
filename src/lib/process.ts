@@ -81,8 +81,7 @@ async function initializeWebGPU() {
       device: "webgpu",
       config: {
         model_type: 'modnet',
-        architectures: ['MODNet']
-      }
+      } as any
     });
     state.processor = await AutoProcessor.from_pretrained(WEBGPU_MODEL_ID);
     state.isWebGPUSupported = true;
@@ -105,7 +104,7 @@ export async function initializeModel(forceModelId?: string): Promise<boolean> {
       }
 
       state.model = await AutoModel.from_pretrained(FALLBACK_MODEL_ID, {
-        config: { model_type: 'custom' }
+        config: { model_type: 'custom' } as any
       });
 
       state.processor = await AutoProcessor.from_pretrained(FALLBACK_MODEL_ID, {
@@ -147,7 +146,7 @@ export async function initializeModel(forceModelId?: string): Promise<boolean> {
     }
     
     state.model = await AutoModel.from_pretrained(FALLBACK_MODEL_ID, {
-      progress_callback: (progress) => {
+      progress_callback: (progress: any) => {
         console.log(`Loading model: ${Math.round(progress * 100)}%`);
       }
     });

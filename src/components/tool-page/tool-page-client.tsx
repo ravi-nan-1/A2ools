@@ -26,17 +26,34 @@ const iframeTools = [
     'ai-humanizer',
     'free-qr-code-generator',
     'free-cheat-sheet-generator',
-    
+    'image-compressor',
+    'free-image-file-compressor',
+    '1-click-article-outline-generator',
     'tinyurl-maker',
     'ai-product-background-remover',
     'pdf-to-word-converter',
     'ai-tutor',
     'excel-power-tools',
-    'plagiarism-checker'
+    'plagiarism-checker',
+    'content-gap-analyzer',
+    'api-latency-checker',
+    'jwt-decoder-validator',
+    'global-loan-optimizer',
+    'crypto-tax-calculator',
+    'forex-arbitrage-checker',
+    'ai-invoice-generator',
+    'business-valuation-calculator',
+    'ai-headshot-generator',
+    'keyword-cluster-generator',
+    'ai-product-description-generator',
+    'json-excel-converter',
+    'regex-generator-from-text',
+    'webhook-tester',
+    'invoice-excel-extractor'
   ];
 
-const ContentSection = ({ title, content, icon: Icon }: { title: string, content: string, icon: React.ElementType }) => {
-    if (!content || content.startsWith(`${title.toLowerCase().replace(/ /g, '_')}_`)) {
+const ContentSection = ({ title, content, icon: Icon }: { title: string, content: string | string[], icon: React.ElementType }) => {
+    if (!content || (typeof content === 'string' && content.startsWith(`${title.toLowerCase().replace(/ /g, '_')}_`))) {
         return (
              <Card>
                 <CardHeader>
@@ -49,7 +66,7 @@ const ContentSection = ({ title, content, icon: Icon }: { title: string, content
         );
     }
 
-    const items = content.split('\n').map(item => item.trim()).filter(Boolean);
+    const items = Array.isArray(content) ? content : content.split('\n').map(item => item.trim()).filter(Boolean);
 
     return (
         <Card>
@@ -71,8 +88,8 @@ const ContentSection = ({ title, content, icon: Icon }: { title: string, content
 };
 
 
-const HowItWorksSection = ({ content }: { content: string }) => {
-    if (!content || content.startsWith('how_it_works_')) {
+const HowItWorksSection = ({ content }: { content: string | string[] }) => {
+    if (!content || (typeof content === 'string' && content.startsWith('how_it_works_'))) {
         return (
             <Card>
                 <CardHeader>
@@ -84,7 +101,7 @@ const HowItWorksSection = ({ content }: { content: string }) => {
             </Card>
         )
     }
-    const items = content.split('\n').map(item => item.trim()).filter(Boolean);
+    const items = Array.isArray(content) ? content : content.split('\n').map(item => item.trim()).filter(Boolean);
     return (
         <Card>
             <CardHeader>
@@ -104,8 +121,8 @@ const HowItWorksSection = ({ content }: { content: string }) => {
     );
 }
 
-const FaqSection = ({ content }: { content: string }) => {
-    if (!content || content.startsWith('faq_')) {
+const FaqSection = ({ content }: { content: { question: string, answer: string }[] | string }) => {
+    if (!content || (typeof content === 'string' && content.startsWith('faq_'))) {
         return (
             <Card>
                 <CardHeader>
@@ -117,7 +134,11 @@ const FaqSection = ({ content }: { content: string }) => {
             </Card>
         );
     }
-    const items = content.split('\n\n').map(q => q.trim()).filter(Boolean);
+    const items = Array.isArray(content) ? content : content.split('\n\n').map(q => {
+        const [question, ...answerParts] = q.trim().split('\n');
+        return { question, answer: answerParts.join('\n') };
+    }).filter(Boolean);
+
     return (
         <Card>
             <CardHeader>
@@ -127,16 +148,12 @@ const FaqSection = ({ content }: { content: string }) => {
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-                {items.map((faqItem, index) => {
-                    const [question, ...answerParts] = faqItem.split('\n');
-                    const answer = answerParts.join('\n');
-                    return (
-                        <div key={index} className="border-l-2 border-primary pl-4">
-                            <h4 className="font-semibold text-foreground text-lg">{question.replace(/^\d+\.\s*/, '')}</h4>
-                            <p className="text-muted-foreground mt-1">{answer}</p>
-                        </div>
-                    );
-                })}
+                {items.map((faqItem, index) => (
+                    <div key={index} className="border-l-2 border-primary pl-4">
+                        <h4 className="font-semibold text-foreground text-lg">{faqItem.question.replace(/^\d+\.\s*/, '')}</h4>
+                        <p className="text-muted-foreground mt-1">{faqItem.answer}</p>
+                    </div>
+                ))}
             </CardContent>
         </Card>
     );
@@ -146,11 +163,11 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
   const { translate } = useLanguage();
   const { jsonLdSchema } = aiContent;
 
-  const longDescription = translate(`${tool.slug}_long_description`);
-  const faqContent = translate(`${tool.slug}_faq`);
-  const featuresContent = translate(`${tool.slug}_features`);
-  const howItWorksContent = translate(`${tool.slug}_how_it_works`);
-  const useCasesContent = translate(`${tool.slug}_use_cases`);
+  const longDescription = tool.longDescription;
+  const faqContent = tool.faq || [];
+  const featuresContent = tool.features || [];
+  const howItWorksContent = tool.howItWorks || [];
+  const useCasesContent = tool.useCases || [];
   
   const isIframeTool = iframeTools.includes(tool.slug);
 
@@ -176,10 +193,12 @@ export function ToolPageClient({ tool, aiContent }: ToolPageClientProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdSchema }}
-      />
+      {jsonLdSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdSchema }}
+        />
+      )}
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="flex justify-between items-start mb-6">
           <Button variant="ghost" asChild>

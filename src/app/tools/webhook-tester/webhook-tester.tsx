@@ -90,5 +90,5 @@ export function WebhookTester() {
     }
   }
 
-  // ... rest of the component
+  return <div>Webhook Tester</div>
 }

@@ -9,8 +9,9 @@ import { Palette, Image, Settings, FileText } from "lucide-react";
 
 interface QROptionsPanelProps {
   config: QRConfig;
-  setConfig: (config: QRConfig) => void;
+  setConfig: React.Dispatch<React.SetStateAction<QRConfig>>;
 }
+
 
 export const QROptionsPanel = ({ config, setConfig }: QROptionsPanelProps) => {
   return (
@@ -40,7 +41,7 @@ export const QROptionsPanel = ({ config, setConfig }: QROptionsPanelProps) => {
         </TabsContent>
 
         <TabsContent value="design" className="space-y-4">
-          <DesignTab config={config} setConfig={setConfig} />
+          {/* <DesignTab config={config} setConfig={setConfig} /> */}
         </TabsContent>
 
         <TabsContent value="logo" className="space-y-4">

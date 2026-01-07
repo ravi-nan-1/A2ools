@@ -1,4 +1,6 @@
 
+"use client";
+import { useState } from 'react';
 import { ContentGapAnalyzer } from '@/app/tools/content-gap-analyzer/content-gap-analyzer';
 import { ApiLatencyChecker } from '@/app/tools/api-latency-checker/api-latency-checker';
 import { PlaceholderTool } from './tools/placeholder-tool';
@@ -24,7 +26,7 @@ import { FreeQrCodeGenerator } from '@/app/(iframe-tools)/free-qr-code-generator
 import { FreeCheatSheetGenerator } from '@/app/(iframe-tools)/free-cheat-sheet-generator/free-cheat-sheet-generator';
 import { ImageCompressor  } from '@/app/tools/free-image-file-compressor/image-compressor';
 import { TinyUrlMaker } from '@/app/tools/tinyurl-maker/tinyurl-maker';
-import { PdfToWordConverter } from '@/app/tools/pdf-to-word-converter/pdf-to-word-converter';
+import { PdfToWordConverter, ConversionType } from '@/app/tools/pdf-to-word-converter/pdf-to-word-converter';
 import { AiTutor } from '@/app/tools/ai-tutor/ai-tutor';
 import { ExcelPowerTools } from '@/app/tools/excel-power-tools/excel-power-tools';
 import { AiProductBackgroundRemover } from '@/app/tools/ai-product-background-remover/ai-product-background-remover';
@@ -34,10 +36,11 @@ interface ToolInterfaceProps {
 }
 
 export function ToolInterface({ slug }: ToolInterfaceProps) {
+  const [conversionType, setConversionType] = useState<ConversionType>('pdf-to-word');
   const renderTool = () => {
     switch (slug) {
       case 'free-image-file-compressor':
-        return <FreeImageFileCompressor />;
+        return <ImageCompressor />;
       case 'free-cheat-sheet-generator':
         return <FreeCheatSheetGenerator />;
       case 'ai-humanizer':
@@ -53,7 +56,7 @@ export function ToolInterface({ slug }: ToolInterfaceProps) {
       case 'api-latency-checker':
         return <ApiLatencyChecker />;
       case 'pdf-to-word-converter':
-        return <PdfToWordConverter />;
+        return <PdfToWordConverter conversionType={conversionType} setConversionType={setConversionType} />;
       case 'ai-tutor':
         return <AiTutor />;
       case 'excel-power-tools':

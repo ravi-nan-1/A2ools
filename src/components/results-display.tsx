@@ -54,7 +54,7 @@ export function ResultsDisplay({ result }: ResultsDisplayProps) {
             {result.matchedPhrases && result.matchedPhrases.length > 0 ? (
                 <div className="mt-4 max-h-48 overflow-y-auto pr-4">
                     <ul className="space-y-2">
-                        {result.matchedPhrases.map((phrase, index) => (
+                        {result.matchedPhrases?.map((phrase: string, index: number) => (
                             <li key={index} className="p-2 text-sm italic border-l-4 rounded-r-md bg-muted border-accent">
                                 "{phrase}"
                             </li>

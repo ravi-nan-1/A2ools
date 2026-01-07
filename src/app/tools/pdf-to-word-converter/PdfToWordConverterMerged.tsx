@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-language";
+import { useToast } from "@/hooks/use-toast";
 import { UploadCloud, FileText, FileSignature, ArrowRight, Download, X, FileImage, FileSpreadsheet, Presentation, FileCode } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,6 +40,8 @@ const getConversionInfo = (conversionType: ConversionType) => {
         accept: 'application/pdf',
         multiple: false,
         params: [] as ({ id: string; label: string; type: string; options?: string[] } | { id: string; label: string; type: 'select'; options: string[] })[],
+        fromIcon: <FileText className="h-10 w-10 text-destructive" />,
+        toIcon: <FileText className="h-10 w-10 text-destructive" />,
     };
     switch (conversionType) {
         case "pdf-to-word": return { ...baseInfo, title: "PDF to Word", actionText: "Convert to Word", fromIcon: <FileText className="h-10 w-10 text-destructive" />, toIcon: <FileSignature className="h-10 w-10 text-primary" />, fromType: "PDF", toType: "Word", accept: "application/pdf" };
@@ -231,7 +233,7 @@ function FileDropZone({
       )}
       
       {(status === "file-selected") && (
-        <Button onClick={handleConvert} className="w-full" size="lg" disabled={status === 'converting' || (files.length === 0 && !htmlContent)}>
+        <Button onClick={handleConvert} className="w-full" size="lg" disabled={status !== 'file-selected' || (files.length === 0 && !htmlContent)}>
           {actionText}
         </Button>
       )}
@@ -459,7 +461,7 @@ export function FileConverter({ conversionType, setConversionType }: FileConvert
                 errorMessage = errorBody;
             }
         } catch (e) {
-            // Parsing failed, do nothing and keep the default message
+            // Parsing failed, do nothing and keep the.
         }
         
         throw new Error(errorMessage);
@@ -574,4 +576,3 @@ export function FileConverter({ conversionType, setConversionType }: FileConvert
     </Card>
   );
 }
-

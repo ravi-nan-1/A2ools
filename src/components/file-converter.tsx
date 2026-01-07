@@ -35,12 +35,33 @@ interface FileConverterProps {
   setConversionType: (type: ConversionType) => void;
 }
 
-const getConversionInfo = (conversionType: ConversionType) => {
-    const baseInfo = {
-        accept: 'application/pdf',
-        multiple: false,
-        params: [] as ({ id: string; label: string; type: string; options?: string[] } | { id: string; label: string; type: 'select'; options: string[] })[],
+    interface ConversionInfo {
+      title: string;
+      actionText: string;
+      fromIcon: React.ReactNode;
+      toIcon: React.ReactNode;
+      fromType: string;
+      toType: string;
+      accept: string;
+      multiple: boolean;
+      params: (
+        | { id: string; label: string; type: string; options?: string[] }
+        | { id: string; label: string; type: 'select'; options: string[] }
+      )[];
+    }
+
+
+    const getConversionInfo = (conversionType: ConversionType): ConversionInfo => {
+      const baseInfo: Pick<
+      ConversionInfo,
+      "accept" | "multiple" | "params" | "fromIcon" | "toIcon"> = {
+      accept: "application/pdf",
+      multiple: false,
+      params: [],
+      fromIcon: <FileText className="h-10 w-10 text-destructive" />,
+      toIcon: <FileText className="h-10 w-10 text-destructive" />,
     };
+
     switch (conversionType) {
         case "pdf-to-word": return { ...baseInfo, title: "PDF to Word", actionText: "Convert to Word", fromIcon: <FileText className="h-10 w-10 text-destructive" />, toIcon: <FileSignature className="h-10 w-10 text-primary" />, fromType: "PDF", toType: "Word", accept: "application/pdf" };
         case "word-to-pdf": return { ...baseInfo, title: "Word to PDF", actionText: "Convert to PDF", fromIcon: <FileSignature className="h-10 w-10 text-primary" />, toIcon: <FileText className="h-10 w-10 text-destructive" />, fromType: "Word", toType: "PDF", accept: ".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" };
@@ -52,7 +73,7 @@ const getConversionInfo = (conversionType: ConversionType) => {
         case "ppt-to-pdf": return { ...baseInfo, title: "PowerPoint to PDF", actionText: "Convert to PDF", fromIcon: <Presentation className="h-10 w-10 text-orange-500" />, toIcon: <FileText className="h-10 w-10 text-destructive" />, fromType: "PPT", toType: "PDF", accept: ".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" };
         case "html-to-pdf": return { ...baseInfo, title: "HTML to PDF", actionText: "Convert to PDF", fromIcon: <FileCode className="h-10 w-10 text-blue-500" />, toIcon: <FileText className="h-10 w-10 text-destructive" />, fromType: "HTML", toType: "PDF", accept: "text/html" };
         case "merge-pdf": return { ...baseInfo, title: "Merge PDF", actionText: "Merge PDFs", fromIcon: <FileText className="h-10 w-10 text-destructive" />, toIcon: <FileText className="h-10 w-10 text-destructive" />, fromType: "PDFs", toType: "PDF", multiple: true };
-        case "split-pdf": return { ...baseInfo, title: "Split PDF", actionText: "Split PDF", fromType: "PDF", toType: "PDFs", params: [{ id: 'ranges', label: 'Page ranges (e.g., 1-3, 5, 7-9)', type: 'text' }] };
+        case "split-pdf": return { ...baseInfo, title: "Split PDF", actionText: "Split PDF", fromType: "PDF", toType: "PDFs",fromIcon: baseInfo.fromIcon,toIcon: baseInfo.toIcon, params: [{ id: 'ranges', label: 'Page ranges (e.g., 1-3, 5, 7-9)', type: 'text' }] };
         case "extract-pages": return { ...baseInfo, title: "Extract Pages", actionText: "Extract Pages", fromType: "PDF", toType: "PDF", params: [{ id: 'pages', label: 'Pages to extract (e.g., 1, 3, 5-7)', type: 'text' }] };
         case "delete-pages": return { ...baseInfo, title: "Delete Pages", actionText: "Delete Pages", fromType: "PDF", toType: "PDF", params: [{ id: 'pages_to_delete', label: 'Pages to delete (e.g., 2, 4)', type: 'text' }] };
         case "reorder-pages": return { ...baseInfo, title: "Reorder Pages", actionText: "Reorder Pages", fromType: "PDF", toType: "PDF", params: [{ id: 'new_order', label: 'New page order (e.g., 3,1,2,4)', type: 'text' }] };
@@ -231,7 +252,7 @@ function FileDropZone({
       )}
       
       {(status === "file-selected") && (
-        <Button onClick={handleConvert} className="w-full" size="lg" disabled={status === 'converting' || (files.length === 0 && !htmlContent)}>
+        <Button onClick={handleConvert} className="w-full" size="lg" disabled={files.length === 0 && !htmlContent}>
           {actionText}
         </Button>
       )}

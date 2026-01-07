@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useContext } from 'react';
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,35 +8,44 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Globe } from 'lucide-react';
-import { LanguageContext } from '@/context/language-context';
-import { languages, Language } from '@/lib/translations';
+import { Globe } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
+import { languages, type Language } from "@/lib/translations";
 
 export function LanguageSwitcher() {
-  const { setLanguage } = useContext(LanguageContext);
+  const { setLanguage, language } = useLanguage();
 
   const Flag = ({ lang }: { lang: Language }) => (
-    <img src={`/flags/${lang}.svg`} alt={lang} className="w-5 h-5 mr-2" />
+    <img
+      src={`/flags/${lang}.svg`}
+      alt={lang}
+      className="w-5 h-5 mr-2"
+      loading="lazy"
+    />
   );
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label="Change language">
           <Globe className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">Change language</span>
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end">
-        {languages.map((lang) => (
-          <DropdownMenuItem key={lang.code} onClick={() => setLanguage(lang.code)}>
-            <Flag lang={lang.code} />
-            {lang.name}
+        {languages.map((langItem) => (
+          <DropdownMenuItem
+            key={langItem.code}
+            onClick={() => setLanguage(langItem.code)}
+            className="flex items-center gap-2"
+          >
+            <Flag lang={langItem.code} />
+            <span className={langItem.code === language ? "font-semibold" : ""}>
+              {langItem.name}
+            </span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-
-    

@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle2, XCircle, Shield, Info } from 'lucide-react';
-import { jwtVerify, decodeJwt } from 'jose';
+import { jwtVerify, decodeJwt, JWTPayload, decodeProtectedHeader } from 'jose';
 
 // Helper to format JSON with indentation
 const formatJson = (obj: any) => JSON.stringify(obj, null, 2);
@@ -14,7 +14,7 @@ export function JwtDecoderValidator() {
   const [encodedToken, setEncodedToken] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [header, setHeader] = useState<object | null>(null);
-  const [payload, setPayload] = useState<object | null>(null);
+  const [payload, setPayload] = useState<JWTPayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [verificationStatus, setVerificationStatus] = useState<'idle' | 'valid' | 'invalid' | 'error'>();
   const [verificationError, setVerificationError] = useState<string | null>(null);
@@ -23,21 +23,16 @@ export function JwtDecoderValidator() {
   const decodeToken = (token: string) => {
     try {
       setError(null);
-      const decodedHeader = decodeJwt(token);
-      
-      const parts = token.split('.');
-      if (parts.length !== 3) {
-        throw new Error('Invalid JWT structure. The token must have three parts separated by dots.');
-      }
-      const decodedPayload = JSON.parse(new TextDecoder().decode(Buffer.from(parts[1], 'base64')));
+      const decodedHeader = decodeProtectedHeader(token);
+      const decodedPayload = decodeJwt(token);
 
       setHeader(decodedHeader);
       setPayload(decodedPayload);
     } catch (e: any) {
       setHeader(null);
       setPayload(null);
-      if (e.message.includes('Invalid Compact JWS')) {
-         setError('Invalid JWT structure. The token must have three parts separated by dots.');
+      if (e.code === 'ERR_JWT_INVALID') {
+         setError('Invalid JWT: The token is malformed or has an incorrect structure.');
       } else if (e.message.includes('base64')) {
         setError('Invalid JWT: Header or Payload is not correctly Base64Url encoded.');
       } else {
@@ -67,7 +62,7 @@ export function JwtDecoderValidator() {
 
       try {
         setVerificationError(null);
-        const alg = (decodeJwt(encodedToken) as any).alg as string;
+        const alg = (decodeProtectedHeader(encodedToken) as any).alg as string;
 
         let key: CryptoKey | Uint8Array;
         if (alg.startsWith('HS')) { // Symmetric HMAC algorithms
@@ -96,9 +91,9 @@ export function JwtDecoderValidator() {
         if (e.code === 'ERR_JWS_SIGNATURE_VERIFICATION_FAILED') {
             setVerificationError('Signature verification failed.');
         } else if (e.code === 'ERR_JWT_EXPIRED') {
-            setVerificationError(`Token expired at ${new Date(payload?.exp * 1000).toLocaleString()}`);
+            setVerificationError(`Token expired at ${new Date((payload?.exp || 0) * 1000).toLocaleString()}`);
         } else if (e.code === 'ERR_JWT_CLAIM_VALIDATION_FAILED' && e.claim === 'nbf') {
-            setVerificationError(`Token is not yet active (nbf: ${new Date(payload?.nbf * 1000).toLocaleString()}).`);
+            setVerificationError(`Token is not yet active (nbf: ${new Date((payload?.nbf || 0) * 1000).toLocaleString()}).`);
         } else {
             setVerificationError(`Verification Error: ${e.message}. Ensure your key matches the token's algorithm.`);
         }
@@ -107,7 +102,7 @@ export function JwtDecoderValidator() {
     
     verify();
     
-  }, [encodedToken, secretKey]);
+  }, [encodedToken, secretKey, payload]);
 
 
   return (

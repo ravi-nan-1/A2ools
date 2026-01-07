@@ -24,7 +24,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import type { Cluster } from '@/types/ai-flows';
+
 
 const formSchema = z.object({
   primaryKeyword: z.string().min(1, 'Primary keyword is required.'),
@@ -34,6 +34,29 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+interface Cluster {
+  clusterTitle: string;
+  parentTopic: string;
+  intent: "Informational" | "Transactional" | "Commercial" | "Navigational" | "Unknown";
+  relevanceScore: number;
+  difficultyScore: number;
+  keywords: string[];
+  searchVolume: number;
+  cpc: number;
+  competition: number;
+  trafficPotential: number;
+  opportunityScore: number;
+  priority: string;
+  seasonality: string;
+  aiSeoTitle: string;
+  aiMetaDescription: string;
+  aiContentBrief: string;
+  aiKeywordExpansion: {
+    related: string[];
+    questions: string[];
+  };
+}
 
 interface ClusterResult {
     clusters: Cluster[];
@@ -127,7 +150,7 @@ export function KeywordClusterGenerator() {
       if (response.error) {
         throw new Error(response.error);
       }
-      setResult(response.data as ClusterResult);
+      setResult(response.data as unknown as ClusterResult);
       toast({
         title: 'Clusters Generated!',
         description: 'Your advanced keyword clusters are ready below.',

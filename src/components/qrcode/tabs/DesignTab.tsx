@@ -23,8 +23,13 @@ export const DesignTab = ({ config, setConfig }: DesignTabProps) => {
   };
 
   const applyPreset = (fg: string, bg: string) => {
-    setConfig({ ...config, fgColor: fg, bgColor: bg });
+    setConfig({
+      ...config,
+      foregroundColor: fg,
+      backgroundColor: bg,
+    });
   };
+  
 
   return (
     <div className="space-y-6">
@@ -35,14 +40,14 @@ export const DesignTab = ({ config, setConfig }: DesignTabProps) => {
             <Input
               id="fgColor"
               type="color"
-              value={config.fgColor}
-              onChange={(e) => updateDesign("fgColor", e.target.value)}
+              value={config.foregroundColor}
+              onChange={(e) => updateDesign("foregroundColor", e.target.value)}
               className="w-20 h-10 cursor-pointer"
             />
             <Input
               type="text"
-              value={config.fgColor}
-              onChange={(e) => updateDesign("fgColor", e.target.value)}
+              value={config.foregroundColor}
+              onChange={(e) => updateDesign("foregroundColor", e.target.value)}
               className="flex-1"
             />
           </div>
@@ -54,14 +59,14 @@ export const DesignTab = ({ config, setConfig }: DesignTabProps) => {
             <Input
               id="bgColor"
               type="color"
-              value={config.bgColor}
-              onChange={(e) => updateDesign("bgColor", e.target.value)}
+              value={config.backgroundColor}
+              onChange={(e) => updateDesign("backgroundColor", e.target.value)}
               className="w-20 h-10 cursor-pointer"
             />
             <Input
               type="text"
-              value={config.bgColor}
-              onChange={(e) => updateDesign("bgColor", e.target.value)}
+              value={config.backgroundColor}
+              onChange={(e) => updateDesign("backgroundColor", e.target.value)}
               className="flex-1"
             />
           </div>
