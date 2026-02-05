@@ -321,7 +321,7 @@ export function BusinessValuationCalculator() {
                      <FormField control={form.control} name="taxRate" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Corporate Tax Rate: {field.value}%</FormLabel>
-                            <FormControl><Slider min={0} max={100} step={1} onValuechenge={(v) => field.onChange(v[0])} defaultValue={[field.value]} /></FormControl>
+                            <FormControl><Slider min={0} max={100} step={1} onValueChange={(v) => field.onChange(v[0])} defaultValue={[field.value]} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
