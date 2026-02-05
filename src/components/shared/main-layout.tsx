@@ -12,11 +12,7 @@ import { Button } from '@/components/ui/button';
 
 const iframeTools = [
   'ai-humanizer',
-  'free-cheat-sheet-generator',
-  'free-image-file-compressor',
   'tinyurl-maker',
-  'ai-product-background-remover',
-  'pdf-to-word-converter',
   'ai-tutor',
   'excel-power-tools',
 ];

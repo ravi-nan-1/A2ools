@@ -10,6 +10,17 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+
+  async function handleSubmit(formData: FormData) {
+    'use server';
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const subject = formData.get('subject');
+    const message = formData.get('message');
+    console.log({ name, email, subject, message });
+    // Here you would typically send an email or save to a database
+  }
+
   return (
     <div className="container mx-auto px-4 py-12 md:py-16">
       <div className="mx-auto max-w-2xl">
@@ -30,15 +41,15 @@ export default function ContactPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form className="space-y-4">
+            <form action={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input placeholder="Your Name" />
-                <Input type="email" placeholder="Your Email Address" />
+                <Input name="name" placeholder="Your Name" />
+                <Input name="email" type="email" placeholder="Your Email Address" />
               </div>
-              <Input placeholder="Subject" />
-              <Textarea placeholder="Your message..." rows={6} />
-              <Button type="submit" className="w-full" disabled>
-                Send Message (Form Inactive)
+              <Input name="subject" placeholder="Subject" />
+              <Textarea name="message" placeholder="Your message..." rows={6} />
+              <Button type="submit" className="w-full">
+                Send Message
               </Button>
             </form>
           </CardContent>

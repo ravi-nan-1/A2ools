@@ -12,10 +12,12 @@ import {
   Server,
   XCircle,
   RefreshCcw,
-  CheckCircle
+  CheckCircle,
+  Mail
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: 'Terms & Conditions | All2ools',
@@ -73,7 +75,7 @@ export default function TermsPage() {
             Terms & Conditions
           </h1>
           <p className="mx-auto mt-4 text-lg text-muted-foreground md:text-xl">
-            Last Updated: December 03, 2025
+            Last Updated: July 16, 2024
           </p>
         </section>
 
@@ -198,9 +200,23 @@ export default function TermsPage() {
               </SectionCard>
           </div>
 
+          <SectionCard icon={Mail} title="11. Contact Information">
+            <p className="text-muted-foreground">If you have any questions about these Terms, please contact us. We are happy to clarify anything you need.</p>
+            <div className="mt-4 flex flex-col sm:flex-row gap-4">
+                <Button asChild>
+                    <Link href="/contact">
+                        Contact Page
+                    </Link>
+                </Button>
+                <Button asChild variant="outline">
+                    <a href="mailto:support@all2ools.com">support@all2ools.com</a>
+                </Button>
+            </div>
+          </SectionCard>
+
           <section className="rounded-xl bg-primary/10 p-8 text-center border-2 border-dashed border-primary/20">
                 <RefreshCcw className="mx-auto h-10 w-10 text-primary" />
-                <h2 className="mt-4 text-2xl font-bold">11. Modifications & Updates</h2>
+                <h2 className="mt-4 text-2xl font-bold">12. Modifications & Updates</h2>
                 <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
                     We may update features, tools, terms, or privacy policies at any time. We will update the “Last Updated” date when changes are made. Your continued use of the website means you accept the updated terms.
                 </p>

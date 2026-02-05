@@ -27,7 +27,6 @@ const iframeTools = [
     'free-qr-code-generator',
     'free-cheat-sheet-generator',
     'image-compressor',
-    'free-image-file-compressor',
     '1-click-article-outline-generator',
     'tinyurl-maker',
     'ai-product-background-remover',

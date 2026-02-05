@@ -66,6 +66,7 @@ export function BusinessValuationCalculator() {
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessingAi, setIsProcessingAi] = useState(false);
   const [country, setCountry] = useState<Country>('US');
+  const currency = countries.find(c => c.code === country)?.currency || 'USD';
   const aiPromptRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -284,35 +285,35 @@ export function BusinessValuationCalculator() {
                   <CardContent className="space-y-4">
                      <FormField control={form.control} name="revenue" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Last 12 Months Revenue ({country})</FormLabel>
+                            <FormLabel>Last 12 Months Revenue ({currency})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="opex" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Operating Expenses (Opex, ex-Depr.) ({country})</FormLabel>
+                            <FormLabel>Operating Expenses (Opex, ex-Depr.) ({currency})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="depreciation" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Depreciation & Amortization ({country})</FormLabel>
+                            <FormLabel>Depreciation & Amortization ({currency})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="capex" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Capital Expenditures (CAPEX) ({country})</FormLabel>
+                            <FormLabel>Capital Expenditures (CAPEX) ({currency})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
                      <FormField control={form.control} name="workingCapitalChange" render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Annual Change in Working Capital ({country})</FormLabel>
+                            <FormLabel>Annual Change in Working Capital ({currency})</FormLabel>
                             <FormControl><Input type="number" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
@@ -320,7 +321,7 @@ export function BusinessValuationCalculator() {
                      <FormField control={form.control} name="taxRate" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Corporate Tax Rate: {field.value}%</FormLabel>
-                            <FormControl><Slider min={0} max={100} step={1} onValueChange={(v) => field.onChange(v[0])} defaultValue={[field.value]} /></FormControl>
+                            <FormControl><Slider min={0} max={100} step={1} onValuechenge={(v) => field.onChange(v[0])} defaultValue={[field.value]} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
@@ -358,16 +359,16 @@ export function BusinessValuationCalculator() {
                         </FormItem>
                     )} />
                     <FormField control={form.control} name="ownerSalary" render={({ field }) => (
-                        <FormItem><FormLabel>Owner's Salary ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Owner's Salary ({currency})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                      <FormField control={form.control} name="addBacks" render={({ field }) => (
-                        <FormItem><FormLabel>Discretionary Expenses / Add-backs ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Discretionary Expenses / Add-backs ({currency})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                     <FormField control={form.control} name="totalAssets" render={({ field }) => (
-                        <FormItem><FormLabel>Total Assets ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Total Assets ({currency})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                     <FormField control={form.control} name="totalLiabilities" render={({ field }) => (
-                        <FormItem><FormLabel>Total Liabilities ({country})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
+                        <FormItem><FormLabel>Total Liabilities ({currency})</FormLabel><FormControl><Input type="number" {...field} /></FormControl></FormItem>
                     )} />
                   </CardContent>
                 </Card>
@@ -455,5 +456,3 @@ export function BusinessValuationCalculator() {
     </div>
   );
 }
-
-    

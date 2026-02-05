@@ -79,7 +79,7 @@ export default function PrivacyPage() {
             Privacy Policy for All2ools
           </h1>
           <p className="mx-auto mt-4 text-lg text-muted-foreground md:text-xl">
-            Last Updated: December 03, 2025
+            Last Updated: July 16, 2024
           </p>
         </section>
 
@@ -179,7 +179,7 @@ export default function PrivacyPage() {
             </SectionCard>
 
             {/* --- 6. Security --- */}
-            <SectionCard icon={ShieldCheck} title="7. Data Security">
+            <SectionCard icon={ShieldCheck} title="6. Data Security">
                 <p className="text-muted-foreground mb-6">While no method is 100% secure, we take all reasonable measures to protect your data.</p>
                 <ul className="columns-1 md:columns-2 space-y-2 text-muted-foreground">
                     <BenefitItem icon={CheckCircle}>HTTPS everywhere</BenefitItem>
@@ -191,11 +191,11 @@ export default function PrivacyPage() {
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* --- Children's Privacy --- */}
-                <SectionCard icon={Baby} title="8. Children's Privacy">
+                <SectionCard icon={Baby} title="7. Children's Privacy">
                     <p className="text-muted-foreground">All2ools is not intended for children under 13. We do not knowingly collect information from children. If you believe a child has provided data, contact us and we will delete it immediately.</p>
                 </SectionCard>
                  {/* --- Your Rights --- */}
-                <SectionCard icon={UserCheck} title="9. Your Rights">
+                <SectionCard icon={UserCheck} title="8. Your Rights">
                     <p className="text-muted-foreground mb-4">Depending on your region (GDPR, CCPA), you may have rights to access, delete, or correct your data. To exercise these rights, please contact us.</p>
                     <Button asChild variant="outline">
                         <a href="mailto:support@all2ools.com"><Mail className="mr-2"/>support@all2ools.com</a>
@@ -206,7 +206,7 @@ export default function PrivacyPage() {
             {/* --- Contact & Changes --- */}
             <section className="rounded-xl bg-primary/10 p-8 text-center border-2 border-dashed border-primary/20">
                 <RefreshCcw className="mx-auto h-10 w-10 text-primary" />
-                <h2 className="mt-4 text-2xl font-bold">Policy Changes & Contact</h2>
+                <h2 className="mt-4 text-2xl font-bold">9. Policy Changes & Contact</h2>
                 <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
                     We may update this Privacy Policy as we add new tools. The “Last Updated” date at the top indicates the last modification. If you have any questions, please reach out. We respond within 24–48 hours.
                 </p>

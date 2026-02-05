@@ -39,6 +39,7 @@ export const toolClusters = [
   {
     title: 'More Image Tools',
     slugs: [
+      'free-image-file-compressor',
       'image-compressor',
       'ai-product-background-remover',
       'ai-headshot-generator',
