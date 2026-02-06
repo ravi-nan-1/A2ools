@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +10,8 @@ import { Loader2, Share, Download, FileText, Link as LinkIcon, Upload, Sparkles 
 import { CheatSheetSkeleton } from '@/components/cheat-sheet-skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CheatSheetWelcome } from '@/components/shared/cheat-sheet-welcome';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export function FreeCheatSheetGenerator() {
   const [text, setText] = useState('');
@@ -18,6 +20,7 @@ export function FreeCheatSheetGenerator() {
   const [error, setError] = useState('');
   const [language, setLanguage] = useState('English');
   const [activeTab, setActiveTab] = useState('text');
+  const cheatSheetRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = async () => {
     if (!text) {
@@ -43,6 +46,33 @@ export function FreeCheatSheetGenerator() {
        setError(`An unexpected error occurred: ${(e as Error).message}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!cheatSheetRef.current) return;
+
+    html2canvas(cheatSheetRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('cheatsheet.pdf');
+    });
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'My AI-Generated Cheat Sheet',
+        text: 'Check out this cheat sheet I made!',
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
     }
   };
 
@@ -134,10 +164,10 @@ export function FreeCheatSheetGenerator() {
         <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Generated Cheat Sheet</h2>
             <div className="flex gap-2">
-                <Button variant="outline" disabled={!cheatSheet || isLoading}>
+                <Button variant="outline" onClick={handleShare} disabled={!cheatSheet || isLoading}>
                     <Share className="w-4 h-4 mr-2" /> Share
                 </Button>
-                <Button variant="outline" disabled={!cheatSheet || isLoading}>
+                <Button variant="outline" onClick={handleDownload} disabled={!cheatSheet || isLoading}>
                     <Download className="w-4 h-4 mr-2" /> Download
                 </Button>
             </div>
@@ -156,7 +186,7 @@ export function FreeCheatSheetGenerator() {
         
         {cheatSheet && !isLoading && (
             <Card>
-                <CardContent className="p-6">
+                <CardContent ref={cheatSheetRef} className="p-6">
                     <div dangerouslySetInnerHTML={{ __html: cheatSheet }} />
                 </CardContent>
             </Card>

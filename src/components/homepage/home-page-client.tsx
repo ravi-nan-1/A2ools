@@ -84,12 +84,6 @@ export function HomePageClient({ tools }: HomePageClientProps) {
             </div>
           </div>
 
-          <div className="mt-12">
-            <div className="bg-muted h-64 w-full max-w-5xl mx-auto rounded-lg flex items-center justify-center border">
-                <span className="text-muted-foreground">Banner Image</span>
-            </div>
-          </div>
-
         </div>
       </section>
 

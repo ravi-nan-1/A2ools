@@ -55,6 +55,7 @@
     "formidable": "^3.5.1",
     "framer-motion": "^12.23.26",
     "genkit": "^1.27.0",
+    "html2canvas": "^1.4.1",
     "input-otp": "^1.2.5",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
