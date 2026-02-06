@@ -55,7 +55,7 @@ export function HomePageClient({ tools }: HomePageClientProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-      <section className="relative bg-background py-20 px-4 text-center">
+      <section className="relative bg-background pt-20 pb-12 px-4 text-center">
         <div className="container mx-auto max-w-6xl text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Free Online AI Tools for Every Task
@@ -83,21 +83,13 @@ export function HomePageClient({ tools }: HomePageClientProps) {
               <span>30+ AI Tools</span>
             </div>
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="#tools" 
-              className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition inline-block"
-            >
-              Explore All Tools →
-            </a>
-            <a 
-              href="#popular" 
-              className="px-8 py-4 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:bg-secondary/90 transition inline-block"
-            >
-              Most Popular Tools
-            </a>
+
+          <div className="mt-12">
+            <div className="bg-muted h-64 w-full max-w-5xl mx-auto rounded-lg flex items-center justify-center border">
+                <span className="text-muted-foreground">Banner Image</span>
+            </div>
           </div>
+
         </div>
       </section>
 

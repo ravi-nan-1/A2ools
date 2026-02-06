@@ -30,16 +30,17 @@ export function FreeCheatSheetGenerator() {
     setCheatSheet('');
 
     try {
-      // NOTE: The 'language' parameter is temporarily removed until the backend supports it.
-      const result = await summarizeContentAndGenerateCheatSheet({ text });
-      if (result && result.cheatSheetHtml) {
+      const result = await summarizeContentAndGenerateCheatSheet({ text, targetLanguage: language });
+      if (result.error) {
+        setError(result.error);
+      } else if (result.cheatSheetHtml) {
         setCheatSheet(result.cheatSheetHtml);
       } else {
         setError('Failed to generate cheat sheet. The model returned an unexpected response.');
       }
     } catch (e) {
       console.error(e);
-       setError('Generation Failed: The AI model failed to generate a cheat sheet for this content. This could be due to network issues or content restrictions. Please try again with different input.');
+       setError(`An unexpected error occurred: ${(e as Error).message}`);
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +98,7 @@ export function FreeCheatSheetGenerator() {
 
           <div>
             <label htmlFor="language" className="text-sm font-medium text-gray-700">Cheat Sheet Language</label>
-            <Select value={language} onValueChange={setLanguage} disabled={true}>
+            <Select value={language} onValueChange={setLanguage} disabled={isLoading}>
                 <SelectTrigger id="language" className="w-full mt-1">
                     <SelectValue placeholder="Select language" />
                 </SelectTrigger>
@@ -109,7 +110,6 @@ export function FreeCheatSheetGenerator() {
                     <SelectItem value="Portuguese">Portuguese</SelectItem>
                 </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground mt-1">Language selection is coming soon.</p>
           </div>
 
 
