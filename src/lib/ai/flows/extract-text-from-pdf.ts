@@ -9,7 +9,7 @@
 
 import { ai } from '@/lib/ai/genkit';
 import { z } from 'genkit';
-import pdf from 'pdf-parse';
+import * as pdf from 'pdf-parse';
 
 const ExtractTextFromPdfInputSchema = z.object({
   pdf: z.string().describe("A PDF file encoded as a data URI. Expected format: 'data:application/pdf;base64,<encoded_data>'."),
@@ -40,6 +40,7 @@ const extractTextFromPdfFlow = ai.defineFlow(
     }
     
     const pdfBuffer = Buffer.from(base64Data, 'base64');
+    // @ts-ignore
     const data = await pdf(pdfBuffer);
 
     // Clean up the extracted text
